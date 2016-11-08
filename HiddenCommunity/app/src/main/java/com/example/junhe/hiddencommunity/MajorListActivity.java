@@ -64,7 +64,7 @@ public class MajorListActivity extends AppCompatActivity {
         major_data.add(new MajorData("화학", "화학공학"));
 
         // ListView 가져오기
-        ListView major_list = (ListView) findViewById(R.id.Majorlist);
+        final ListView major_list = (ListView) findViewById(R.id.Majorlist);
 
         MajorListAdapter adapter = new MajorListAdapter(mContext, 0, major_data);
         // ListView에 각각의 전공표시를 제어하는 Adapter를 설정
@@ -75,17 +75,19 @@ public class MajorListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-               // ListView major_list = (ListView) parent;
+                // ListView major_list = (ListView) parent;
                 // TODO 아이템 클릭시에 구현할 내용은 여기에.
-                // 전공 선택시 RegisterActivity의 etMajor에 전달되어야 함☆☆☆☆☆
                 Intent intent = new Intent(getApplicationContext(), NoticeBoardActivity.class);
+                // 전공 선택시 RegisterActivity의 etMajor에 전달되어야 함☆☆☆☆☆
+//                String mj = (String) major_list.getItemAtPosition(position);
+//                intent.putExtra("major",mj);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivityForResult(intent, 1000);
                 // 이건 일단 게시판으로 넘어가게 임시방편....
 
-
             }
-
         });
+
     }
 
     private class MajorListAdapter extends ArrayAdapter<MajorData> {

@@ -26,8 +26,8 @@ import static android.R.attr.data;
 
 public class NoticeBoardActivity extends AppCompatActivity {
 
-    TextView input_title;
-    TextView input_content;
+//    TextView input_title;
+//    TextView input_content;
 
     private ArrayList<BoardData> board_data = new ArrayList<BoardData>();
     Context mContext = this;
@@ -37,24 +37,25 @@ public class NoticeBoardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notice_board);
 
-        input_title = (TextView) findViewById(R.id.Title);
+//        input_title = (TextView) findViewById(R.id.Title);
+        TextView Title = (TextView) findViewById(R.id.Title);
         TextView Nickname = (TextView) findViewById(R.id.Nickname);
         TextView Date = (TextView) findViewById(R.id.Date);
-        input_content = (TextView) findViewById(R.id.Content);
+        TextView Content = (TextView) findViewById(R.id.Content);
+//        input_content = (TextView) findViewById(R.id.Content);
 
         //BoardWritingActivity에서 제목,내용 받아오고, 사용자 정보에서 닉네임 받아오고, 날짜 받아오기
-        Bundle extras1 = getIntent().getExtras();
-        String title = extras1.getString("title");
-        input_title.setText(title);
-
-        Bundle extras2 = getIntent().getExtras();
-        String content = extras2.getString("content");
-        input_content.setText(content);
+//        Bundle extras1 = getIntent().getExtras();
+//        String title = extras1.getString("title");
+//        input_title.setText(title);
+//
+//        Bundle extras2 = getIntent().getExtras();
+//        String content = extras2.getString("content");
+//        input_content.setText(content);
 
         // 게시글 추가
-        board_data.add(new BoardData(input_title, Nickname, Date,input_content));
-        board_data.add(new BoardData(input_title, Nickname, Date,input_content));
-        board_data.add(new BoardData(input_title, Nickname, Date,input_content));
+//        board_data.add(new BoardData(input_title, Nickname, Date,input_content));
+        board_data.add(new BoardData(Title, Nickname, Date,Content));
 
 
         // ListView 가져오기
@@ -70,7 +71,7 @@ public class NoticeBoardActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                ListView major_list = (ListView) parent;
+               // ListView major_list = (ListView) parent;
                 // TODO 아이템 클릭시에 구현할 내용은 여기에.
                 // 전공 선택시 RegisterActivity의 etMajor에 전달되어야 함☆☆☆☆☆
 

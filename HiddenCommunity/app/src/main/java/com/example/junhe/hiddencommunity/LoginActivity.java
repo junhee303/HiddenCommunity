@@ -33,8 +33,7 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 Intent intent = new Intent(getApplicationContext(), EmailActivity.class);
-                // 여기서 입력한 메일주소로 인증 메일 전송!!☆☆
-                // 메일주소를 다음 화면으로 전달해야함
+                // 여기서 입력한 메일주소로 인증 메일 전송 + 다음 화면으로 전달☆☆
                 String email = etEmail.getText().toString();
                 intent.putExtra("email",email);
                 startActivityForResult(intent, 1000);
