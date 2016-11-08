@@ -29,9 +29,7 @@ public class EmailActivity extends AppCompatActivity {
         bFinish = (Button) findViewById(R.id.bFinish);
 
         Bundle extras = getIntent().getExtras();
-
         String email = extras.getString("email");
-
         input_email.setText(email);
 
         bFinish.setOnClickListener(new View.OnClickListener() {

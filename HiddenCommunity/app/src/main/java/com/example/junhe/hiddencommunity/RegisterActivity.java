@@ -75,6 +75,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MajorListActivity.class);
                 startActivityForResult(intent, 1000);
+                // 갓다가 선택한 전공들고 다시 와야 함..
             }
         });
 

@@ -1,6 +1,7 @@
 package com.example.junhe.hiddencommunity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
@@ -71,15 +72,16 @@ public class MajorListActivity extends AppCompatActivity {
 
         // 전공 클릭시 이벤트 리스너 등록
         major_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                ListView major_list = (ListView) parent;
+               // ListView major_list = (ListView) parent;
                 // TODO 아이템 클릭시에 구현할 내용은 여기에.
-                String item = (String) major_list.getItemAtPosition(position);
+                // 전공 선택시 RegisterActivity의 etMajor에 전달되어야 함☆☆☆☆☆
+                Intent intent = new Intent(getApplicationContext(), NoticeBoardActivity.class);
+                startActivityForResult(intent, 1000);
+                // 이건 일단 게시판으로 넘어가게 임시방편....
 
-                Toast.makeText(MajorListActivity.this, item, Toast.LENGTH_LONG).show();
 
             }
 
