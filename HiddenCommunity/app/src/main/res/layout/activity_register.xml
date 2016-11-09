@@ -110,31 +110,42 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:layout_marginTop="30dp"
-        android:id="@+id/etMajor"
+        android:id="@+id/etMajor1"
         android:textSize="18sp"
-        android:hint="전공"
+        android:hint="전공1"
         android:textColorHint="#FFA7A7A7"
         android:textColor="#FF4E4E4E"
         android:layout_below="@+id/etNickname"
         android:layout_alignParentStart="true"
         android:textCursorDrawable="@null"/>
-
-    <Button
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:id="@+id/bMajorAdd"
-        android:background="@drawable/plus_selector"
-        android:layout_alignTop="@+id/etMajor"
-        android:layout_alignParentEnd="true" />
-
-    <Button
-        android:text="시작하기"
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="55dp"
-        android:id="@+id/bStart"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/etMajor2"
+        android:textSize="18sp"
+        android:hint="전공2"
+        android:textColorHint="#FFA7A7A7"
+        android:textColor="#FF4E4E4E"
+        android:layout_below="@+id/etMajor1"
+        android:layout_alignParentStart="true"
+        android:textCursorDrawable="@null"
+        android:visibility="invisible"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/etMajor3"
+        android:textSize="18sp"
+        android:hint="전공3"
+        android:textColorHint="#FFA7A7A7"
+        android:textColor="#FF4E4E4E"
+        android:layout_below="@+id/etMajor2"
+        android:layout_alignParentStart="true"
+        android:textCursorDrawable="@null"
+        android:visibility="invisible"/>
 
     <FrameLayout
         android:layout_width="wrap_content"
@@ -185,6 +196,23 @@
             android:visibility="invisible"/>
 
     </FrameLayout>
+
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/bMajorAdd"
+        android:background="@drawable/plus_selector"
+        android:layout_alignTop="@+id/etMajor1"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="시작하기"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/bStart"
+        android:layout_below="@+id/etMajor3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp" />
 
 
 </RelativeLayout>

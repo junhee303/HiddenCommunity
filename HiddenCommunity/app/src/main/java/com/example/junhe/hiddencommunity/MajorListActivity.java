@@ -81,6 +81,7 @@ public class MajorListActivity extends AppCompatActivity {
                 // 전공 선택시 RegisterActivity의 etMajor에 전달되어야 함☆☆☆☆☆
                 String major = (String) major_data.get(position).getMajor();
                 intent.putExtra("major",major);
+                System.out.print("major");
                 startActivityForResult(intent, 1000);
 
 

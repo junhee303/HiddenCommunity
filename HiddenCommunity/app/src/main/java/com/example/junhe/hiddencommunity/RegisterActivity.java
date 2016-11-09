@@ -19,7 +19,9 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText etPassword;
     private EditText etPasswordConfirm;
     private EditText etNickname;
-    private EditText etMajor;
+    private EditText etMajor1;
+    private EditText etMajor2;
+    private EditText etMajor3;
     private Button bMajorAdd;
     private Button bStart;
     private TextView CheckPasswordNotice;
@@ -29,6 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ImageView nicknameCheck;
     private ImageView nicknameError;
     private String server_nickname;
+    private int count_major;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +41,9 @@ public class RegisterActivity extends AppCompatActivity {
         etPassword = (EditText) findViewById(R.id.etPassword);
         etPasswordConfirm = (EditText) findViewById(R.id.etPasswordConfirm);
         etNickname = (EditText) findViewById(R.id.etNickname);
-        etMajor = (EditText) findViewById(R.id.etMajor);
+        etMajor1 = (EditText) findViewById(R.id.etMajor1);
+        etMajor2 = (EditText) findViewById(R.id.etMajor2);
+        etMajor3 = (EditText) findViewById(R.id.etMajor3);
         bMajorAdd = (Button) findViewById(R.id.bMajorAdd);
         bStart = (Button) findViewById(R.id.bStart);
         CheckPasswordNotice = (TextView) findViewById(R.id.CheckPasswordNotice);
@@ -48,6 +53,7 @@ public class RegisterActivity extends AppCompatActivity {
         nicknameCheck = (ImageView) findViewById(R.id.nicknameCheck);
         nicknameError = (ImageView) findViewById(R.id.nicknameError);
         server_nickname = "server";
+        count_major = 1;
 
 
         // 비밀번호 일치 검사
@@ -91,7 +97,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String nickname = etNickname.getText().toString();
                 String serverName = server_nickname;
 
-                if (nickname.equals(serverName)) {
+                if (nickname.equals(serverName) || nickname.length()==0) {
                     nicknameCheck.setVisibility(View.INVISIBLE);
                     nicknameError.setVisibility(View.VISIBLE);
                     CheckNicknameNotice.setVisibility(View.INVISIBLE);
@@ -118,13 +124,13 @@ public class RegisterActivity extends AppCompatActivity {
 //            }
 //        });
 
-        etMajor.setOnClickListener(new View.OnClickListener() {
+        etMajor1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(RegisterActivity.this, MajorListActivity.class);
 //                startActivityForResult(intent, 1000);
 //                Bundle extras = getIntent().getExtras();
 //                String major = extras.getString("major");
-//                etMajor.setText(major);
+//                etMajor1.setText(major);
                 startActivity(intent);
             }
 
@@ -132,11 +138,11 @@ public class RegisterActivity extends AppCompatActivity {
 //        @Override
 //        protected void onActivityResult (int requestCode, int resultCode, Intent data) {
 //            super.onActivityResult(requestCode, resultCode, data);
-//            etMajor = (EditText) findViewById(R.id.etMajor);
+//            etMajor1 = (EditText) findViewById(R.id.etMajor1);
 //            if(resultCode==RESULT_OK) {// 액티비티가 정상적으로 종료되었을 경우
 //                if(requestCode==1000){// MajorListActivity에서 호출한 경우에만 처리
 //                    // 받아온 전공명을 MajorListActivity에 표시
-//                    etMajor.setText(data.getStringExtra("major"));
+//                    etMajor1.setText(data.getStringExtra("major"));
 //                }
 //            }
 //        }
@@ -144,7 +150,14 @@ public class RegisterActivity extends AppCompatActivity {
 
         bMajorAdd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // 전공 입력 칸 생성☆☆☆☆☆☆☆☆
+                // 전공 입력 칸 추가 생성☆☆☆☆☆☆☆☆
+                count_major++;
+                if(count_major>=2) {
+                    etMajor2.setVisibility(View.VISIBLE);
+                }
+                if(count_major>=3){
+                    etMajor3.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -192,9 +205,9 @@ public class RegisterActivity extends AppCompatActivity {
                 }
 
                 // 전공 입력 확인
-                if (etMajor.getText().toString().length() == 0) {
+                if (etMajor1.getText().toString().length() == 0) {
                     Toast.makeText(RegisterActivity.this, "전공을 입력하세요", Toast.LENGTH_SHORT).show();
-                    etMajor.requestFocus();
+                    etMajor1.requestFocus();
                     return;
                 }
 
