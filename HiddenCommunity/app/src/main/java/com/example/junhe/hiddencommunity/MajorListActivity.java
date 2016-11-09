@@ -77,13 +77,12 @@ public class MajorListActivity extends AppCompatActivity {
 
                 // ListView major_list = (ListView) parent;
                 // TODO 아이템 클릭시에 구현할 내용은 여기에.
-                Intent intent = new Intent(getApplicationContext(), NoticeBoardActivity.class);
+                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
                 // 전공 선택시 RegisterActivity의 etMajor에 전달되어야 함☆☆☆☆☆
-//                String mj = (String) major_list.getItemAtPosition(position);
-//                intent.putExtra("major",mj);
-                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                String major = (String) major_data.get(position).getMajor();
+                intent.putExtra("major",major);
                 startActivityForResult(intent, 1000);
-                // 이건 일단 게시판으로 넘어가게 임시방편....
+
 
             }
         });

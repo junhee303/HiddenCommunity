@@ -18,23 +18,51 @@
         android:ems="10"
         android:layout_marginTop="50dp"
         android:id="@+id/etPassword"
+        android:textSize="18sp"
         android:hint="비밀번호"
         android:textColorHint="#FFA7A7A7"
         android:textColor="#FF4E4E4E"
-        android:password="false" />
+        android:password="false"
+        android:textCursorDrawable="@null"/>
+
+    <TextView
+        android:text="영문 대·소문자, 숫자를 포함한 8~12자리로 입력하세요."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/PasswordNotice"
+        android:textSize="10sp"
+        android:textColor="#b4b4b4"
+        android:layout_below="@+id/etPassword"
+        android:gravity="right"/>
+
+    // android:drawableRight="@+id/etPasswordConfirm"
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
-        android:layout_marginTop="30dp"
         android:id="@+id/etPasswordConfirm"
+        android:textSize="18sp"
         android:hint="비밀번호 확인"
         android:textColorHint="#FFA7A7A7"
         android:textColor="#FF4E4E4E"
+        android:textCursorDrawable="@null"
         android:layout_below="@+id/etPassword"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="32dp" />
+
+
+    <TextView
+        android:text="비밀번호가 일치합니다."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/CheckPasswordNotice"
+        android:textSize="10sp"
+        android:textColor="#b4b4b4"
+        android:layout_below="@+id/etPasswordConfirm"
+        android:gravity="right"
+        android:visibility="invisible"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -43,12 +71,38 @@
         android:ems="10"
         android:layout_marginTop="30dp"
         android:id="@+id/etNickname"
+        android:textSize="18sp"
         android:hint="닉네임"
         android:textColorHint="#FFA7A7A7"
         android:textColor="#FF4E4E4E"
         android:layout_below="@+id/etPasswordConfirm"
         android:layout_alignParentStart="true"
-        android:text="k2df456" />
+        android:text="k2df456"
+        android:textCursorDrawable="@null"/>
+
+    // android:drawableRight="@+id/etPasswordConfirm"
+
+
+    <TextView
+        android:text="사용 중에도 닉네임을 변경할 수 있습니다."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/NicknameNotice"
+        android:textSize="10sp"
+        android:textColor="#b4b4b4"
+        android:layout_below="@+id/etNickname"
+        android:gravity="right"/>
+
+    <TextView
+        android:text="사용 가능한 닉네임 입니다."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/CheckNicknameNotice"
+        android:textSize="10sp"
+        android:textColor="#b4b4b4"
+        android:layout_below="@+id/NicknameNotice"
+        android:gravity="right"
+        android:visibility="visible"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -57,11 +111,21 @@
         android:ems="10"
         android:layout_marginTop="30dp"
         android:id="@+id/etMajor"
+        android:textSize="18sp"
         android:hint="전공"
         android:textColorHint="#FFA7A7A7"
         android:textColor="#FF4E4E4E"
         android:layout_below="@+id/etNickname"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textCursorDrawable="@null"/>
+
+    <Button
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/bMajorAdd"
+        android:background="@drawable/plus_selector"
+        android:layout_alignTop="@+id/etMajor"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:text="시작하기"
@@ -72,22 +136,56 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
-    <!--<ImageView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--app:srcCompat="@drawable/number"-->
-    <!--android:layout_above="@+id/etPasswordConfirm"-->
-    <!--android:layout_marginBottom="62dp"-->
-    <!--android:id="@+id/img_Number"-->
-    <!--android:layout_alignParentStart="true" />-->
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/etPasswordConfirm"
+        android:layout_alignParentEnd="true">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/error"
+            android:id="@+id/passwordError"
+            android:layout_alignTop="@+id/etPasswordConfirm"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible"
+            />
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/check"
+            android:id="@+id/passwordCheck"
+            android:layout_alignTop="@+id/etPasswordConfirm"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible"
+            />
+    </FrameLayout>
 
-    <Button
-        android:layout_width="40dp"
-        android:id="@+id/bMajorAdd"
-        android:background="@drawable/plus_selector"
-        android:layout_height="40dp"
-        android:layout_alignTop="@+id/etMajor"
-        android:layout_alignParentEnd="true" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/etNickname"
+        android:layout_alignParentEnd="true">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/check"
+            android:id="@+id/nicknameCheck"
+            android:layout_alignTop="@+id/etNickname"
+            android:layout_alignParentEnd="true"
+            android:visibility="visible"/>
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            app:srcCompat="@drawable/error"
+            android:id="@+id/nicknameError"
+            android:layout_alignTop="@+id/etNickname"
+            android:layout_alignParentEnd="true"
+            android:visibility="invisible"/>
+
+    </FrameLayout>
+
 
 </RelativeLayout>
 

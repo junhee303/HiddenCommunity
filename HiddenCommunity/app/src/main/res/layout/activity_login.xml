@@ -33,7 +33,9 @@
         android:layout_marginTop="40dp"
         android:layout_marginBottom="30dp"
         android:layout_above="@+id/bSendEmail"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:textCursorDrawable="@null"
+        />
 
     <Button
         android:text="이메일 인증"
