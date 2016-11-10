@@ -1,8 +1,12 @@
 package com.example.junhe.hiddencommunity;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +36,9 @@ public class BoardReadingActivity extends AppCompatActivity {
     private int count_like = 0;
     private int count_comment = 0;
 
+    final Context context = this;
+    private TextView postedComment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +53,7 @@ public class BoardReadingActivity extends AppCompatActivity {
         bLikeOff = (Button) findViewById(R.id.bLikeOff);
         bAddComment = (Button) findViewById(R.id.bAddComment);
         TheNumberOfLike = (TextView) findViewById(R.id.TheNumberOfLike);
+        postedComment = (TextView) findViewById(R.id.postedComment);
 
         Bundle extras = getIntent().getExtras();
         String title = extras.getString("title");
@@ -86,8 +94,42 @@ public class BoardReadingActivity extends AppCompatActivity {
             }
         });
 
+        bAddComment.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
 
+                //get comment_post_popup.wml view
+                LayoutInflater li = LayoutInflater.from(context);
+                View commentPopupView = li.inflate(R.layout.comment_post_popup, null);
 
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+
+                //set comment_post_popup.wml to alertdialog builder
+                alertDialogBuilder.setView(commentPopupView);
+
+                final EditText userInput = (EditText) commentPopupView.findViewById(R.id.editTextDialogComment);
+
+                // set dialog message
+                alertDialogBuilder.setCancelable(false).setPositiveButton("등록", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        // get user input and set it to result
+                                        // edit text
+                                        postedComment.setText(userInput.getText());
+                                    }
+                                })
+                        .setNegativeButton("취소",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+
+                // show it
+                alertDialog.show();
+
+            }
+        });
     }
-
 }
