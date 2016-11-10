@@ -55,6 +55,10 @@ public class RegisterActivity extends AppCompatActivity {
         server_nickname = "server";
         count_major = 1;
 
+//        Bundle extras = getIntent().getExtras();
+//        String major = extras.getString("major");
+//        etMajor1.setText(major);
+
 
         // 비밀번호 일치 검사
         etPasswordConfirm.addTextChangedListener(new TextWatcher() {
@@ -123,15 +127,21 @@ public class RegisterActivity extends AppCompatActivity {
 //                return;
 //            }
 //        });
+        System.out.println("여기11111111111111111111111111111111");
 
         etMajor1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                System.out.println("여기22222222222222222222222");
                 Intent intent = new Intent(RegisterActivity.this, MajorListActivity.class);
-//                startActivityForResult(intent, 1000);
 //                Bundle extras = getIntent().getExtras();
-//                String major = extras.getString("major");
+//                String major = extras.getString("selected_major");
 //                etMajor1.setText(major);
-                startActivity(intent);
+                System.out.println("여기333333333333333333333333333333");
+                startActivityForResult(intent, 1000); // 여기서 문제있음..
+                System.out.print("여기444444444444444444444");
+                String selected_major = intent.getStringExtra("selected_major");
+                System.out.print(selected_major); // null
+                System.out.print("여기555555555555");
             }
 
         });
@@ -211,8 +221,8 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
-            /*    Intent intent = new Intent(getApplicationContext(), MajorActivity.class);
-                 startActivityForResult(intent, 1000);*/
+                 Intent intent = new Intent(getApplicationContext(), BoardWritingActivity.class);
+                 startActivityForResult(intent, 1000);
 
 //                Intent result = new Intent();
 //                result.putExtra("Nickname", etNickname.getText().toString());

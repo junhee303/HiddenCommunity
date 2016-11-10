@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <EditText
+        android:id="@+id/comment_edit"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:textSize="15dp"
+        android:textColor="#FF343434"
+        android:hint="댓글을 남겨주세요"
+        android:textColorHint="#FFCCCACA" />
+
+    <Button
+        android:id="@+id/bCommentPost"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:text="등록"/>
+</LinearLayout>

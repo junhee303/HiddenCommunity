@@ -19,7 +19,9 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MajorListActivity" />
         <activity android:name=".NoticeBoardActivity" />
-        <activity android:name=".BoardWritingActivity"></activity>
+        <activity android:name=".BoardWritingActivity" />
+        <activity android:name=".BoardReadingActivity" />
+        <activity android:name=".BoardReadingListViewActivity"></activity>
     </application>
 
 </manifest>

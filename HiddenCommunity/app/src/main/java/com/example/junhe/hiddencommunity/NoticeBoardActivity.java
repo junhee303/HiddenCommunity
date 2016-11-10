@@ -55,7 +55,7 @@ public class NoticeBoardActivity extends AppCompatActivity {
 
         // 게시글 추가
 //        board_data.add(new BoardData(input_title, Nickname, Date,input_content));
-        board_data.add(new BoardData(Title, Nickname, Date,Content));
+        board_data.add(new BoardData(Title.toString(), Nickname.toString(), Date.toString(),Content.toString()));
 
 
         // ListView 가져오기

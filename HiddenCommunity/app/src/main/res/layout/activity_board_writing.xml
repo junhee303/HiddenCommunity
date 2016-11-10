@@ -1,13 +1,69 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_board_writing"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.junhe.hiddencommunity.BoardWritingActivity">
+    tools:context="com.example.junhe.hiddencommunity.MajorListActivity">
+
+    <Button
+        android:id="@+id/board_menu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="게시판 선택"
+        android:layout_alignParentEnd="true" />
+
+//android:onClick="m_onClick"
+    <EditText
+        android:id="@+id/Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="제목"
+        android:textColor="#000000"
+        android:textColorHint="#FFCCCACA"
+        android:textSize="24dp"
+        android:textStyle="bold"
+        android:layout_below="@+id/board_menu"/>
+
+    <EditText
+        android:id="@+id/Content"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="17dp"
+        android:ems="10"
+        android:hint="내용을 입력하세요"
+        android:textColor="#000000"
+        android:textColorHint="#FFCCCACA"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_below="@+id/Title"
+        android:gravity="top"/>
+
+    <EditText
+        android:id="@+id/Tag"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="18dp"
+        android:ems="10"
+        android:hint="#태그"
+        android:textColor="#000000"
+        android:textColorHint="#88bec9"
+        android:textSize="18dp"
+        android:layout_below="@+id/Content"
+        android:layout_alignParentStart="true"
+        android:background="#f0f0f0" />
+
+    <Button
+        android:id="@+id/bPost"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="17dp"
+        android:text="글쓰기"
+        android:layout_below="@+id/Tag"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
+

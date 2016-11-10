@@ -62,29 +62,29 @@ public class MajorListActivity extends AppCompatActivity {
         major_data.add(new MajorData("정밀·에너지·소재", "광학공학, 에너지공학, 반도체·세라믹공학, 섬유공학, 신소재공학, 재료공학"));
         major_data.add(new MajorData("컴퓨터·통신", "전산학·컴퓨터공학, 응용소프트웨어공학, 정보·통신공학"));
         major_data.add(new MajorData("화학", "화학공학"));
-
+        System.out.print("여기1");
         // ListView 가져오기
-        final ListView major_list = (ListView) findViewById(R.id.Majorlist);
+        final ListView major_list = (ListView) findViewById(R.id.MajorList);
 
         MajorListAdapter adapter = new MajorListAdapter(mContext, 0, major_data);
         // ListView에 각각의 전공표시를 제어하는 Adapter를 설정
         major_list.setAdapter(adapter);
-
+        System.out.println("저기1111111111111111111111111111");
         // 전공 클릭시 이벤트 리스너 등록
         major_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                System.out.println("저기2222222222222222222222222222");
 
-                // ListView major_list = (ListView) parent;
                 // TODO 아이템 클릭시에 구현할 내용은 여기에.
                 Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
                 // 전공 선택시 RegisterActivity의 etMajor에 전달되어야 함☆☆☆☆☆
-                String major = (String) major_data.get(position).getMajor();
+                String major = major_data.get(position).getMajor();
+                System.out.println("저기33333333333333333333333333");
                 intent.putExtra("major",major);
-                System.out.print("major");
+                System.out.println("저기44444444444444444444444"+major); //제대로 출력됨
                 startActivityForResult(intent, 1000);
-
-
+                System.out.println("저기55555");
             }
         });
 

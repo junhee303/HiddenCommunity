@@ -32,10 +32,14 @@ public class LoginActivity extends AppCompatActivity {
                     etEmail.requestFocus();
                     return;
                 }
-                Intent intent = new Intent(getApplicationContext(), EmailActivity.class);
-                // 여기서 입력한 메일주소로 인증 메일 전송 + 다음 화면으로 전달☆☆
-                String email = etEmail.getText().toString();
-                intent.putExtra("email",email);
+//                Intent intent = new Intent(getApplicationContext(), EmailActivity.class);
+//                // 여기서 입력한 메일주소로 인증 메일 전송 + 다음 화면으로 전달
+//                String email = etEmail.getText().toString();
+//                intent.putExtra("email",email);
+//                startActivityForResult(intent, 1000);
+
+                //게시판 만들기 편하게 메일 입력에서 바로 게시판 뛰어넘게 해둠 / 나중에 경로 다시 수정
+                Intent intent = new Intent(getApplicationContext(), BoardWritingActivity.class);
                 startActivityForResult(intent, 1000);
             }
         });
