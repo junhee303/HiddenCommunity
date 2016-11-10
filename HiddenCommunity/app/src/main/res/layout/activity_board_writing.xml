@@ -8,14 +8,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.junhe.hiddencommunity.MajorListActivity">
 
-    <Button
-        android:id="@+id/board_menu"
+    <Spinner
+        android:id="@+id/spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="게시판 선택"
-        android:layout_alignParentEnd="true" />
+        android:entries="@array/board_arrays"
+        android:prompt="@string/board_prompt" />
 
-//android:onClick="m_onClick"
+    //android:onClick="m_onClick"
+    //버튼 상태의 변화가 없고, 단순히 클릭 했을때 원하는 코드를 구현 하게만 하고 싶을때 간단하게 사용
+
     <EditText
         android:id="@+id/Title"
         android:layout_width="match_parent"
@@ -26,7 +28,7 @@
         android:textColorHint="#FFCCCACA"
         android:textSize="24dp"
         android:textStyle="bold"
-        android:layout_below="@+id/board_menu"/>
+        android:layout_below="@+id/spinner"/>
 
     <EditText
         android:id="@+id/Content"

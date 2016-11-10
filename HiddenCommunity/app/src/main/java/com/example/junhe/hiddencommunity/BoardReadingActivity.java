@@ -56,16 +56,14 @@ public class BoardReadingActivity extends AppCompatActivity {
         postedComment = (TextView) findViewById(R.id.postedComment);
 
         Bundle extras = getIntent().getExtras();
+        String board = extras.getString("board");
         String title = extras.getString("title");
         String content = extras.getString("content");
         String tag = extras.getString("tag");
+        select_board.setText(board);
         TitleOfWriting.setText(title);
         ContentOfWriting.setText(content);
         TagOfWriting.setText(tag);
-
-
-        System.out.println("여기는 BoardReadingActivity로 들어온 거!! count_like는 " + count_like);
-        System.out.println("click_like는 " + click_like);
 
         bLikeOn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -109,11 +107,19 @@ public class BoardReadingActivity extends AppCompatActivity {
                 final EditText userInput = (EditText) commentPopupView.findViewById(R.id.editTextDialogComment);
 
                 // set dialog message
+
+
                 alertDialogBuilder.setCancelable(false).setPositiveButton("등록", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         // get user input and set it to result
                                         // edit text
-                                        postedComment.setText(userInput.getText());
+                                        if (userInput.getText().toString().length() == 0) {
+                                            Toast.makeText(BoardReadingActivity.this, "입력한 내용이 없습니다", Toast.LENGTH_SHORT).show();
+                                            userInput.requestFocus();
+
+                                        } else {
+                                            postedComment.setText(userInput.getText());
+                                        }
                                     }
                                 })
                         .setNegativeButton("취소",

@@ -1,3 +1,13 @@
 <resources>
-    <string name="app_name">HiddenCommunity</string>
+
+    <string name="app_name">hidden_community</string>
+    <string name="board_prompt">게시판 선택</string>
+
+    <string-array name="board_arrays">
+        <item>전공1 게시판</item>
+        <item>전공2 게시판</item>
+        <item>전공3 게시판</item>
+        <item>자유 게시판</item>
+    </string-array>
+
 </resources>
