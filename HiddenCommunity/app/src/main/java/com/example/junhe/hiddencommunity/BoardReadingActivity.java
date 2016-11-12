@@ -3,20 +3,19 @@ package com.example.junhe.hiddencommunity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import data.CommentData;
 
@@ -39,6 +38,12 @@ public class BoardReadingActivity extends AppCompatActivity {
     final Context context = this;
     private TextView postedComment;
 
+    private ArrayList<CommentData> comment_data = new ArrayList<CommentData>();
+    Context mContext = this;
+
+    ListView comment_list;
+    ScrollView scrollView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,18 +58,51 @@ public class BoardReadingActivity extends AppCompatActivity {
         bLikeOff = (Button) findViewById(R.id.bLikeOff);
         bAddComment = (Button) findViewById(R.id.bAddComment);
         TheNumberOfLike = (TextView) findViewById(R.id.TheNumberOfLike);
-        postedComment = (TextView) findViewById(R.id.postedComment);
+        // postedComment = (TextView) findViewById(R.id.postedComment);
 
+        comment_list = (ListView) findViewById(R.id.comment_list);
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
         Bundle extras = getIntent().getExtras();
         String board = extras.getString("board");
         String title = extras.getString("title");
         String content = extras.getString("content");
         String tag = extras.getString("tag");
+
         select_board.setText(board);
         TitleOfWriting.setText(title);
         ContentOfWriting.setText(content);
         TagOfWriting.setText(tag);
 
+        pushLikeButton();
+        pushCommentButton();
+        String[] list = {"listdddddddddddddddddddddddddddddddddddddddddddddddddddddw1", "list1", "list1", "list1", "list1", "list1", "list1"};
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
+        comment_list.setAdapter(adapter);
+
+//        comment_list.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                scrollView.requestDisallowInterceptTouchEvent(true);
+//                return false;
+//            }
+//        });
+
+    }
+
+
+
+//        // 스크롤뷰 스크롤 막기
+//        scrollView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                return true;
+//            }
+//        });
+//
+
+
+
+    public void pushLikeButton() {
         bLikeOn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -88,10 +126,11 @@ public class BoardReadingActivity extends AppCompatActivity {
                 }
                 count_like++;
                 TheNumberOfLike.setText("좋아요 수 = " + count_like + "click_like 상태는" + click_like);
-
             }
         });
+    }
 
+    public void pushCommentButton() {
         bAddComment.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -110,18 +149,18 @@ public class BoardReadingActivity extends AppCompatActivity {
 
 
                 alertDialogBuilder.setCancelable(false).setPositiveButton("등록", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        // get user input and set it to result
-                                        // edit text
-                                        if (userInput.getText().toString().length() == 0) {
-                                            Toast.makeText(BoardReadingActivity.this, "입력한 내용이 없습니다", Toast.LENGTH_SHORT).show();
-                                            userInput.requestFocus();
+                    public void onClick(DialogInterface dialog, int id) {
+                        // get user input and set it to result
+                        // edit text
+                        if (userInput.getText().toString().length() == 0) {
+                            Toast.makeText(BoardReadingActivity.this, "입력한 내용이 없습니다", Toast.LENGTH_SHORT).show();
+                            userInput.requestFocus();
 
-                                        } else {
-                                            postedComment.setText(userInput.getText());
-                                        }
-                                    }
-                                })
+                        } else {
+                            postedComment.setText(userInput.getText());
+                        }
+                    }
+                })
                         .setNegativeButton("취소",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
@@ -137,5 +176,8 @@ public class BoardReadingActivity extends AppCompatActivity {
 
             }
         });
+
     }
+
+
 }

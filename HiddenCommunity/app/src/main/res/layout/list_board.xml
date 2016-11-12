@@ -14,7 +14,7 @@
         android:orientation="vertical"
         >
 
-        <EditText
+        <TextView
             android:id="@+id/Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,14 +22,13 @@
             android:hint="제목"
             android:textColorHint="#FFCCCACA"
             android:textStyle="bold"
-            android:textSize="24dp"
-            android:textColor="#000000"
+            android:textSize="20dp"
+            android:textColor="#606060"
             />
 
         <TextView
             android:id="@+id/Nickname"
             android:textSize="14dp"
-            android:paddingTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="닉네임"
@@ -40,7 +39,6 @@
         <TextView
             android:id="@+id/Date"
             android:textSize="14dp"
-            android:paddingTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="2016-00-00"
@@ -48,7 +46,7 @@
             android:textColor="#868686"
             />
 
-        <EditText
+        <TextView
             android:id="@+id/Content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,11 +54,42 @@
             android:hint="내용을 입력하세요"
             android:textColorHint="#FFCCCACA"
             android:textStyle="bold"
-            android:textSize="20dp"
-            android:textColor="#000000"
+            android:textSize="16dp"
+            android:textColor="#606060"
             android:layout_marginTop="40dp"
             android:layout_marginBottom="30dp"
             />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/count_hit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="조회 수"
+                android:textColorHint="#FFCCCACA"/>
+
+            <TextView
+                android:id="@+id/count_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="좋아요 수"
+                android:textColorHint="#FFCCCACA"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/count_hit"
+                android:layout_marginStart="30dp" />
+
+            <TextView
+                android:id="@+id/count_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="댓글 수"
+                android:textColorHint="#FFCCCACA"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/count_like"
+                android:layout_marginStart="29dp" />
+        </RelativeLayout>
 
     </LinearLayout>
 

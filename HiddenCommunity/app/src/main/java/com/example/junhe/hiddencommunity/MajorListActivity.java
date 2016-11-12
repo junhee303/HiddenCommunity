@@ -3,24 +3,18 @@ package com.example.junhe.hiddencommunity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import data.MajorData;
-
-import static android.R.attr.data;
 
 
 public class MajorListActivity extends AppCompatActivity {
@@ -69,25 +63,21 @@ public class MajorListActivity extends AppCompatActivity {
         MajorListAdapter adapter = new MajorListAdapter(mContext, 0, major_data);
         // ListView에 각각의 전공표시를 제어하는 Adapter를 설정
         major_list.setAdapter(adapter);
-        System.out.println("저기1111111111111111111111111111");
+
         // 전공 클릭시 이벤트 리스너 등록
         major_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println("저기2222222222222222222222222222");
-
                 // TODO 아이템 클릭시에 구현할 내용은 여기에.
                 Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+
                 // 전공 선택시 RegisterActivity의 etMajor에 전달되어야 함☆☆☆☆☆
-                String major = major_data.get(position).getMajor();
-                System.out.println("저기33333333333333333333333333");
-                intent.putExtra("major",major);
-                System.out.println("저기44444444444444444444444"+major); //제대로 출력됨
-                startActivityForResult(intent, 1000);
-                System.out.println("저기55555");
+                String selected_major = major_data.get(position).getMajor();
+                intent.putExtra("selected_major",selected_major);
+                setResult(RESULT_OK,intent);
+                finish();
             }
         });
-
     }
 
     private class MajorListAdapter extends ArrayAdapter<MajorData> {

@@ -1,27 +1,19 @@
 package com.example.junhe.hiddencommunity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import data.BoardData;
-
-import static android.R.attr.data;
 
 
 public class NoticeBoardActivity extends AppCompatActivity {
@@ -55,13 +47,18 @@ public class NoticeBoardActivity extends AppCompatActivity {
 
         // 게시글 추가
 //        board_data.add(new BoardData(input_title, Nickname, Date,input_content));
-        board_data.add(new BoardData(Title.toString(), Nickname.toString(), Date.toString(),Content.toString()));
+//        board_data.add(new BoardData(Title.toString(), Nickname.toString(), Date.toString(),Content.toString()));
+
+        board_data.add(new BoardData("제목", "닉네임", "날짜", "내용"));
+        board_data.add(new BoardData("제목", "닉네임", "날짜", "내용"));
+        board_data.add(new BoardData("제목", "닉네임", "날짜", "내용"));
+        board_data.add(new BoardData("제목", "닉네임", "날짜", "내용"));
 
 
         // ListView 가져오기
         ListView board_list = (ListView) findViewById(R.id.Boardlist);
 
-        NoticeBoatdAdapter adapter = new NoticeBoatdAdapter(mContext, 0, board_data);
+        NoticeBoardAdapter adapter = new NoticeBoardAdapter(mContext, 0, board_data);
         // ListView에 각각의 전공표시를 제어하는 Adapter를 설정
         board_list.setAdapter(adapter);
 
@@ -71,7 +68,7 @@ public class NoticeBoardActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-               // ListView major_list = (ListView) parent;
+               ListView major_list = (ListView) parent;
                 // TODO 아이템 클릭시에 구현할 내용은 여기에.
                 // 전공 선택시 RegisterActivity의 etMajor에 전달되어야 함☆☆☆☆☆
 
@@ -81,11 +78,11 @@ public class NoticeBoardActivity extends AppCompatActivity {
 
     }
 
-    private class NoticeBoatdAdapter extends ArrayAdapter<BoardData> {
+    private class NoticeBoardAdapter extends ArrayAdapter<BoardData> {
 
         private ArrayList<BoardData> mBoardData;
 
-        public NoticeBoatdAdapter(Context context, int resource, ArrayList<BoardData> boardData) {
+        public NoticeBoardAdapter(Context context, int resource, ArrayList<BoardData> boardData) {
             super(context, resource, boardData);
 
             mBoardData = boardData;

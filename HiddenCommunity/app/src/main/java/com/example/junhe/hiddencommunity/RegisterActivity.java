@@ -1,7 +1,6 @@
 package com.example.junhe.hiddencommunity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -9,7 +8,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,19 +50,22 @@ public class RegisterActivity extends AppCompatActivity {
         passwordError = (ImageView) findViewById(R.id.passwordError);
         nicknameCheck = (ImageView) findViewById(R.id.nicknameCheck);
         nicknameError = (ImageView) findViewById(R.id.nicknameError);
-        server_nickname = "server";
+        server_nickname = "server"; // 닉네임 중복 체크 위해 임의로 만든 닉네임
         count_major = 1;
 
-//        Bundle extras = getIntent().getExtras();
-//        String major = extras.getString("major");
-//        etMajor1.setText(major);
+        conformPassword(); // 비밀번호 일치 검사
+        conformNickname(); // 닉네임 중복 검사
+        addMajor(); // [+] 버튼 클릭 시 전공 최대 3개 등록 가능
+        selectMajor(); // 전공 입력 부분 클릭 시 MajorActivity로 넘어감
+        pushStartButton(); // 정보 입력 유무 확인 및 가입 완료
 
+    }
 
+    public void conformPassword() {
         // 비밀번호 일치 검사
         etPasswordConfirm.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -85,15 +86,15 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
+    }
 
+    public void conformNickname() {
         // 닉네임 중복 검사
         etNickname.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
@@ -101,7 +102,7 @@ public class RegisterActivity extends AppCompatActivity {
                 String nickname = etNickname.getText().toString();
                 String serverName = server_nickname;
 
-                if (nickname.equals(serverName) || nickname.length()==0) {
+                if (nickname.equals(serverName) || nickname.length() == 0) {
                     nicknameCheck.setVisibility(View.INVISIBLE);
                     nicknameError.setVisibility(View.VISIBLE);
                     CheckNicknameNotice.setVisibility(View.INVISIBLE);
@@ -114,10 +115,9 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
-
         });
+    }
 
 //        etNickname.setOnClickListener(new View.OnClickListener() {
 //            public void onClick(View v) {
@@ -127,50 +127,32 @@ public class RegisterActivity extends AppCompatActivity {
 //                return;
 //            }
 //        });
-        System.out.println("여기11111111111111111111111111111111");
 
+    public void selectMajor() {
         etMajor1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                System.out.println("여기22222222222222222222222");
                 Intent intent = new Intent(RegisterActivity.this, MajorListActivity.class);
-//                Bundle extras = getIntent().getExtras();
-//                String major = extras.getString("selected_major");
-//                etMajor1.setText(major);
-                System.out.println("여기333333333333333333333333333333");
-                startActivityForResult(intent, 1000); // 여기서 문제있음..
-                System.out.print("여기444444444444444444444");
-                String selected_major = intent.getStringExtra("selected_major");
-                System.out.print(selected_major); // null
-                System.out.print("여기555555555555");
+                startActivityForResult(intent, 1000);
             }
-
         });
-//        @Override
-//        protected void onActivityResult (int requestCode, int resultCode, Intent data) {
-//            super.onActivityResult(requestCode, resultCode, data);
-//            etMajor1 = (EditText) findViewById(R.id.etMajor1);
-//            if(resultCode==RESULT_OK) {// 액티비티가 정상적으로 종료되었을 경우
-//                if(requestCode==1000){// MajorListActivity에서 호출한 경우에만 처리
-//                    // 받아온 전공명을 MajorListActivity에 표시
-//                    etMajor1.setText(data.getStringExtra("major"));
-//                }
-//            }
-//        }
+    }
 
-
+    public void addMajor() {
         bMajorAdd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // 전공 입력 칸 추가 생성☆☆☆☆☆☆☆☆
                 count_major++;
-                if(count_major>=2) {
+                if (count_major >= 2) {
                     etMajor2.setVisibility(View.VISIBLE);
                 }
-                if(count_major>=3){
+                if (count_major >= 3) {
                     etMajor3.setVisibility(View.VISIBLE);
                 }
             }
         });
+    }
 
+    public void pushStartButton() {
         bStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -221,25 +203,24 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
-                 Intent intent = new Intent(getApplicationContext(), BoardWritingActivity.class);
-                 startActivityForResult(intent, 1000);
-
-//                Intent result = new Intent();
-//                result.putExtra("Nickname", etNickname.getText().toString());
-
-                //               // 자신을 호출한 액티비티로 데이터를 보낸다.
-                //               setResult(RESULT_OK, result);
-                //               finish();
-
-//                btnCancel.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        finish();
-//                    }
-//                });
-
+                Intent intent = new Intent(getApplicationContext(), BoardWritingActivity.class);
+                startActivityForResult(intent, 1000);
 
             }
         });
     }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        etMajor1 = (EditText) findViewById(R.id.etMajor1);
+        if (resultCode == RESULT_OK) {// 액티비티가 정상적으로 종료되었을 경우
+            if (requestCode == 1000) {// MajorListActivity에서 호출한 경우에만 처리
+                // 받아온 전공명을 MajorListActivity에 표시
+                etMajor1.setText(data.getStringExtra("selected_major"));
+            }
+        }
+    }
 }
+
