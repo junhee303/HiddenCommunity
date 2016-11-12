@@ -21,6 +21,11 @@ public class EmailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email);
 
+        confirmEmail();
+    }
+
+    public void confirmEmail() {
+
         img_Email = (ImageView) findViewById(R.id.img_Email);
         input_email = (TextView) findViewById(R.id.input_email);
         bFinish = (Button) findViewById(R.id.bFinish);

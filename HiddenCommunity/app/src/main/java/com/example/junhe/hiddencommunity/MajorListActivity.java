@@ -56,7 +56,7 @@ public class MajorListActivity extends AppCompatActivity {
         major_data.add(new MajorData("정밀·에너지·소재", "광학공학, 에너지공학, 반도체·세라믹공학, 섬유공학, 신소재공학, 재료공학"));
         major_data.add(new MajorData("컴퓨터·통신", "전산학·컴퓨터공학, 응용소프트웨어공학, 정보·통신공학"));
         major_data.add(new MajorData("화학", "화학공학"));
-        System.out.print("여기1");
+
         // ListView 가져오기
         final ListView major_list = (ListView) findViewById(R.id.MajorList);
 

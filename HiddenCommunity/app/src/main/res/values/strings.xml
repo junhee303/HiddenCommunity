@@ -3,11 +3,17 @@
     <string name="app_name">Hidden Community</string>
     <string name="board_prompt">게시판 선택</string>
 
+    <string name="action_move">Move</string>
+    <string name="action_notice">Notice</string>
+    <string name="action_bookmark">Bookmark</string>
+    <string name="action_settings">Settings</string>
+
     <string-array name="board_arrays">
         <item>전공1 게시판</item>
         <item>전공2 게시판</item>
         <item>전공3 게시판</item>
         <item>자유 게시판</item>
     </string-array>
+
 
 </resources>

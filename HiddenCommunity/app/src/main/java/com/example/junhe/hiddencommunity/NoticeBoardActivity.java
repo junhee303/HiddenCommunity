@@ -24,6 +24,8 @@ public class NoticeBoardActivity extends AppCompatActivity {
     private ArrayList<BoardData> board_data = new ArrayList<BoardData>();
     Context mContext = this;
 
+    ListView board_list;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,14 +55,16 @@ public class NoticeBoardActivity extends AppCompatActivity {
         board_data.add(new BoardData("제목", "닉네임", "날짜", "내용"));
         board_data.add(new BoardData("제목", "닉네임", "날짜", "내용"));
         board_data.add(new BoardData("제목", "닉네임", "날짜", "내용"));
-
-
+        board_data.add(new BoardData("제목", "닉네임", "날짜", "내용")); //서버에서 받아와야함
         // ListView 가져오기
-        ListView board_list = (ListView) findViewById(R.id.Boardlist);
-
-        NoticeBoardAdapter adapter = new NoticeBoardAdapter(mContext, 0, board_data);
+        board_list = (ListView) findViewById(R.id.board_list);
+        BoardListAdapter adapter = new BoardListAdapter(mContext, 0, board_data);
         // ListView에 각각의 전공표시를 제어하는 Adapter를 설정
         board_list.setAdapter(adapter);
+
+        // ListView 가져오기
+        ListView board_list = (ListView) findViewById(R.id.board_list);
+
 
         // 전공 클릭시 이벤트 리스너 등록
         board_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -110,7 +114,47 @@ public class NoticeBoardActivity extends AppCompatActivity {
         }
     }
 
+    private class BoardListAdapter extends ArrayAdapter<BoardData> {
 
+        private ArrayList<BoardData> mBoardData;
+
+        public BoardListAdapter(Context context, int resource, ArrayList<BoardData> boardData) {
+            super(context, resource, boardData);
+
+            mBoardData = boardData;
+        }
+
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+            View rowView = inflater.inflate(R.layout.list_board, null, true);
+
+            TextView txtTitle = (TextView) rowView.findViewById(R.id.Title);
+            TextView txtNickname = (TextView) rowView.findViewById(R.id.Nickname);
+            TextView txtDate = (TextView) rowView.findViewById(R.id.Date);
+            TextView txtContent = (TextView) rowView.findViewById(R.id.Content);
+
+            TextView txtTag = (TextView) rowView.findViewById(R.id.Tag);
+            TextView txtHit = (TextView) rowView.findViewById(R.id.count_hit);
+            TextView txtLike = (TextView) rowView.findViewById(R.id.count_like);
+            TextView txtComment = (TextView) rowView.findViewById(R.id.count_comment);
+
+            txtTitle.setText(mBoardData.get(position).getTitle());
+            txtNickname.setText(mBoardData.get(position).getNickname());
+            txtDate.setText(mBoardData.get(position).getDate());
+            txtContent.setText(mBoardData.get(position).getContent());
+
+//            txtTag.setText(mBoardData.get(position).getTag());
+//            txtHit.setText(mBoardData.get(position).getCountHit());
+//            txtLike.setText(mBoardData.get(position).getCountLike());
+//            txtComment.setText(mBoardData.get(position).getCountComment());
+
+            return rowView;
+//            return super.getView(position, convertView, parent);
+        }
+    }
 }
 
 

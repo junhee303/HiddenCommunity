@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- Action Bar에 버튼을 추가하기 위해서는 <item> 사용 -->
+    <!-- 글 목록으로 이동 버튼 -->
+    <item
+        android:id="@+id/move_boardList_btn"
+        android:icon="@drawable/ic_action_move"
+        android:title="@string/action_move"
+        app:showAsAction="always" />
+
+    <!--&lt;!&ndash; 알림 버튼 &ndash;&gt;-->
+    <!--<item-->
+        <!--android:id="@+id/notice_btn"-->
+        <!--android:icon="@drawable/ic_action_notice"-->
+        <!--android:title="@string/action_notice"-->
+        <!--android:showAsAction="always"/>-->
+
+    <!--&lt;!&ndash; 북마크 버튼 &ndash;&gt;-->
+    <!--<item-->
+        <!--android:id="@+id/bookmark_btn"-->
+        <!--android:icon="@drawable/ic_action_bookmark"-->
+        <!--android:title="@string/action_bookmark"-->
+        <!--android:showAsAction="always"/>-->
+
+    <!-- 세팅 버튼 -->
+    <item
+        android:id="@+id/setting_btn"
+        android:icon="@drawable/ic_action_settings"
+        android:title="@string/action_settings"
+        app:showAsAction="always"/>
+
+</menu>

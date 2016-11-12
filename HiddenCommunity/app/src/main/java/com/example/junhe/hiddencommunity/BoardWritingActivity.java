@@ -1,17 +1,17 @@
 package com.example.junhe.hiddencommunity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import data.BoardData;
 
 public class BoardWritingActivity extends AppCompatActivity {
 
@@ -20,6 +20,8 @@ public class BoardWritingActivity extends AppCompatActivity {
     private EditText Content;
     private EditText Tag;
     private Button bPost;
+
+    private ArrayList<BoardData> board_data = new ArrayList<BoardData>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +93,10 @@ public class BoardWritingActivity extends AppCompatActivity {
                 intent.putExtra("content", content);
                 intent.putExtra("tag", tag);
                 startActivityForResult(intent, 1000);
+
+
+                // 게시글을 BoardData에 저장?? -> 안됨 ㅠ 클래스 달라서 안 넘어가나
+                board_data.add(new BoardData(Title.getText().toString(), "닉네임", "날짜",  Content.getText().toString()));
 
             }
         });

@@ -59,6 +59,21 @@
             android:layout_marginTop="40dp"
             android:layout_marginBottom="30dp"
             />
+
+        <TextView
+            android:id="@+id/Tag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="#태그"
+            android:textColorHint="#FFCCCACA"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:textColor="#88bec9"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="30dp"
+            />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

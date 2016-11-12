@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 
-
 public class LoginActivity extends AppCompatActivity {
 
     private ImageView img_Logo;
@@ -21,6 +20,11 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        inputEmail(); // 인증 받을 메일 입력
+    }
+
+    public void inputEmail() {
 
         img_Logo = (ImageView) findViewById(R.id.img_Logo);
         etEmail = (EditText) findViewById(R.id.etEmail);
@@ -34,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
-               // new Thread(ask).start();
+                // new Thread(ask).start();
 
 //                Intent intent = new Intent(getApplicationContext(), EmailActivity.class);
 //                // 여기서 입력한 메일주소로 인증 메일 전송 + 다음 화면으로 전달
@@ -44,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 //게시판 만들기 편하게 메일 입력에서 바로 게시판 뛰어넘게 해둠 / 나중에 경로 다시 수정
 
-                Intent intent = new Intent(getApplicationContext(), NoticeBoardActivity.class);
+                Intent intent = new Intent(getApplicationContext(), BoardWritingActivity.class);
                 startActivityForResult(intent, 1000);
 
             }

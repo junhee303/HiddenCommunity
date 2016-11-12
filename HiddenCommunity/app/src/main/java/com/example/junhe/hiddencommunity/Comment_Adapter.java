@@ -1,7 +1,5 @@
 package com.example.junhe.hiddencommunity;
 
-import android.content.Context;
-
 import data.CommentData;
 
 /**
