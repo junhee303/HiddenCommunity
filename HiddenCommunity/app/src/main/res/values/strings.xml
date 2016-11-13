@@ -4,9 +4,11 @@
     <string name="board_prompt">게시판 선택</string>
 
     <string name="action_move">Move</string>
-    <string name="action_notice">Notice</string>
-    <string name="action_bookmark">Bookmark</string>
+    <string name="알림">알림</string>
+    <string name="북마크">북마크</string>
     <string name="action_settings">Settings</string>
+    <string name="대화하기">대화하기</string>
+    <string name="신고하기">신고하기</string>
 
     <string-array name="board_arrays">
         <item>전공1 게시판</item>

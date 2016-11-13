@@ -1,20 +1,57 @@
 package com.example.junhe.hiddencommunity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.IOException;
 
 public class LoginActivity extends AppCompatActivity {
 
     private ImageView img_Logo;
     private EditText etEmail;
     private Button bSendEmail;
+
+    String testurl,result;
+    class TestTask extends AsyncTask<String,Void,String> {
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                result = HTTPInstance.Instance().Post(testurl);
+                onResponseHttp(result);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+    TestTask _test;
+
+    void onResponseHttp(String s){
+        if(s == null) {
+
+            return;
+        }
+        Log.d("RESPONSE", s);
+        if(s.compareTo("ok")==0){
+            Intent intent = new Intent(getApplicationContext(), EmailActivity.class);
+            String email = etEmail.getText().toString();
+            intent.putExtra("email",email);
+            startActivityForResult(intent, 1000);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +77,19 @@ public class LoginActivity extends AppCompatActivity {
 
                 // new Thread(ask).start();
 
-//                Intent intent = new Intent(getApplicationContext(), EmailActivity.class);
 //                // 여기서 입력한 메일주소로 인증 메일 전송 + 다음 화면으로 전달
-//                String email = etEmail.getText().toString();
+                String email = etEmail.getText().toString();
+                testurl = "http://52.78.207.133:3000/send/email/" + email.toString();
+                _test = new TestTask();
+                _test.execute();
+
 //                intent.putExtra("email",email);
 //                startActivityForResult(intent, 1000);
 
                 //게시판 만들기 편하게 메일 입력에서 바로 게시판 뛰어넘게 해둠 / 나중에 경로 다시 수정
 
-                Intent intent = new Intent(getApplicationContext(), BoardWritingActivity.class);
-                startActivityForResult(intent, 1000);
+                //Intent intent = new Intent(getApplicationContext(), BoardWritingActivity.class);
+                //startActivityForResult(intent, 1000);
 
             }
         });

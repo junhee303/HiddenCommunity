@@ -54,7 +54,7 @@ public class BoardReadingActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_, menu);
+        inflater.inflate(R.menu.board_reading_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
     @Override

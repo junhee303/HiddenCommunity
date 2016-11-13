@@ -1,16 +1,21 @@
 package com.example.junhe.hiddencommunity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -30,6 +35,45 @@ public class RegisterActivity extends AppCompatActivity {
     private ImageView nicknameError;
     private String server_nickname;
     private int count_major;
+
+    String url,result;
+    private ProgressDialog mProgressDialog;
+    class RegisterTask extends AsyncTask<String,Void,String> {
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                result = HTTPInstance.Instance().Post(url);
+                onResponseHttp(result);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    RegisterTask registerTask;
+
+    private void onResponseHttp(String s){
+        if(s == null) {
+//            mProgressDialog = ProgressDialog.show(.this,"",
+//                    "잠시만 기다려 주세요.",true);
+            System.out.println("회원 정보를 정확히 입력해주세요");
+            return;
+        }
+        Log.d("RESPONSE", s);
+        if(s.compareTo("ok")==0){
+            System.out.println("가입이 완료되었습니다.");
+            Intent intent = new Intent(getApplicationContext(), NoticeBoardActivity.class);
+            startActivityForResult(intent, 1000);
+        } else {
+
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,13 +247,25 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
-                Intent intent = new Intent(getApplicationContext(), BoardWritingActivity.class);
-                startActivityForResult(intent, 1000);
+                Bundle extras = getIntent().getExtras();
+                String email = extras.getString("email");
+                String password = etPassword.getText().toString();
+                String password_confirm = etPasswordConfirm.getText().toString();
+                String nickname = etNickname.getText().toString();
+                String major1 = etMajor1.getText().toString();
+                url = "http://52.78.207.133:3000/send/user/info?";
+                url += "email=" + email;
+                url += "&password=" + password;
+                url += "&nickname=" + nickname;
+                url += "&major1=" + major1;
+                url += "&major2=";
+                url += "&major3=";
+                registerTask = new RegisterTask();
+                registerTask.execute();
 
             }
         });
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

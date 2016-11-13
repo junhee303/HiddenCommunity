@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <!-- Action Bar에 버튼을 추가하기 위해서는 <item> 사용 -->
+    <!-- 세팅 버튼 -->
+    <item
+        android:id="@+id/writing_btn"
+        android:icon="@drawable/ic_action_write"
+        android:title="@string/action_settings"
+        app:showAsAction="ifRoom">
+    </item>
+
+</menu>
