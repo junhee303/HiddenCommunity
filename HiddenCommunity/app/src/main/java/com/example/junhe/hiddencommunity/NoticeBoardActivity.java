@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,28 +22,27 @@ import data.BoardData;
 
 
 public class NoticeBoardActivity extends AppCompatActivity {
-
-//    TextView input_title;
-//    TextView input_content;
-
     private ArrayList<BoardData> board_data = new ArrayList<BoardData>();
     Context mContext = this;
-
     ListView board_list;
+
+    private Toolbar bottom_toolbar;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.notice_board, menu);
+        //inflater.inflate(R.menu.notice_board, menu);
+        inflater.inflate(R.menu.bottom_navigation, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // TODO Auto-generated method stub
         switch (item.getItemId()) {
-            case R.id.writing_btn:
+            case R.id.action_write:
                 Intent intent = new Intent(getApplicationContext(), BoardWritingActivity.class);
                 startActivityForResult(intent, 1000);
                 return true;
@@ -55,13 +55,15 @@ public class NoticeBoardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notice_board);
+        setTitle(null);
 
-//        input_title = (TextView) findViewById(R.id.Title);
+        bottom_toolbar = (Toolbar) findViewById(R.id.bottom_toolbar);
+        setSupportActionBar(bottom_toolbar);
+
         TextView Title = (TextView) findViewById(R.id.Title);
         TextView Nickname = (TextView) findViewById(R.id.Nickname);
         TextView Date = (TextView) findViewById(R.id.Date);
         TextView Content = (TextView) findViewById(R.id.Content);
-//        input_content = (TextView) findViewById(R.id.Content);
 
         //BoardWritingActivity에서 제목,내용 받아오고, 사용자 정보에서 닉네임 받아오고, 날짜 받아오기
 //        Bundle extras1 = getIntent().getExtras();
@@ -96,7 +98,7 @@ public class NoticeBoardActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-               ListView major_list = (ListView) parent;
+                ListView major_list = (ListView) parent;
                 // TODO 아이템 클릭시에 구현할 내용은 여기에.
                 // 전공 선택시 RegisterActivity의 etMajor에 전달되어야 함☆☆☆☆☆
 
@@ -120,8 +122,8 @@ public class NoticeBoardActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
-            View rowView= inflater.inflate(R.layout.list_board, null, true);
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+            View rowView = inflater.inflate(R.layout.list_board, null, true);
 
             TextView txtinput_title = (TextView) rowView.findViewById(R.id.Title);
             TextView txtNickname = (TextView) rowView.findViewById(R.id.Nickname);

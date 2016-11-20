@@ -6,7 +6,7 @@
     <!-- 세팅 버튼 -->
     <item
         android:id="@+id/writing_btn"
-        android:icon="@drawable/ic_action_write"
+        android:icon="@drawable/ic_action_write2"
         android:title="@string/action_settings"
         app:showAsAction="ifRoom">
     </item>
