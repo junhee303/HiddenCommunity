@@ -1,67 +1,118 @@
-//package com.example.junhe.hiddencommunity;
-//
-//import android.app.Activity;
-//import android.os.Bundle;
-//import android.support.v4.view.ViewPager;
-//import android.view.View;
-//
-///**
-// * Created by junhe on 2016-11-21.
-// */
-//
-//public class SwipeBoardActivity extends Activity {
-//
-//    ViewPager pager;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_swipe_board);
-//
-//        pager= (ViewPager)findViewById(R.id.pager);
-//
-//        //ViewPager에 설정할 Adapter 객체 생성
-//        //ListView에서 사용하는 Adapter와 같은 역할.
-//        //다만. ViewPager로 스크롤 될 수 있도록 되어 있다는 것이 다름
-//        //PagerAdapter를 상속받은 CustomAdapter 객체 생성
-//        //CustomAdapter에게 LayoutInflater 객체 전달
-//        CustomAdapter adapter= new CustomAdapter(getLayoutInflater());
-//
-//        //ViewPager에 Adapter 설정
-//        pager.setAdapter(adapter);
-//
-//    }
-//
-//    //onClick속성이 지정된 View를 클릭했을때 자동으로 호출되는 메소드
-//    public void mOnClick(View v){
-//
-//        int position;
-//
-//        switch( v.getId() ){
-//            case R.id.btn_previous://이전버튼 클릭
-//
-//                position=pager.getCurrentItem();//현재 보여지는 아이템의 위치를 리턴
-//
-//                //현재 위치(position)에서 -1 을 해서 이전 position으로 변경
-//                //이전 Item으로 현재의 아이템 변경 설정(가장 처음이면 더이상 이동하지 않음)
-//                //첫번째 파라미터: 설정할 현재 위치
-//                //두번째 파라미터: 변경할 때 부드럽게 이동하는가? false면 팍팍 바뀜
-//                pager.setCurrentItem(position-1,true);
-//
-//                break;
-//
-//            case R.id.btn_next://다음버튼 클릭
-//
-//                position=pager.getCurrentItem();//현재 보여지는 아이템의 위치를 리턴
-//
-//                //현재 위치(position)에서 +1 을 해서 다음 position으로 변경
-//                //다음 Item으로 현재의 아이템 변경 설정(가장 마지막이면 더이상 이동하지 않음)
-//                //첫번째 파라미터: 설정할 현재 위치
-//                //두번째 파라미터: 변경할 때 부드럽게 이동하는가? false면 팍팍 바뀜
-//                pager.setCurrentItem(position+1,true);
-//
-//                break;
-//        }
-//
-//    }
-//}
+package com.example.junhe.hiddencommunity;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+import android.widget.Toolbar;
+
+import java.util.ArrayList;
+
+import data.BoardData;
+
+
+/**
+ * Created by junhe on 2016-11-21.
+ */
+
+public class SwipeBoardActivity extends AppCompatActivity {
+    Context mContext = this;
+    private ArrayList<BoardData> board_data = new ArrayList<BoardData>();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_swipe_board);
+
+        // Initializing ViewPager
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        MyAdapter adapter = new MyAdapter(getSupportFragmentManager());
+        adapter.addFragment(new MyFragment(), "자유 게시판");
+        adapter.addFragment(new MyFragment(), "전공1 게시판");
+        adapter.addFragment(new MyFragment(), "전공2 게시판");
+        adapter.addFragment(new MyFragment(), "전공3 게시판");
+        viewPager.setAdapter(adapter);
+
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Toolbar bottom_toolbar;
+
+        getMenuInflater().inflate(R.menu.bottom_navigation, menu);
+        return true;
+    }
+
+    private class NoticeBoardAdapter extends ArrayAdapter<BoardData> {
+
+        private ArrayList<BoardData> mBoardData;
+
+        public NoticeBoardAdapter(Context context, int resource, ArrayList<BoardData> boardData) {
+            super(context, resource, boardData);
+
+            mBoardData = boardData;
+        }
+
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+            View rowView = inflater.inflate(R.layout.list_board, null, true);
+
+            TextView txtinput_title = (TextView) rowView.findViewById(R.id.Title);
+            TextView txtNickname = (TextView) rowView.findViewById(R.id.Nickname);
+            TextView txtDate = (TextView) rowView.findViewById(R.id.Date);
+            TextView txtinput_content = (TextView) rowView.findViewById(R.id.Content);
+
+            txtinput_title.setText((CharSequence) mBoardData.get(position).getTitle());
+            txtNickname.setText((CharSequence) mBoardData.get(position).getNickname());
+            txtDate.setText((CharSequence) mBoardData.get(position).getDate());
+            txtinput_content.setText((CharSequence) mBoardData.get(position).getContent());
+
+            return rowView;
+//            return super.getView(position, convertView, parent);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // TODO Auto-generated method stub
+        switch (item.getItemId()) {
+            case R.id.action_home:
+                Intent intent1 = new Intent(getApplicationContext(), SwipeBoardActivity.class);
+                startActivityForResult(intent1, 1000);
+                return true;
+//            case R.id.action_chat:
+//                Intent intent2 = new Intent(getApplicationContext(), ChattingActivity.class);
+//                startActivityForResult(intent2, 1000);
+//                return true;
+//            case R.id.action_search:
+//                Intent intent3 = new Intent(getApplicationContext(), SearchActivity.class);
+//                startActivityForResult(intent3, 1000);
+//                return true;
+//            case R.id.action_notice:
+//                Intent intent4 = new Intent(getApplicationContext(), NoticeActivity.class);
+//                startActivityForResult(intent4, 1000);
+//                return true;
+            case R.id.action_write:
+                Intent intent5 = new Intent(getApplicationContext(), BoardWritingActivity.class);
+                startActivityForResult(intent5, 1000);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+}

@@ -2,6 +2,7 @@ package com.example.junhe.hiddencommunity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -39,6 +43,8 @@ public class RegisterActivity extends AppCompatActivity {
     private int count_major;
 
     String url,result;
+
+
     private ProgressDialog mProgressDialog;
     class RegisterTask extends AsyncTask<String,Void,String> {
         @Override
@@ -51,6 +57,20 @@ public class RegisterActivity extends AppCompatActivity {
             try {
                 result = HTTPInstance.Instance().Post(url);
                 onResponseHttp(result);
+
+                try
+                {
+                    JSONObject jsonObject = new JSONObject(result.toString());
+                    String resultSessionId = jsonObject.getString("sessionID");
+                    String resultMemberId = jsonObject.getString("memberID");
+                    System.out.println("서버에서 받아온 JSON 파싱!!");
+                    System.out.println(resultSessionId+"\n"+resultMemberId);
+                }
+                catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -104,6 +124,8 @@ public class RegisterActivity extends AppCompatActivity {
         addMajor(); // [+] 버튼 클릭 시 전공 최대 3개 등록 가능
         selectMajor(); // 전공 입력 부분 클릭 시 MajorActivity로 넘어감
         pushStartButton(); // 정보 입력 유무 확인 및 가입 완료
+
+
 
     }
 
@@ -257,6 +279,13 @@ public class RegisterActivity extends AppCompatActivity {
                 String major2 = etMajor2.getText().toString();
                 String major3 = etMajor3.getText().toString();
 
+                SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
+
+                SharedPreferences.Editor editor = test.edit();
+
+                editor.putString("UserInfo", email); //UserInfo라는 파일에 email 데이터를 저장한다.
+
+                editor.commit(); //완료한다.
 
                try{
                 url = "http://52.78.207.133:3000/members/addInfo?";

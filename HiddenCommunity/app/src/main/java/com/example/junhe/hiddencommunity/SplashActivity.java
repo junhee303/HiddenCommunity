@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import java.io.IOException;
-
 /**
  * Created by junhe on 2016-11-20.
  */
@@ -57,27 +55,39 @@ public class SplashActivity extends AppCompatActivity {
         session_check.execute();
 
 
-//              //  게시판 만들기 편하게 메일 입력에서 바로 게시판 뛰어넘게 해둠 / 나중에 경로 다시 수정
+              //  게시판 만들기 편하게 메일 입력에서 바로 게시판 뛰어넘게 해둠 / 나중에 경로 다시 수정
+
+                Intent intent = new Intent(getApplicationContext(), SwipeBoardActivity.class);
+                startActivityForResult(intent, 1000);
+
+//        SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
 //
-//                Intent intent = new Intent(getApplicationContext(), NoticeBoardActivity.class);
-//                startActivityForResult(intent, 1000);
-
-
+//        String email = test.getString("UserInfo", null);
+//
+//        if(getSharedPreferences("test", MODE_PRIVATE) != null) {
+//            Intent intent = new Intent(getApplicationContext(), NoticeBoardActivity.class);
+//            startActivityForResult(intent, 1000);
+//            System.out.println("사용자 세션 존재하므로 게시판 화면으로 이동");
+//        } else if (getSharedPreferences("test", MODE_PRIVATE) == null){
+//            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//            startActivityForResult(intent, 1000);
+//            System.out.println("사용자 세션 없으므로 로그인 화면으로 이동");
+//        }
 
     }
 
     void onResponseHttp(String s) {
         System.out.println("서버에서 넘어온 RESPONSE는" + s);
 
-        Log.d("RESPONSE", s);
-        if (s.compareTo("board") == 0) {
-            Intent intent = new Intent(getApplicationContext(), NoticeBoardActivity.class);
-            startActivityForResult(intent, 1000);
-            System.out.println("사용자 세션 존재하므로 게시판 화면으로 이동");
-        } else if (s.compareTo("email") == 0){
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivityForResult(intent, 1000);
-            System.out.println("사용자 세션 없으므로 로그인 화면으로 이동");
-        }
+//        Log.d("RESPONSE", s);
+//        if (s.compareTo("board") == 0) {
+//            Intent intent = new Intent(getApplicationContext(), NoticeBoardActivity.class);
+//            startActivityForResult(intent, 1000);
+//            System.out.println("사용자 세션 존재하므로 게시판 화면으로 이동");
+//        } else if (s.compareTo("email") == 0){
+//            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//            startActivityForResult(intent, 1000);
+//            System.out.println("사용자 세션 없으므로 로그인 화면으로 이동");
+//        }
     }
 }

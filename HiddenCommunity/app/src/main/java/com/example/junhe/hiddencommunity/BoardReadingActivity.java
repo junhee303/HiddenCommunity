@@ -236,7 +236,7 @@ public class BoardReadingActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.move_boardList_btn:
                 text = "click the move button";
-                Intent intent = new Intent(BoardReadingActivity.this, NoticeBoardActivity.class);
+                Intent intent = new Intent(BoardReadingActivity.this, SwipeBoardActivity.class);
                 startActivityForResult(intent, 1000);
 
                 break;
