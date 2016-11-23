@@ -55,12 +55,21 @@ public class BoardReadingActivity extends AppCompatActivity {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.board_reading_menu, menu);
+
         return super.onCreateOptionsMenu(menu);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board_reading);
+
+//        top_toolbar = (Toolbar) findViewById(R.id.top_toolbar);
+//        setSupportActionBar(top_toolbar);
+
+//        bottom_toolbar = (Toolbar) findViewById(R.id.bottom_toolbar);
+//        setSupportActionBar(bottom_toolbar);
+
 
         scrollView = (ScrollView) findViewById(R.id.scrollView);
 

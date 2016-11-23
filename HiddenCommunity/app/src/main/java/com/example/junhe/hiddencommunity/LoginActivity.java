@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                 String email = etEmail.getText().toString();
 
                 if (email.matches(".*.ac.kr.*")) {
-                    testurl = "http://52.78.207.133:3000/send/email/" + email.toString();
+                    testurl = "http://52.78.207.133:3000/emails/send/" + email.toString();
                     _test = new TestTask();
                     _test.execute();
                 } else {

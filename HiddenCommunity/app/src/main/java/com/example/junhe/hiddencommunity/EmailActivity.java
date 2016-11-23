@@ -94,7 +94,7 @@ public class EmailActivity extends AppCompatActivity {
         bFinish.setOnClickListener(new View.OnClickListener() {
             // 대학교 메일을 통한 인증 완료시에만 인증완료 가능하게 하기!!☆☆
             public void onClick(View v) {
-                url = "http://52.78.207.133:3000/send/user/validate?email="+input_email.getText();
+                url = "http://52.78.207.133:3000/emails/validate/"+input_email.getText();
                 validateTask = new ValidateTask();
                 validateTask.execute();
             }

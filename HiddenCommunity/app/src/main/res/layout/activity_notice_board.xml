@@ -9,12 +9,6 @@
     android:orientation="vertical"
     android:weightSum="1">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp">
-
-    </RelativeLayout>
-
     <ListView
         android:id="@+id/board_list"
         android:layout_width="fill_parent"
@@ -30,4 +24,8 @@
         android:id="@+id/bottom_toolbar"
         layout="@layout/bottom_toolbar"
         ></include>
+
+
+
+
 </LinearLayout>

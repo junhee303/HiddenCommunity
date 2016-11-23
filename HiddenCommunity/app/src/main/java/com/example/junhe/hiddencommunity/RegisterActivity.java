@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -250,16 +252,27 @@ public class RegisterActivity extends AppCompatActivity {
                 Bundle extras = getIntent().getExtras();
                 String email = extras.getString("email");
                 String password = etPassword.getText().toString();
-                String password_confirm = etPasswordConfirm.getText().toString();
                 String nickname = etNickname.getText().toString();
                 String major1 = etMajor1.getText().toString();
-                url = "http://52.78.207.133:3000/send/user/info?";
-                url += "email=" + email;
-                url += "&password=" + password;
-                url += "&nickname=" + nickname;
-                url += "&major1=" + major1;
-                url += "&major2=";
-                url += "&major3=";
+                String major2 = etMajor2.getText().toString();
+                String major3 = etMajor3.getText().toString();
+
+
+               try{
+                url = "http://52.78.207.133:3000/members/addInfo?";
+                url += "email=" + URLEncoder.encode(email, "utf-8");
+                url += "&password=" + URLEncoder.encode(password, "utf-8");
+                url += "&nickname=" + URLEncoder.encode(nickname, "utf-8");
+                url += "&major1=" + URLEncoder.encode(major1, "utf-8");
+                url += "&major2=" + URLEncoder.encode(major2, "utf-8");
+                url += "&major3=" + URLEncoder.encode(major3, "utf-8");
+
+//                // 안되면 String.format() 써보기
+//                try {
+//                    url = URLEncoder.encode(url, "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                 registerTask = new RegisterTask();
                 registerTask.execute();
 
