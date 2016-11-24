@@ -23,8 +23,7 @@
         android:layout_height="match_parent" />
 
     <include
-    android:id="@+id/bottom_toolbar"
-    layout="@layout/bottom_toolbar"
-    ></include>
+        android:id="@+id/bottom_toolbar"
+        layout="@layout/bottom_toolbar"></include>
 
 </LinearLayout>

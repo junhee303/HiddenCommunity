@@ -42,11 +42,12 @@ public class RegisterActivity extends AppCompatActivity {
     private String server_nickname;
     private int count_major;
 
-    String url,result;
+    String url, result;
 
 
     private ProgressDialog mProgressDialog;
-    class RegisterTask extends AsyncTask<String,Void,String> {
+
+    class RegisterTask extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
 
@@ -57,20 +58,6 @@ public class RegisterActivity extends AppCompatActivity {
             try {
                 result = HTTPInstance.Instance().Post(url);
                 onResponseHttp(result);
-
-                try
-                {
-                    JSONObject jsonObject = new JSONObject(result.toString());
-                    String resultSessionId = jsonObject.getString("sessionID");
-                    String resultMemberId = jsonObject.getString("memberID");
-                    System.out.println("서버에서 받아온 JSON 파싱!!");
-                    System.out.println(resultSessionId+"\n"+resultMemberId);
-                }
-                catch (JSONException e)
-                {
-                    e.printStackTrace();
-                }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -80,15 +67,15 @@ public class RegisterActivity extends AppCompatActivity {
 
     RegisterTask registerTask;
 
-    private void onResponseHttp(String s){
-        if(s == null) {
+    private void onResponseHttp(String s) {
+        if (s == null) {
 //            mProgressDialog = ProgressDialog.show(.this,"",
 //                    "잠시만 기다려 주세요.",true);
             System.out.println("회원 정보를 정확히 입력해주세요");
             return;
         }
         Log.d("RESPONSE", s);
-        if(s.compareTo("ok")==0){
+        if (s.compareTo("ok") == 0) {
             System.out.println("가입이 완료되었습니다.");
             Intent intent = new Intent(getApplicationContext(), NoticeBoardActivity.class);
             startActivityForResult(intent, 1000);
@@ -124,7 +111,6 @@ public class RegisterActivity extends AppCompatActivity {
         addMajor(); // [+] 버튼 클릭 시 전공 최대 3개 등록 가능
         selectMajor(); // 전공 입력 부분 클릭 시 MajorActivity로 넘어감
         pushStartButton(); // 정보 입력 유무 확인 및 가입 완료
-
 
 
     }
@@ -279,31 +265,51 @@ public class RegisterActivity extends AppCompatActivity {
                 String major2 = etMajor2.getText().toString();
                 String major3 = etMajor3.getText().toString();
 
+                // 자동 로그인위해 SharedPreferences 사용하여 "UserInfo"에 email 저장
                 SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
-
                 SharedPreferences.Editor editor = test.edit();
-
                 editor.putString("UserInfo", email); //UserInfo라는 파일에 email 데이터를 저장한다.
-
                 editor.commit(); //완료한다.
 
-               try{
-                url = "http://52.78.207.133:3000/members/addInfo?";
-                url += "email=" + URLEncoder.encode(email, "utf-8");
-                url += "&password=" + URLEncoder.encode(password, "utf-8");
-                url += "&nickname=" + URLEncoder.encode(nickname, "utf-8");
-                url += "&major1=" + URLEncoder.encode(major1, "utf-8");
-                url += "&major2=" + URLEncoder.encode(major2, "utf-8");
-                url += "&major3=" + URLEncoder.encode(major3, "utf-8");
-
-//                // 안되면 String.format() 써보기
-//                try {
-//                    url = URLEncoder.encode(url, "utf-8");
+                // 서버로 회원 정보 전달========> 이게 묶어서 user 당 저장되어 있으면 파싱으로 받아올 수 있지 않나
+                try {
+                    url = "http://52.78.207.133:3000/members/addInfo?";
+                    url += "email=" + URLEncoder.encode(email, "utf-8");
+                    url += "&password=" + URLEncoder.encode(password, "utf-8");
+                    url += "&nickname=" + URLEncoder.encode(nickname, "utf-8");
+                    url += "&major1=" + URLEncoder.encode(major1, "utf-8");
+                    url += "&major2=" + URLEncoder.encode(major2, "utf-8");
+                    url += "&major3=" + URLEncoder.encode(major3, "utf-8");
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
                 registerTask = new RegisterTask();
                 registerTask.execute();
+
+                // JSON 변환 후 서버에 보내기
+                String userInfo_temp = "{\"email\"" + ":" + "\"" + email + "\"" + ","
+                        + "\"password\"" + ":" + "\"" + password + "\"" + ","
+                        + "\"nickname\"" + ":" + "\"" + nickname + "\"" + ","
+                        + "\"major1\"" + ":" + "\"" + major1 + "\"" + ","
+                        + "\"major2\"" + ":" + "\"" + major2 + "\"" + ","
+                        + "\"major3\"" + ":" + "\"" + major3 + "\"" + "}";
+                System.out.println(userInfo_temp);
+
+                // 서버에서 받아온 JSON 파싱
+                try {
+                    JSONObject jsonObject = new JSONObject(result.toString());
+                    String resultUserEmail = jsonObject.getString("email");
+                    String resultUserNickname = jsonObject.getString("nickname");
+                    String resultUserPassword = jsonObject.getString("password");
+                    String resultUserMajor1 = jsonObject.getString("major1");
+                    String resultUserMajor2 = jsonObject.getString("major2");
+                    String resultUserMajor3= jsonObject.getString("major3");
+                    System.out.println("서버에서 받아온 JSON 파싱!!");
+                    System.out.println(resultUserEmail + "\n" + resultUserNickname + "\n" + resultUserPassword + "\n" + resultUserMajor1+ "\n" + resultUserMajor2+ "\n" + resultUserMajor3);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
 
             }
         });
