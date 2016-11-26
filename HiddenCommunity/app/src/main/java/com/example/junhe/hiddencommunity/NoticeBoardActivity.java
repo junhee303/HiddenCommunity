@@ -1,14 +1,10 @@
 package com.example.junhe.hiddencommunity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -30,57 +26,24 @@ public class NoticeBoardActivity extends AppCompatActivity {
 
     private ViewPager pager;
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu items for use in the action bar
-        MenuInflater inflater = getMenuInflater();
-        //inflater.inflate(R.menu.notice_board, menu);
-        inflater.inflate(R.menu.bottom_navigation, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // TODO Auto-generated method stub
-        switch (item.getItemId()) {
-            case R.id.action_home:
-                Intent intent1 = new Intent(getApplicationContext(), NoticeBoardActivity.class);
-                startActivityForResult(intent1, 1000);
-                return true;
-//            case R.id.action_chat:
-//                Intent intent2 = new Intent(getApplicationContext(), ChattingActivity.class);
-//                startActivityForResult(intent2, 1000);
-//                return true;
-//            case R.id.action_search:
-//                Intent intent3 = new Intent(getApplicationContext(), SearchActivity.class);
-//                startActivityForResult(intent3, 1000);
-//                return true;
-//            case R.id.action_notice:
-//                Intent intent4 = new Intent(getApplicationContext(), NoticeActivity.class);
-//                startActivityForResult(intent4, 1000);
-//                return true;
-            case R.id.action_write:
-                Intent intent5 = new Intent(getApplicationContext(), BoardWritingActivity.class);
-                startActivityForResult(intent5, 1000);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
+    //    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu items for use in the action bar
+//        MenuInflater inflater = getMenuInflater();
+//        //inflater.inflate(R.menu.notice_board, menu);
+//        inflater.inflate(R.menu.bottom_navigation, menu);
+//        return super.onCreateOptionsMenu(menu);
+//    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notice_board);
         //setTitle(null);
 
-
         TextView Title = (TextView) findViewById(R.id.Title);
         TextView Nickname = (TextView) findViewById(R.id.Nickname);
         TextView Date = (TextView) findViewById(R.id.Date);
         TextView Content = (TextView) findViewById(R.id.Content);
-
 
         board_data.add(new BoardData("○○기업 인턴 정보 공유하려고 합니다", "carsilverstar", "2016-11-13", "이번에 ○○기업에서 인턴 모집하네요~ \n 링크 첨부할테니 참고하세요! \n\nhttp://blog.swcode.net/entry/Action-Bar%EC%97%90-%EB%B2%84%ED%8A%BC-%EC%B6%94%EA%B0%80%ED%95%98%EA%B8%B0-1")); //서버에서 받아와야함
         board_data.add(new BoardData("안드로이드 스튜디오 해보신 분 있으신가요??", "재주훈", "2016-11-12", "이번에 전공 수업에서 앱을 만드는 프로젝트가 있는데, 안드로이드를 처음 써봐서 모르겠는게 너무 많네요ㅠㅠ\n도움 주실 수 있는 분 댓글이나 채팅 부탁드립니다!! "));
@@ -95,18 +58,16 @@ public class NoticeBoardActivity extends AppCompatActivity {
 
         // 게시글 클릭시 이벤트 리스너 등록
         board_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 ListView board_list = (ListView) parent;
                 // TODO 아이템 클릭시에 구현할 내용은 여기에.
                 // 전공 선택시 RegisterActivity의 etMajor에 전달되어야 함☆☆☆☆☆
             }
-
         });
 
     }
+
 
     private class NoticeBoardAdapter extends ArrayAdapter<BoardData> {
 

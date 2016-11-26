@@ -1,15 +1,23 @@
 package com.example.junhe.hiddencommunity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 import data.BoardData;
 
@@ -20,6 +28,51 @@ public class BoardWritingActivity extends AppCompatActivity {
     private EditText Content;
     private EditText Tag;
     private Button bPost;
+
+    String url, result;
+
+    private List<String> list = new ArrayList<String>();
+
+    class PostWritingTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                result = HTTPInstance.Instance().Post(url);
+                onResponseHttp(result);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    PostWritingTask postWritingTask;
+
+    private void onResponseHttp(String s) {
+        System.out.println(s);
+        if (s == null) {
+//            mProgressDialog = ProgressDialog.show(.this,"",
+//                    "잠시만 기다려 주세요.",true);
+            System.out.println("작성한 글이 등록되지 않았습니다.");
+            return;
+        }
+        Log.d("boardId", s);
+        if (s != null) { // 작성 게시글 id 넘어옴
+            System.out.println("작성한 글의 아이디는 :" + s);
+
+            Intent intent = new Intent(getApplicationContext(), BoardReadingActivity.class);
+            String boardId = s;
+            intent.putExtra("boardId", boardId);
+            startActivityForResult(intent, 1000);
+        } else {
+
+        }
+    }
 
     private ArrayList<BoardData> board_data = new ArrayList<BoardData>();
 
@@ -32,24 +85,37 @@ public class BoardWritingActivity extends AppCompatActivity {
         write_Board();
     }
 
-//    public void selectBoardOnSpinner() {
-//
-//        spinner = (Spinner) findViewById(R.id.spinner);
-//        List<String> list = new ArrayList<String>();
-//        list.add("자유 게시판");
-//        list.add("전공1 게시판");
-//        list.add("전공2 게시판");
-//        list.add("전공3 게시판");
-//        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-//                android.R.layout.simple_spinner_item, list);
-//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        spinner.setAdapter(dataAdapter);
-//    }
+    public void selectBoardOnSpinner() {
 
-    public void selectBoardOnSpinner(){
         spinner = (Spinner) findViewById(R.id.spinner);
-        spinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
+
+
+        SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
+        String major1 = test.getString("UserMajor1", "");
+        String major2 = test.getString("UserMajor2", "");
+        String major3 = test.getString("UserMajor3", "");
+
+        list.add("자유");
+        if (major1 != "") {
+            list.add(major1);
+        }
+        if (major2 != "") {
+            list.add(major2);
+        }
+        if (major3 != "") {
+            list.add(major3);
+        }
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(dataAdapter);
     }
+
+//    public void selectBoardOnSpinner(){
+//        spinner = (Spinner) findViewById(R.id.spinner);
+//        spinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
+//    }
 
     public void write_Board() {
         spinner = (Spinner) findViewById(R.id.spinner);
@@ -79,25 +145,43 @@ public class BoardWritingActivity extends AppCompatActivity {
                     return;
                 }
 
-//                Toast.makeText(BoardWritingActivity.this,String.valueOf(spinner.getSelectedItem())+" 선택",
-//                        Toast.LENGTH_SHORT).show();
+                SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
 
-                Intent intent = new Intent(getApplicationContext(), BoardReadingActivity.class);
-                // 여기서 입력한 메일주소로 인증 메일 전송 + 다음 화면으로 전달☆☆
-                String board = spinner.getSelectedItem().toString();
+                String major = spinner.getSelectedItem().toString();
                 String title = Title.getText().toString();
-                String content = Content.getText().toString();
+                String author = test.getString("UserNickname", null);
+                String body = Content.getText().toString();
                 String tag = Tag.getText().toString();
-                intent.putExtra("board",board);
-                intent.putExtra("title", title);
-                intent.putExtra("content", content);
-                intent.putExtra("tag", tag);
-                startActivityForResult(intent, 1000);
+
+                System.out.println(major+" / "+title+" / "+author+" / "+body+" / "+tag);
+
+                // 서버로 게시글 전달
+                try {
+                    url = "http://52.78.207.133:3000/boards/new?";
+                    url += "major=" + URLEncoder.encode(major, "utf-8");
+                    url += "&title=" + URLEncoder.encode(title, "utf-8");
+                    url += "&author=" + URLEncoder.encode(author, "utf-8");
+                    url += "&body=" + URLEncoder.encode(body, "utf-8");
+                    url += "&tag=" + URLEncoder.encode(tag, "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                postWritingTask = new PostWritingTask();
+                postWritingTask.execute();
 
 
-                // 게시글을 BoardData에 저장?? -> 안됨 ㅠ 클래스 달라서 안 넘어가나
-                board_data.add(new BoardData(Title.getText().toString(), "닉네임", "날짜",  Content.getText().toString()));
-
+//                Intent intent = new Intent(getApplicationContext(), BoardReadingActivity.class);
+//                // 여기서 입력한 메일주소로 인증 메일 전송 + 다음 화면으로 전달☆☆
+//                String board = spinner.getSelectedItem().toString();
+//                String title = Title.getText().toString();
+//                String content = Content.getText().toString();
+//                String tag = Tag.getText().toString();
+//                intent.putExtra("board", board);
+//                intent.putExtra("title", title);
+//                intent.putExtra("content", content);
+//                intent.putExtra("tag", tag);
+//                startActivityForResult(intent, 1000);
             }
         });
     }

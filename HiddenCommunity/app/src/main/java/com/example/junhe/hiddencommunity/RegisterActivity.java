@@ -16,9 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -77,7 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
         Log.d("RESPONSE", s);
         if (s.compareTo("ok") == 0) {
             System.out.println("가입이 완료되었습니다.");
-            Intent intent = new Intent(getApplicationContext(), NoticeBoardActivity.class);
+            Intent intent = new Intent(getApplicationContext(), BoardWritingActivity.class);
             startActivityForResult(intent, 1000);
         } else {
 
@@ -265,13 +262,8 @@ public class RegisterActivity extends AppCompatActivity {
                 String major2 = etMajor2.getText().toString();
                 String major3 = etMajor3.getText().toString();
 
-                // 자동 로그인위해 SharedPreferences 사용하여 "UserInfo"에 email 저장
-                SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
-                SharedPreferences.Editor editor = test.edit();
-                editor.putString("UserInfo", email); //UserInfo라는 파일에 email 데이터를 저장한다.
-                editor.commit(); //완료한다.
 
-                // 서버로 회원 정보 전달========> 이게 묶어서 user 당 저장되어 있으면 파싱으로 받아올 수 있지 않나
+                // 서버로 회원 정보 전달
                 try {
                     url = "http://52.78.207.133:3000/members/addInfo?";
                     url += "email=" + URLEncoder.encode(email, "utf-8");
@@ -283,33 +275,20 @@ public class RegisterActivity extends AppCompatActivity {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
+
                 registerTask = new RegisterTask();
                 registerTask.execute();
 
-                // JSON 변환 후 서버에 보내기
-                String userInfo_temp = "{\"email\"" + ":" + "\"" + email + "\"" + ","
-                        + "\"password\"" + ":" + "\"" + password + "\"" + ","
-                        + "\"nickname\"" + ":" + "\"" + nickname + "\"" + ","
-                        + "\"major1\"" + ":" + "\"" + major1 + "\"" + ","
-                        + "\"major2\"" + ":" + "\"" + major2 + "\"" + ","
-                        + "\"major3\"" + ":" + "\"" + major3 + "\"" + "}";
-                System.out.println(userInfo_temp);
+                // 자동 로그인위해 SharedPreferences 사용하여 UserInfo 데이터 저장
+                SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
+                SharedPreferences.Editor editor = test.edit();
+                editor.putString("UserEmail", email); // UserEmail 파일에 email 데이터를 저장
+                editor.putString("UserNickname", nickname); // UserNickname 파일에 nickname 데이터를 저장
+                editor.putString("UserMajor1", major1); // UserMajor1 파일에 major1 데이터를 저장
+                editor.putString("UserMajor2", major2); // UserMajor2 파일에 major2 데이터를 저장
+                editor.putString("UserMajor3", major3); // UserMajor3 파일에 major3 데이터를 저장
 
-                // 서버에서 받아온 JSON 파싱
-                try {
-                    JSONObject jsonObject = new JSONObject(result.toString());
-                    String resultUserEmail = jsonObject.getString("email");
-                    String resultUserNickname = jsonObject.getString("nickname");
-                    String resultUserPassword = jsonObject.getString("password");
-                    String resultUserMajor1 = jsonObject.getString("major1");
-                    String resultUserMajor2 = jsonObject.getString("major2");
-                    String resultUserMajor3= jsonObject.getString("major3");
-                    System.out.println("서버에서 받아온 JSON 파싱!!");
-                    System.out.println(resultUserEmail + "\n" + resultUserNickname + "\n" + resultUserPassword + "\n" + resultUserMajor1+ "\n" + resultUserMajor2+ "\n" + resultUserMajor3);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+                editor.commit(); //완료한다.
 
             }
         });

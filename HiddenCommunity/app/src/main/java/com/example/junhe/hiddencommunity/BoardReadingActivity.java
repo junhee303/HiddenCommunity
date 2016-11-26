@@ -4,8 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +24,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 import data.CommentData;
@@ -43,12 +50,50 @@ public class BoardReadingActivity extends AppCompatActivity {
 
     final Context context = this;
     //private TextView postedComment;
+    String url_boardId, result_boardId;
 
     private ArrayList<CommentData> comment_data = new ArrayList<CommentData>();
     Context mContext = this;
 
     ListView comment_list;
     ScrollView scrollView;
+
+    class PostReadingTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                result_boardId = HTTPInstance.Instance().Post(url_boardId);
+                System.out.println("PostReadingTask 부분에 있는 result_boardId 값 : " +result_boardId);
+                onResponseHttp(result_boardId);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    PostReadingTask postReadingTask;
+
+    private void onResponseHttp(String s) {
+        System.out.println(s);
+        if (s == null) {
+//            mProgressDialog = ProgressDialog.show(.this,"",
+//                    "잠시만 기다려 주세요.",true);
+            System.out.println("작성한 글을 받아오지 못하였습니다.");
+            return;
+        }
+        Log.d("board", s);
+        if (s != null) {
+            System.out.println("작성한 글을 받아왔습니다.");
+            System.out.println(s);
+        } else {
+
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -66,13 +111,10 @@ public class BoardReadingActivity extends AppCompatActivity {
 
 //        top_toolbar = (Toolbar) findViewById(R.id.top_toolbar);
 //        setSupportActionBar(top_toolbar);
-
 //        bottom_toolbar = (Toolbar) findViewById(R.id.bottom_toolbar);
 //        setSupportActionBar(bottom_toolbar);
 
-
         scrollView = (ScrollView) findViewById(R.id.scrollView);
-
         select_board = (TextView) findViewById(R.id.select_board);
         TitleOfWriting = (TextView) findViewById(R.id.TitleOfWriting);
         Writer = (TextView) findViewById(R.id.Writer);
@@ -84,17 +126,50 @@ public class BoardReadingActivity extends AppCompatActivity {
         bAddComment = (Button) findViewById(R.id.bAddComment);
         TheNumberOfLike = (TextView) findViewById(R.id.TheNumberOfLike);
 
-        // BoardWritingActivity에서 전달받은 String -> 서버상에서 해결해야함
         Bundle extras = getIntent().getExtras();
-        String board = extras.getString("board");
-        String title = extras.getString("title");
-        String content = extras.getString("content");
-        String tag = extras.getString("tag");
+        String boardId = extras.getString("boardId");
 
-        select_board.setText(board);
-        TitleOfWriting.setText(title);
-        ContentOfWriting.setText(content);
-        TagOfWriting.setText(tag);
+
+        // 서버로 게시글 ID 전달하여 게시글 정보 요청
+        url_boardId = "http://52.78.207.133:3000/boards/read/" +boardId;
+
+        postReadingTask = new PostReadingTask();
+        postReadingTask.execute();
+
+        //JSON으로 서버에서 게시글 정보 받아오기
+        try
+        {
+            System.out.println("result_board 값은 " + result_boardId);
+            JSONObject jsonObject = new JSONObject(result_boardId);
+            String postMajor = jsonObject.getString("major");
+            String postTitle = jsonObject.getString("title");
+            String postAuthor = jsonObject.getString("author");
+            String postDate = jsonObject.getString("date");
+            String postBody = jsonObject.getString("body");
+            String postTag = jsonObject.getString("tag");
+
+            select_board.setText(postMajor);
+            TitleOfWriting.setText(postTitle);
+            Writer.setText(postAuthor);
+            DateOfWriting.setText(postDate);
+            ContentOfWriting.setText(postBody);
+            TagOfWriting.setText(postTag);
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+
+
+
+
+//        // BoardWritingActivity에서 전달받은 String -> 서버상에서 해결해야함
+//        Bundle extras = getIntent().getExtras();
+//        String board = extras.getString("board");
+//        String title = extras.getString("title");
+//        String content = extras.getString("content");
+//        String tag = extras.getString("tag");
 
         pushLikeButton(); // 좋아요
         pushCommentButton(); // 댓글 쓰기
@@ -151,7 +226,13 @@ public class BoardReadingActivity extends AppCompatActivity {
                             userInput.requestFocus();
 
                         } else {
-                            comment_data.add(new CommentData("닉네임", "날짜", userInput.getText().toString()));
+                            SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
+                            String nickname = test.getString("UserNickname", null);
+
+                            if(nickname != null) {
+                                comment_data.add(new CommentData(nickname, "날짜", userInput.getText().toString()));
+                            }
+
                             // ListView 가져오기
                             comment_list = (ListView) findViewById(R.id.comment_list);
                             CommentListAdapter adapter = new CommentListAdapter(mContext, 0, comment_data);
@@ -235,8 +316,9 @@ public class BoardReadingActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.move_boardList_btn:
+                // 상단바의 화살표 버튼 클릭 시 게시글 목록으로 나가기
                 text = "click the move button";
-                Intent intent = new Intent(BoardReadingActivity.this, SwipeBoardActivity.class);
+                Intent intent = new Intent(BoardReadingActivity.this, NoticeBoardActivity.class);
                 startActivityForResult(intent, 1000);
 
                 break;
