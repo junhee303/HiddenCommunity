@@ -24,22 +24,33 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.Volley;
+import com.example.junhe.hiddencommunity.network.CustomJsonRequest;
+import com.example.junhe.hiddencommunity.network.JsonParser;
+
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
+import data.BoardData;
 import data.CommentData;
+
+//import org.apache.http.impl.client.DefaultHttpClient;
 
 public class BoardReadingActivity extends AppCompatActivity {
 
-    private TextView select_board;
-    private TextView TitleOfWriting;
-    private TextView Writer;
-    private TextView DateOfWriting;
-    private TextView ContentOfWriting;
-    private TextView TagOfWriting;
+    private TextView Category;
+    private TextView Title;
+    private TextView Author;
+    private TextView Date;
+    private TextView Body;
+    private TextView Tag;
     private Button bLikeOn;
     private Button bLikeOff;
     private Button bAddComment;
@@ -49,8 +60,8 @@ public class BoardReadingActivity extends AppCompatActivity {
     private int count_comment = 0;
 
     final Context context = this;
-    //private TextView postedComment;
-    String url_boardId, result_boardId;
+
+    String url_boardId, result;
 
     private ArrayList<CommentData> comment_data = new ArrayList<CommentData>();
     Context mContext = this;
@@ -65,30 +76,31 @@ public class BoardReadingActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String... params) {
+
             try {
-                result_boardId = HTTPInstance.Instance().Post(url_boardId);
-                System.out.println("PostReadingTask 부분에 있는 result_boardId 값 : " +result_boardId);
-                onResponseHttp(result_boardId);
+                result = HTTPInstance.Instance().Post(url_boardId);
+                Log.d("doInBackground result:", result);
+                onResponseHttp(result);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
-        }
     }
+}
 
     PostReadingTask postReadingTask;
 
     private void onResponseHttp(String s) {
-        System.out.println(s);
+        System.out.println("onResponseHttp의 String s 값 : " + s);
         if (s == null) {
 //            mProgressDialog = ProgressDialog.show(.this,"",
-//                    "잠시만 기다려 주세요.",true);
-            System.out.println("작성한 글을 받아오지 못하였습니다.");
+//                    "게시물을 받아오지 못하였습니다.",true);
+            System.out.println("게시물을 받아오지 못하였습니다.");
             return;
         }
         Log.d("board", s);
         if (s != null) {
-            System.out.println("작성한 글을 받아왔습니다.");
+            System.out.println("게시물을 받아왔습니다.");
             System.out.println(s);
         } else {
 
@@ -115,70 +127,66 @@ public class BoardReadingActivity extends AppCompatActivity {
 //        setSupportActionBar(bottom_toolbar);
 
         scrollView = (ScrollView) findViewById(R.id.scrollView);
-        select_board = (TextView) findViewById(R.id.select_board);
-        TitleOfWriting = (TextView) findViewById(R.id.TitleOfWriting);
-        Writer = (TextView) findViewById(R.id.Writer);
-        DateOfWriting = (TextView) findViewById(R.id.DateOfWriting);
-        ContentOfWriting = (TextView) findViewById(R.id.ContentOfWriting);
-        TagOfWriting = (TextView) findViewById(R.id.TagOfWriting);
+        Category = (TextView) findViewById(R.id.Category);
+        Title = (TextView) findViewById(R.id.Title);
+        Author = (TextView) findViewById(R.id.Author);
+        Date = (TextView) findViewById(R.id.Date);
+        Body = (TextView) findViewById(R.id.Body);
+        Tag = (TextView) findViewById(R.id.Tag);
         bLikeOn = (Button) findViewById(R.id.bLikeOn);
         bLikeOff = (Button) findViewById(R.id.bLikeOff);
         bAddComment = (Button) findViewById(R.id.bAddComment);
         TheNumberOfLike = (TextView) findViewById(R.id.TheNumberOfLike);
 
+        //url_boardId = "http://52.78.207.133:3000/boards/read/" + boardId;
+
+//        postReadingTask = new PostReadingTask();
+//        postReadingTask.execute();
+
+        sendRequest();
+        pushLikeButton(); // ?넫?뿭釉???뜝?룞?삕
+        pushCommentButton(); // ??뜝?룞?삕?뜝占?? ??뜝?룞?삕?뜝占??
+
+    }
+
+    public void sendRequest() {
+        // RequestQueue를 새로 만들어준다.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        // Request를 요청 할 URL
         Bundle extras = getIntent().getExtras();
         String boardId = extras.getString("boardId");
+        Log.d("sendRequest의 boardId: ", boardId);
+        String url = "http://52.78.207.133:3000/boards/read/" + boardId;
 
-
-        // 서버로 게시글 ID 전달하여 게시글 정보 요청
-        url_boardId = "http://52.78.207.133:3000/boards/read/" +boardId;
-
-        postReadingTask = new PostReadingTask();
-        postReadingTask.execute();
-
-        //JSON으로 서버에서 게시글 정보 받아오기
-        try
-        {
-            System.out.println("result_board 값은 " + result_boardId);
-            JSONObject jsonObject = new JSONObject(result_boardId);
-            String postMajor = jsonObject.getString("major");
-            String postTitle = jsonObject.getString("title");
-            String postAuthor = jsonObject.getString("author");
-            String postDate = jsonObject.getString("date");
-            String postBody = jsonObject.getString("body");
-            String postTag = jsonObject.getString("tag");
-
-            select_board.setText(postMajor);
-            TitleOfWriting.setText(postTitle);
-            Writer.setText(postAuthor);
-            DateOfWriting.setText(postDate);
-            ContentOfWriting.setText(postBody);
-            TagOfWriting.setText(postTag);
-        }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-
-
-
-
-
-//        // BoardWritingActivity에서 전달받은 String -> 서버상에서 해결해야함
-//        Bundle extras = getIntent().getExtras();
-//        String board = extras.getString("board");
-//        String title = extras.getString("title");
-//        String content = extras.getString("content");
-//        String tag = extras.getString("tag");
-
-        pushLikeButton(); // 좋아요
-        pushCommentButton(); // 댓글 쓰기
-
+        CustomJsonRequest request = new CustomJsonRequest(Request.Method.GET,
+                url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        System.out.println("sendRequest의 onResponse 부분");
+                            JsonParser js = new JsonParser();
+                            BoardData data = js.getData(response);
+                        System.out.println("JsonParser의 response 받아서 BoardData에 넣기");
+                            Category.setText(data.getCategory());
+                            Title.setText(data.getTitle());
+                            Author.setText(data.getAuthor());
+                            Date.setText(data.getDate());
+                            Body.setText(data.getBody());
+                            Tag.setText(data.getTag());
+                        System.out.println("BoardData에서 받아와서 Title에 getText : " +Title.getText());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error: ", error.getMessage());
+            }
+        });
+        // queue에 Request를 추가해준다.
+        queue.add(request);
     }
 
     public void pushLikeButton() {
         bLikeOn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) { // 좋아요 클릭 시 까만 하트
+            public void onClick(View v) { // ?넫?뿭釉???뜝?룞?삕 ??뜝?룞?삕?뜝占?? ??뜝?룞?삕 繹먮슢彛? ??뜝?룞?삕??뜝?룞?삕
 
                 if (click_like == true) {
                     bLikeOn.setVisibility(View.INVISIBLE);
@@ -186,12 +194,12 @@ public class BoardReadingActivity extends AppCompatActivity {
                     click_like = false;
                 }
                 count_like--;
-                TheNumberOfLike.setText("좋아요 수 = " + count_like + "click_like 상태는" + click_like);
+                TheNumberOfLike.setText("?넫?뿭釉???뜝?룞?삕 ??뜝?룞?삕 = " + count_like + "click_like ??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕" + click_like);
             }
         });
 
         bLikeOff.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) { // 좋아요 해제 시 하얀 하트
+            public void onClick(View v) { // ?넫?뿭釉???뜝?룞?삕 ??뜝?룞?삕??뜝?룞?삕 ??뜝?룞?삕 ??뜝?룞?삕?? ??뜝?룞?삕??뜝?룞?삕
 
                 if (click_like == false) {
                     bLikeOn.setVisibility(View.VISIBLE);
@@ -199,7 +207,7 @@ public class BoardReadingActivity extends AppCompatActivity {
                     click_like = true;
                 }
                 count_like++;
-                TheNumberOfLike.setText("좋아요 수 = " + count_like + "click_like 상태는" + click_like);
+                TheNumberOfLike.setText("?넫?뿭釉???뜝?룞?삕 ??뜝?룞?삕 = " + count_like + "click_like ??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕" + click_like);
             }
         });
     }
@@ -212,38 +220,38 @@ public class BoardReadingActivity extends AppCompatActivity {
                 View commentPopupView = li.inflate(R.layout.comment_post_popup, null);
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                alertDialogBuilder.setView(commentPopupView); // 팝업창으로 댓글 쓰기
+                alertDialogBuilder.setView(commentPopupView); // ??뜝?룞?삕??뜝?룞?삕筌≪럩?몵?뜝占?? ??뜝?룞?삕?뜝占?? ??뜝?룞?삕?뜝占??
 
                 final EditText userInput = (EditText) commentPopupView.findViewById(R.id.editTextDialogComment);
 
-                // 작성한 댓글 내용 입력
-                alertDialogBuilder.setCancelable(false).setPositiveButton("등록", new DialogInterface.OnClickListener() {
+                // ??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕 ??뜝?룞?삕?뜝占?? ??뜝?룞?삕??뜝?룞?삕 ??뜝?룞?삕??뜝?룞?삕
+                alertDialogBuilder.setCancelable(false).setPositiveButton("??뜝?룞?삕?뜝占??", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // get user input and set it to result
                         // edit text
                         if (userInput.getText().toString().length() == 0) {
-                            Toast.makeText(BoardReadingActivity.this, "입력한 내용이 없습니다", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BoardReadingActivity.this, "??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕 ??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕 ??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕", Toast.LENGTH_SHORT).show();
                             userInput.requestFocus();
 
                         } else {
                             SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
                             String nickname = test.getString("UserNickname", null);
 
-                            if(nickname != null) {
-                                comment_data.add(new CommentData(nickname, "날짜", userInput.getText().toString()));
+                            if (nickname != null) {
+                                comment_data.add(new CommentData(nickname, "??뜝?룞?삕?뜝占??", userInput.getText().toString()));
                             }
 
-                            // ListView 가져오기
+                            // ListView ?뜝占????뜝?룞?삕??뜝?룞?삕?뜝占??
                             comment_list = (ListView) findViewById(R.id.comment_list);
                             CommentListAdapter adapter = new CommentListAdapter(mContext, 0, comment_data);
-                            // ListView에 각각의 전공표시를 제어하는 Adapter를 설정
+                            // ListView??뜝?룞?삕 揶쏄낫而???뜝?룞?삕 ??뜝?룞?삕?⑤벏紐???뜝?룞?삕?뜝占?? ??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕 Adapter?뜝占?? ??뜝?룞?삕??뜝?룞?삕
                             comment_list.setAdapter(adapter);
 
-                            setListViewHeightBasedOnChildren(comment_list); // 댓글 리스트뷰 높이만큼 다 보이게 세팅
+                            setListViewHeightBasedOnChildren(comment_list); // ??뜝?룞?삕?뜝占?? ?뵳?딅뮞??뜝?룞?삕?뜝占?? ??뜝?룞?삕??뜝?룞?삕筌띾슦寃? ??뜝?룞?삕 癰귣똻?뵠?뜝占?? ??뜝?룞?삕??뜝?룞?삕
                         }
                     }
                 })
-                        .setNegativeButton("취소",
+                        .setNegativeButton("?뿆?뫁?꺖",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
@@ -287,6 +295,7 @@ public class BoardReadingActivity extends AppCompatActivity {
             return rowView;
 //            return super.getView(position, convertView, parent);
         }
+
     }
 
     public void setListViewHeightBasedOnChildren(ListView listView) {
@@ -316,7 +325,7 @@ public class BoardReadingActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.move_boardList_btn:
-                // 상단바의 화살표 버튼 클릭 시 게시글 목록으로 나가기
+                // ??뜝?룞?삕??뜝?룞?삕獄쏅뗄?벥 ??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕 甕곌쑵?뱣 ??뜝?룞?삕?뜝占?? ??뜝?룞?삕 野껊슣?뻻?뜝占?? 筌뤴뫖以???뜝?룞?삕?뜝占?? ??뜝?룞?삕?뜝占???뜝占??
                 text = "click the move button";
                 Intent intent = new Intent(BoardReadingActivity.this, NoticeBoardActivity.class);
                 startActivityForResult(intent, 1000);
@@ -336,5 +345,7 @@ public class BoardReadingActivity extends AppCompatActivity {
         }
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
         return true;
+
     }
+
 }

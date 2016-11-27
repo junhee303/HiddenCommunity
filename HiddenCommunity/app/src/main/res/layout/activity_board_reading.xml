@@ -22,7 +22,7 @@
             <!--android:layout_above="@+id/bottom_toolbar"-->
 
             <TextView
-                android:id="@+id/select_board"
+                android:id="@+id/Category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -34,7 +34,7 @@
 
 
             <TextView
-                android:id="@+id/TitleOfWriting"
+                android:id="@+id/Title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/select_board"
@@ -49,7 +49,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/Writer"
+                android:id="@+id/Author"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/TitleOfWriting"
@@ -62,7 +62,7 @@
                 android:textSize="14dp" />
 
             <TextView
-                android:id="@+id/DateOfWriting"
+                android:id="@+id/Date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/Writer"
@@ -80,7 +80,7 @@
                 android:paddingRight="@dimen/activity_horizontal_margin">
 
                 <TextView
-                    android:id="@+id/ContentOfWriting"
+                    android:id="@+id/Body"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:layout_below="@+id/DateOfWriting"
@@ -95,7 +95,7 @@
             </ScrollView>
 
             <TextView
-                android:id="@+id/TagOfWriting"
+                android:id="@+id/Tag"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_alignParentStart="true"

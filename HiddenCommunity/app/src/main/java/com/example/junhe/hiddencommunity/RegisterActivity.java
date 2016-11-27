@@ -37,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
     private ImageView nicknameCheck;
     private ImageView nicknameError;
     private String server_nickname;
+    private int addMajor;
     private int count_major;
 
     String url, result;
@@ -47,7 +48,6 @@ public class RegisterActivity extends AppCompatActivity {
     class RegisterTask extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
-
         }
 
         @Override
@@ -66,8 +66,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void onResponseHttp(String s) {
         if (s == null) {
-//            mProgressDialog = ProgressDialog.show(.this,"",
-//                    "잠시만 기다려 주세요.",true);
             System.out.println("회원 정보를 정확히 입력해주세요");
             return;
         }
@@ -108,12 +106,10 @@ public class RegisterActivity extends AppCompatActivity {
         addMajor(); // [+] 버튼 클릭 시 전공 최대 3개 등록 가능
         selectMajor(); // 전공 입력 부분 클릭 시 MajorActivity로 넘어감
         pushStartButton(); // 정보 입력 유무 확인 및 가입 완료
-
-
     }
 
+    // 비밀번호 일치 검사
     public void conformPassword() {
-        // 비밀번호 일치 검사
         etPasswordConfirm.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -141,8 +137,8 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    // 닉네임 중복 검사
     public void conformNickname() {
-        // 닉네임 중복 검사
         etNickname.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -179,30 +175,49 @@ public class RegisterActivity extends AppCompatActivity {
 //            }
 //        });
 
+    // 전공 입력 칸 누르면 MajorListActivity로 이동
     public void selectMajor() {
+
         etMajor1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                count_major = 1;
+                Intent intent = new Intent(RegisterActivity.this, MajorListActivity.class);
+                startActivityForResult(intent, 1000);
+            }
+        });
+        etMajor2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                count_major = 2;
+                Intent intent = new Intent(RegisterActivity.this, MajorListActivity.class);
+                startActivityForResult(intent, 1000);
+            }
+        });
+        etMajor3.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                count_major = 3;
                 Intent intent = new Intent(RegisterActivity.this, MajorListActivity.class);
                 startActivityForResult(intent, 1000);
             }
         });
     }
 
+    // [+]버튼 눌러 전공 추가
     public void addMajor() {
         bMajorAdd.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // 전공 입력 칸 추가 생성☆☆☆☆☆☆☆☆
-                count_major++;
-                if (count_major >= 2) {
+                addMajor++;
+                if (addMajor >= 2) {
                     etMajor2.setVisibility(View.VISIBLE);
                 }
-                if (count_major >= 3) {
+                if (addMajor >= 3) {
                     etMajor3.setVisibility(View.VISIBLE);
                 }
             }
         });
     }
 
+    // 회원 가입 정보 입력 확인
     public void pushStartButton() {
         bStart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -294,14 +309,21 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    // 최대 3개의 전공 선택
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        etMajor1 = (EditText) findViewById(R.id.etMajor1);
+
         if (resultCode == RESULT_OK) {// 액티비티가 정상적으로 종료되었을 경우
             if (requestCode == 1000) {// MajorListActivity에서 호출한 경우에만 처리
                 // 받아온 전공명을 MajorListActivity에 표시
-                etMajor1.setText(data.getStringExtra("selected_major"));
+                if(count_major == 1){
+                    etMajor1.setText(data.getStringExtra("selected_major"));
+                } else if(count_major == 2){
+                    etMajor2.setText(data.getStringExtra("selected_major"));
+                } else if(count_major == 3){
+                    etMajor3.setText(data.getStringExtra("selected_major"));
+                }
             }
         }
     }

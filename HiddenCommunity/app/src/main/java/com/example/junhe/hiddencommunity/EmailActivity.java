@@ -57,19 +57,18 @@ public class EmailActivity extends AppCompatActivity {
         Log.d("RESPONSE", s);
         if(s.compareTo("ok")==0){
             //Toast.makeText(EmailActivity.this, "인증이 완료되었습니다", Toast.LENGTH_SHORT).show();
-//            return;
+            //===> 이거 왜 안돼 ㅠ
             System.out.println("인증이 완료되었습니다.");
             Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
             // SINGLE_TOP : 이미 만들어진게 있으면 그걸 쓰고, 없으면 만들어서 써라
             intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             String email = input_email.getText().toString();
             intent.putExtra("email",email);
-
             startActivityForResult(intent, 1000);
         } else {
-
+            System.out.println("다시 인증해 주세요");
+            //Toast.makeText(EmailActivity.this, "다시 인증해 주세요", Toast.LENGTH_SHORT).show();
         }
-        //Toast.makeText(EmailActivity.this, "다시 인증해 주세요", Toast.LENGTH_SHORT).show();
     }
 
 

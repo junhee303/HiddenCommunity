@@ -23,9 +23,9 @@ import data.BoardData;
 
 public class BoardWritingActivity extends AppCompatActivity {
 
-    private Spinner spinner;
+    private Spinner Category;
     private EditText Title;
-    private EditText Content;
+    private EditText Body;
     private EditText Tag;
     private Button bPost;
 
@@ -36,13 +36,13 @@ public class BoardWritingActivity extends AppCompatActivity {
     class PostWritingTask extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
-
         }
 
         @Override
         protected String doInBackground(String... params) {
             try {
                 result = HTTPInstance.Instance().Post(url);
+                Log.d("result: ", result);
                 onResponseHttp(result);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -54,7 +54,7 @@ public class BoardWritingActivity extends AppCompatActivity {
     PostWritingTask postWritingTask;
 
     private void onResponseHttp(String s) {
-        System.out.println(s);
+        Log.d("result: ", s);
         if (s == null) {
 //            mProgressDialog = ProgressDialog.show(.this,"",
 //                    "잠시만 기다려 주세요.",true);
@@ -87,8 +87,7 @@ public class BoardWritingActivity extends AppCompatActivity {
 
     public void selectBoardOnSpinner() {
 
-        spinner = (Spinner) findViewById(R.id.spinner);
-
+        Category = (Spinner) findViewById(R.id.Category);
 
         SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
         String major1 = test.getString("UserMajor1", "");
@@ -109,7 +108,7 @@ public class BoardWritingActivity extends AppCompatActivity {
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(dataAdapter);
+        Category.setAdapter(dataAdapter);
     }
 
 //    public void selectBoardOnSpinner(){
@@ -118,47 +117,39 @@ public class BoardWritingActivity extends AppCompatActivity {
 //    }
 
     public void write_Board() {
-        spinner = (Spinner) findViewById(R.id.spinner);
+        Category = (Spinner) findViewById(R.id.Category);
         Title = (EditText) findViewById(R.id.Title);
-        Content = (EditText) findViewById(R.id.Content);
+        Body = (EditText) findViewById(R.id.Body);
         Tag = (EditText) findViewById(R.id.Tag);
         bPost = (Button) findViewById(R.id.bPost);
 
         bPost.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-//                if(board_menu.getText().toString().length() == 0) {
-//                    Toast.makeText(BoardWritingActivity.this, "게시판을 선택하세요", Toast.LENGTH_SHORT).show();
-//                    board_menu.requestFocus();
-//                    return;
-//                }
-
-
                 if (Title.getText().toString().length() == 0) {
                     Toast.makeText(BoardWritingActivity.this, "제목 입력하세요", Toast.LENGTH_SHORT).show();
                     Title.requestFocus();
                     return;
                 }
-                if (Content.getText().toString().length() == 0) {
+                if (Body.getText().toString().length() == 0) {
                     Toast.makeText(BoardWritingActivity.this, "내용을 입력하세요", Toast.LENGTH_SHORT).show();
-                    Content.requestFocus();
+                    Body.requestFocus();
                     return;
                 }
 
                 SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
 
-                String major = spinner.getSelectedItem().toString();
+                String category = Category.getSelectedItem().toString();
                 String title = Title.getText().toString();
                 String author = test.getString("UserNickname", null);
-                String body = Content.getText().toString();
+                String body = Body.getText().toString();
                 String tag = Tag.getText().toString();
-
-                System.out.println(major+" / "+title+" / "+author+" / "+body+" / "+tag);
+                System.out.println(category + " / " + title + " / " + author + " / " + body + " / " + tag);
 
                 // 서버로 게시글 전달
                 try {
                     url = "http://52.78.207.133:3000/boards/new?";
-                    url += "major=" + URLEncoder.encode(major, "utf-8");
+                    url += "category=" + URLEncoder.encode(category, "utf-8");
                     url += "&title=" + URLEncoder.encode(title, "utf-8");
                     url += "&author=" + URLEncoder.encode(author, "utf-8");
                     url += "&body=" + URLEncoder.encode(body, "utf-8");
@@ -170,19 +161,8 @@ public class BoardWritingActivity extends AppCompatActivity {
                 postWritingTask = new PostWritingTask();
                 postWritingTask.execute();
 
-
-//                Intent intent = new Intent(getApplicationContext(), BoardReadingActivity.class);
-//                // 여기서 입력한 메일주소로 인증 메일 전송 + 다음 화면으로 전달☆☆
-//                String board = spinner.getSelectedItem().toString();
-//                String title = Title.getText().toString();
-//                String content = Content.getText().toString();
-//                String tag = Tag.getText().toString();
-//                intent.putExtra("board", board);
-//                intent.putExtra("title", title);
-//                intent.putExtra("content", content);
-//                intent.putExtra("tag", tag);
-//                startActivityForResult(intent, 1000);
             }
+
         });
     }
 }

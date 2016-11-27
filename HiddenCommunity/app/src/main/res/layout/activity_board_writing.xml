@@ -9,10 +9,9 @@
     tools:context="com.example.junhe.hiddencommunity.MajorListActivity">
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/Category"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:entries="@array/board_arrays"
         android:prompt="@string/board_prompt" />
 
     //android:onClick="m_onClick"
@@ -28,10 +27,10 @@
         android:textColorHint="#FFCCCACA"
         android:textSize="24dp"
         android:textStyle="bold"
-        android:layout_below="@+id/spinner"/>
+        android:layout_below="@+id/Category"/>
 
     <EditText
-        android:id="@+id/Content"
+        android:id="@+id/Body"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:layout_marginTop="17dp"
@@ -44,20 +43,6 @@
         android:layout_below="@+id/Title"
         android:gravity="top"/>
 
-    <EditText
-        android:id="@+id/Tag"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="18dp"
-        android:ems="10"
-        android:hint="#태그"
-        android:textColor="#000000"
-        android:textColorHint="#88bec9"
-        android:textSize="18dp"
-        android:layout_below="@+id/Content"
-        android:layout_alignParentStart="true"
-        android:background="#f0f0f0" />
-
     <Button
         android:id="@+id/bPost"
         android:layout_width="wrap_content"
@@ -66,6 +51,20 @@
         android:text="글쓰기"
         android:layout_below="@+id/Tag"
         android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/Tag"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="11dp"
+        android:ems="10"
+        android:hint="#태그"
+        android:textColor="#000000"
+        android:textColorHint="#88bec9"
+        android:textSize="18dp"
+        android:background="#f0f0f0"
+        android:layout_below="@+id/Body"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
 

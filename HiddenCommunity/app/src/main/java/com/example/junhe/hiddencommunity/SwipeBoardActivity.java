@@ -127,6 +127,7 @@ public class SwipeBoardActivity extends AppCompatActivity {
 
     }
 
+    // 액션 바에 아이콘 추가 ==> 하단으로 내려야함..
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Toolbar bottom_toolbar;
@@ -135,7 +136,7 @@ public class SwipeBoardActivity extends AppCompatActivity {
         return true;
     }
 
-
+    //하단 아이콘 클릭 시 액션
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // TODO Auto-generated method stub

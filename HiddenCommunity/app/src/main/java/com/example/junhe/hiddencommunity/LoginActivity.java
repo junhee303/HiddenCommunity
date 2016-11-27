@@ -11,9 +11,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.example.junhe.hiddencommunity.network.DataRequest;
+import com.example.junhe.hiddencommunity.network.VolleySingleton;
+
 import java.io.IOException;
 
 public class LoginActivity extends AppCompatActivity {
+    private VolleySingleton volleySingleton;
+    private RequestQueue requestQueue;
 
     private ImageView img_Logo;
     private EditText etEmail;
@@ -60,7 +66,18 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        volleySingleton = VolleySingleton.getInstance();
+        requestQueue = volleySingleton.getRequestQueue();
+        DataRequest.sendJsonDataRequest(requestQueue, getRequestUrl());
+
         inputEmail(); // 인증 받을 메일 입력
+    }
+
+
+    public static final String getRequestUrl() {
+        String url = "http://ip.jsontest.com/";
+        Log.d("TAG", url);
+        return url;
     }
 
     public void inputEmail() {

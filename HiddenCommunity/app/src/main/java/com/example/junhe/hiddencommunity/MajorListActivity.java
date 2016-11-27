@@ -27,7 +27,7 @@ public class MajorListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_major_list);
 
-        // 전공 추가
+        // 전공 추가 ===> 서버에서 해야..
         major_data.add(new MajorData("건축·토목", "건축·설비공학, 건축학, 조경학, 토목공학, 도시공학"));
         major_data.add(new MajorData("경영·경제", "경영학, 경제학, 관광학, 광고·홍보학, 금융·회계·세무학, 무역·유통학, 교양경상학"));
         major_data.add(new MajorData("교육", "교육학, 유아교육학, 특수교육, 초등교육학, 언어교육, 인문교육, 사회교육, 공학교육, 자연계교육, 예체능교육"));
@@ -71,10 +71,10 @@ public class MajorListActivity extends AppCompatActivity {
                 // TODO 아이템 클릭시에 구현할 내용은 여기에.
                 Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
 
-                // 전공 선택시 RegisterActivity의 etMajor에 전달되어야 함☆☆☆☆☆
+                // 전공 선택시 RegisterActivity의 etMajor에 전달
                 String selected_major = major_data.get(position).getMajor();
-                intent.putExtra("selected_major",selected_major);
-                setResult(RESULT_OK,intent);
+                intent.putExtra("selected_major", selected_major);
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -94,42 +94,18 @@ public class MajorListActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
-            View rowView= inflater.inflate(R.layout.list_major, null, true);
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+            View rowView = inflater.inflate(R.layout.list_major, null, true);
 
             TextView txtMajor = (TextView) rowView.findViewById(R.id.Major);
             TextView txtSubMajor = (TextView) rowView.findViewById(R.id.SubMajor);
 
-            txtMajor.setText( mMajorData.get(position).getMajor() );
+            txtMajor.setText(mMajorData.get(position).getMajor());
             txtSubMajor.setText(mMajorData.get(position).getSubMajor());
 
             return rowView;
-//            return super.getView(position, convertView, parent);
         }
     }
-
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_coupon_lists, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-    }
+}
 
 
