@@ -73,7 +73,7 @@ public class NoticeBoardActivity extends AppCompatActivity {
             mBoardData = boardData;
         }
 
-
+        // BoardData에서 데이터 읽어와서 게시글 목록 작성
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 

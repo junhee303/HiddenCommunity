@@ -25,17 +25,24 @@ public class JsonParser {
             try {
                 board = reponse.getJSONObject("board");
                 String boardId = URLEncoder.encode(board.getString("_id"), "utf-8");
-                System.out.println("boardId 받아오기 :" + boardId);
                 //String postCategory = URLEncoder.encode(board.getString("category"), "utf-8");
                 String postCategory = "건축·토목";
-                System.out.println("category 받아오기 :" + postCategory);
-                String postTitle = URLEncoder.encode(board.getString("title"), "utf-8").toString();
-                String postAuthor = URLEncoder.encode(board.getString("author"), "utf-8").toString();
-                String postDate = URLEncoder.encode(board.getString("date"), "utf-8").toString();
-                String postBody = URLEncoder.encode(board.getString("body"), "utf-8").toString();
-                String postTag = URLEncoder.encode(board.getString("tag"), "utf-8").toString();
-                String postMeta = URLEncoder.encode(board.getString("meta"), "utf-8").toString();
-                int post
+                String postTitle1 = URLEncoder.encode(board.getString("title"), "utf-8");
+                String postTitle2 = URLEncoder.encode(URLEncoder.encode(board.getString("title"), "utf-8"), "utf-8");
+                //URLEncoder.encode(board.getString("title"), "utf-8");
+                String postAuthor = URLEncoder.encode(board.getString("author"), "utf-8");
+                String postDate = URLEncoder.encode(board.getString("date"), "utf-8");
+                String postBody = URLEncoder.encode(board.getString("body"), "utf-8");
+                String postTag = URLEncoder.encode(board.getString("tag"), "utf-8");
+
+                String Meta = URLEncoder.encode(board.getString("meta"), "utf-8");
+
+//                int postHit = URLEncoder.encode(Meta.getInt("hit"), "utf-8");
+//                int postLike = URLEncoder.encode(Meta.getInt("like"), "utf-8");
+//                int postComment = URLEncoder.encode(Meta.getInt("comment"), "utf-8");
+
+                System.out.println(postTitle1 + "\n" + postTitle2);
+
 //                String boardId = board.getString("_id");
 //                System.out.println("boardId 받아오기 :" + boardId);
 //                //String postCategory = URLEncoder.encode(board.getString("category"), "utf-8");
@@ -48,10 +55,10 @@ public class JsonParser {
 //                String postTag = board.getString("tag");
 //                String postMeta = board.getString("meta");
 
-                Log.d("JsonParser: ", "boardId: " + boardId + " / 작성 게시판: " + postCategory + " / 글 제목: " + postTitle + " / 글쓴이: " + postAuthor);
-                Log.d("JsonParser: ", " / 날짜: " + postDate + " / 글내용: " + postBody + " / 태그: " + postTag + " / 싫어요 좋아요 조회수: " + postMeta);
+                Log.d("JsonParser: ", "boardId: " + boardId + " / 작성 게시판: " + postCategory + " / 글 제목: " + postTitle1 + " / 글쓴이: " + postAuthor);
+                Log.d("JsonParser: ", " / 날짜: " + postDate + " / 글내용: " + postBody + " / 태그: " + postTag + " / 싫어요 좋아요 조회수: " + Meta);
 
-                data = new BoardData(postCategory, postTitle, postAuthor, postDate, postBody, postTag, 0,0,0);
+                data = new BoardData(postCategory, postTitle1, postAuthor, postDate, postBody, postTag, 0,0,0);
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (UnsupportedEncodingException e) {

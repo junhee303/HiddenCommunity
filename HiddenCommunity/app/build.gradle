@@ -4,6 +4,9 @@ android {
     compileSdkVersion 23
     buildToolsVersion "25.0.0"
    // useLibrary 'org.apache.http.legacy'
+    compileOptions {
+        encoding "UTF-8"
+    }
     defaultConfig {
         applicationId "com.example.junhe.hiddencommunity"
         minSdkVersion 23

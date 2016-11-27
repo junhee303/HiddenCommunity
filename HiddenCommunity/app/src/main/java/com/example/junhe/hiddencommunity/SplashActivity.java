@@ -40,7 +40,7 @@ public class SplashActivity extends AppCompatActivity {
         String email = test.getString("UserEmail", null);
 
         if(email != null) {
-            Intent intent = new Intent(getApplicationContext(), BoardWritingActivity.class);
+            Intent intent = new Intent(getApplicationContext(), SwipeBoardActivity.class);
             startActivityForResult(intent, 1000);
             System.out.println("사용자 세션 존재하므로 게시판 화면으로 이동");
             System.out.println(email);

@@ -15,12 +15,15 @@ public class MyFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        int resId = R.layout.list_board;
+        int resId = R.layout.activity_notice_board;
         return inflater.inflate(resId, null);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
+
     }
+
 }

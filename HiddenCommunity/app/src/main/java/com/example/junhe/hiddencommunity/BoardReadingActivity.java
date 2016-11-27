@@ -94,13 +94,13 @@ public class BoardReadingActivity extends AppCompatActivity {
         System.out.println("onResponseHttp의 String s 값 : " + s);
         if (s == null) {
 //            mProgressDialog = ProgressDialog.show(.this,"",
-//                    "게시물을 받아오지 못하였습니다.",true);
-            System.out.println("게시물을 받아오지 못하였습니다.");
+//                    "잠시만 기다려 주세요",true);
+            System.out.println("작성한 글을 받아오지 못하였습니다.");
             return;
         }
         Log.d("board", s);
         if (s != null) {
-            System.out.println("게시물을 받아왔습니다.");
+            System.out.println("작성한 글을 받아왔습니다.");
             System.out.println(s);
         } else {
 
@@ -144,8 +144,8 @@ public class BoardReadingActivity extends AppCompatActivity {
 //        postReadingTask.execute();
 
         sendRequest();
-        pushLikeButton(); // ?넫?뿭釉???뜝?룞?삕
-        pushCommentButton(); // ??뜝?룞?삕?뜝占?? ??뜝?룞?삕?뜝占??
+        pushLikeButton(); // 좋아요 버튼 클릭
+        pushCommentButton(); // 댓글 쓰기 버튼 클릭
 
     }
 
@@ -184,34 +184,35 @@ public class BoardReadingActivity extends AppCompatActivity {
         queue.add(request);
     }
 
+    // 좋아요 버튼 클릭 시 하트 색 변경
     public void pushLikeButton() {
         bLikeOn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) { // ?넫?뿭釉???뜝?룞?삕 ??뜝?룞?삕?뜝占?? ??뜝?룞?삕 繹먮슢彛? ??뜝?룞?삕??뜝?룞?삕
-
+            public void onClick(View v) {
+                // 좋아요 클릭 시 까만 하트
                 if (click_like == true) {
                     bLikeOn.setVisibility(View.INVISIBLE);
                     bLikeOff.setVisibility(View.VISIBLE);
                     click_like = false;
                 }
                 count_like--;
-                TheNumberOfLike.setText("?넫?뿭釉???뜝?룞?삕 ??뜝?룞?삕 = " + count_like + "click_like ??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕" + click_like);
             }
         });
 
         bLikeOff.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) { // ?넫?뿭釉???뜝?룞?삕 ??뜝?룞?삕??뜝?룞?삕 ??뜝?룞?삕 ??뜝?룞?삕?? ??뜝?룞?삕??뜝?룞?삕
-
+            public void onClick(View v) {
+                // 좋아요 해제 시 하얀 하트
                 if (click_like == false) {
                     bLikeOn.setVisibility(View.VISIBLE);
                     bLikeOff.setVisibility(View.INVISIBLE);
                     click_like = true;
                 }
                 count_like++;
-                TheNumberOfLike.setText("?넫?뿭釉???뜝?룞?삕 ??뜝?룞?삕 = " + count_like + "click_like ??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕" + click_like);
             }
         });
+        TheNumberOfLike.setText("좋아요 수 : " + count_like + "click_like 클릭 상태 : " + click_like);
     }
 
+    // 댓글 작성 버튼
     public void pushCommentButton() {
         bAddComment.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -220,17 +221,17 @@ public class BoardReadingActivity extends AppCompatActivity {
                 View commentPopupView = li.inflate(R.layout.comment_post_popup, null);
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                alertDialogBuilder.setView(commentPopupView); // ??뜝?룞?삕??뜝?룞?삕筌≪럩?몵?뜝占?? ??뜝?룞?삕?뜝占?? ??뜝?룞?삕?뜝占??
+                alertDialogBuilder.setView(commentPopupView);
 
                 final EditText userInput = (EditText) commentPopupView.findViewById(R.id.editTextDialogComment);
 
-                // ??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕 ??뜝?룞?삕?뜝占?? ??뜝?룞?삕??뜝?룞?삕 ??뜝?룞?삕??뜝?룞?삕
-                alertDialogBuilder.setCancelable(false).setPositiveButton("??뜝?룞?삕?뜝占??", new DialogInterface.OnClickListener() {
+                // 작성한 댓글 내용 입력
+                alertDialogBuilder.setCancelable(false).setPositiveButton("등록", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // get user input and set it to result
                         // edit text
                         if (userInput.getText().toString().length() == 0) {
-                            Toast.makeText(BoardReadingActivity.this, "??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕 ??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕 ??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BoardReadingActivity.this, "작성한 내용이 없습니다.", Toast.LENGTH_SHORT).show();
                             userInput.requestFocus();
 
                         } else {
@@ -238,20 +239,20 @@ public class BoardReadingActivity extends AppCompatActivity {
                             String nickname = test.getString("UserNickname", null);
 
                             if (nickname != null) {
-                                comment_data.add(new CommentData(nickname, "??뜝?룞?삕?뜝占??", userInput.getText().toString()));
+                                comment_data.add(new CommentData(nickname, "날짜", userInput.getText().toString()));
                             }
 
-                            // ListView ?뜝占????뜝?룞?삕??뜝?룞?삕?뜝占??
+                            // ListView 가져오기
                             comment_list = (ListView) findViewById(R.id.comment_list);
                             CommentListAdapter adapter = new CommentListAdapter(mContext, 0, comment_data);
-                            // ListView??뜝?룞?삕 揶쏄낫而???뜝?룞?삕 ??뜝?룞?삕?⑤벏紐???뜝?룞?삕?뜝占?? ??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕 Adapter?뜝占?? ??뜝?룞?삕??뜝?룞?삕
+                            // ListView에 각각의 전공표시를 제어하는 Adapter를 설정
                             comment_list.setAdapter(adapter);
 
-                            setListViewHeightBasedOnChildren(comment_list); // ??뜝?룞?삕?뜝占?? ?뵳?딅뮞??뜝?룞?삕?뜝占?? ??뜝?룞?삕??뜝?룞?삕筌띾슦寃? ??뜝?룞?삕 癰귣똻?뵠?뜝占?? ??뜝?룞?삕??뜝?룞?삕
+                            setListViewHeightBasedOnChildren(comment_list); // 댓글 리스트뷰 높이만큼 다 보이게 세팅
                         }
                     }
                 })
-                        .setNegativeButton("?뿆?뫁?꺖",
+                        .setNegativeButton("취소",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
@@ -325,7 +326,7 @@ public class BoardReadingActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.move_boardList_btn:
-                // ??뜝?룞?삕??뜝?룞?삕獄쏅뗄?벥 ??뜝?룞?삕??뜝?룞?삕??뜝?룞?삕 甕곌쑵?뱣 ??뜝?룞?삕?뜝占?? ??뜝?룞?삕 野껊슣?뻻?뜝占?? 筌뤴뫖以???뜝?룞?삕?뜝占?? ??뜝?룞?삕?뜝占???뜝占??
+                // 상단바의 화살표 버튼 클릭 시 게시글 목록으로 나가기
                 text = "click the move button";
                 Intent intent = new Intent(BoardReadingActivity.this, NoticeBoardActivity.class);
                 startActivityForResult(intent, 1000);
