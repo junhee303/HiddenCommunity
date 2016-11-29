@@ -29,13 +29,15 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.Volley;
 import com.example.junhe.hiddencommunity.network.CustomJsonRequest;
 import com.example.junhe.hiddencommunity.network.JsonParser;
+import com.example.junhe.hiddencommunity.network.VolleySingleton;
 
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import data.BoardData;
@@ -53,6 +55,7 @@ public class BoardReadingActivity extends AppCompatActivity {
     private TextView Tag;
     private Button bLikeOn;
     private Button bLikeOff;
+    private EditText userInput;
     private Button bAddComment;
     private TextView TheNumberOfLike;
     private boolean click_like = false;
@@ -60,8 +63,8 @@ public class BoardReadingActivity extends AppCompatActivity {
     private int count_comment = 0;
 
     final Context context = this;
-
-    String url_boardId, result;
+    String url_boardId, result_readBoard;
+    String url_comment, result_readComment;
 
     private ArrayList<CommentData> comment_data = new ArrayList<CommentData>();
     Context mContext = this;
@@ -69,6 +72,7 @@ public class BoardReadingActivity extends AppCompatActivity {
     ListView comment_list;
     ScrollView scrollView;
 
+    // 게시글 읽어오기
     class PostReadingTask extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
@@ -78,24 +82,61 @@ public class BoardReadingActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
 
             try {
-                result = HTTPInstance.Instance().Post(url_boardId);
-                Log.d("doInBackground result:", result);
-                onResponseHttp(result);
+                result_readBoard = HTTPInstance.Instance().Post(url_boardId);
+                Log.d("doInBackground result:", result_readBoard);
+                onResponseHttp1(result_readBoard);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             return null;
     }
 }
-
     PostReadingTask postReadingTask;
-
-    private void onResponseHttp(String s) {
+    // 게시글 읽어오기 response
+    private void onResponseHttp1(String s) {
         System.out.println("onResponseHttp의 String s 값 : " + s);
         if (s == null) {
 //            mProgressDialog = ProgressDialog.show(.this,"",
 //                    "잠시만 기다려 주세요",true);
             System.out.println("작성한 글을 받아오지 못하였습니다.");
+            return;
+        }
+        Log.d("board", s);
+        if (s != null) {
+            System.out.println("작성한 글을 받아왔습니다.");
+            System.out.println(s);
+        } else {
+
+        }
+    }
+
+    // 댓글 읽어오기
+    class CommentReadingTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                result_readComment = HTTPInstance.Instance().Post(url_comment);
+                Log.d("doInBackground result:", result_readComment);
+                onResponseHttp2(result_readComment);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+    CommentReadingTask commentReadingTask;
+    // 댓글 읽어오기 response
+    private void onResponseHttp2(String s) {
+        System.out.println("댓글 작성 응답 : " + s);
+        if (s == null) {
+//            mProgressDialog = ProgressDialog.show(.this,"",
+//                    "잠시만 기다려 주세요",true);
+            System.out.println("작성한 댓글이 등록되습니다.");
             return;
         }
         Log.d("board", s);
@@ -143,21 +184,24 @@ public class BoardReadingActivity extends AppCompatActivity {
 //        postReadingTask = new PostReadingTask();
 //        postReadingTask.execute();
 
-        sendRequest();
+        sendRequest_board(); // 게시물 읽어오기
         pushLikeButton(); // 좋아요 버튼 클릭
         pushCommentButton(); // 댓글 쓰기 버튼 클릭
 
     }
 
-    public void sendRequest() {
+    // 게시물 읽어오기
+    public void sendRequest_board() {
+        VolleySingleton v = VolleySingleton.getInstance();
+        RequestQueue queue = v.getRequestQueue();
         // RequestQueue를 새로 만들어준다.
-        RequestQueue queue = Volley.newRequestQueue(this);
+        //RequestQueue queue = Volley.newRequestQueue(this);
         // Request를 요청 할 URL
         Bundle extras = getIntent().getExtras();
         String boardId = extras.getString("boardId");
         Log.d("sendRequest의 boardId: ", boardId);
         String url = "http://52.78.207.133:3000/boards/read/" + boardId;
-
+        Log.d("url", url);
         CustomJsonRequest request = new CustomJsonRequest(Request.Method.GET,
                 url, null, new Response.Listener<JSONObject>() {
                     @Override
@@ -172,6 +216,22 @@ public class BoardReadingActivity extends AppCompatActivity {
                             Date.setText(data.getDate());
                             Body.setText(data.getBody());
                             Tag.setText(data.getTag());
+//                        try {
+//                            JSONArray postTag = data.getTag();
+//                            ArrayList Tag = new ArrayList();
+//                            if (Tag != null) {
+//                                int len = postTag.length();
+//                                for (int i = 0; i < len; i++) {
+//                                    Tag.add(postTag.get(i).toString());
+//                                }
+//                                String tags = Tag.get(0);
+//                            }
+//
+//
+//                        }catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+
                         System.out.println("BoardData에서 받아와서 Title에 getText : " +Title.getText());
                     }
                 }, new Response.ErrorListener() {
@@ -223,7 +283,7 @@ public class BoardReadingActivity extends AppCompatActivity {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
                 alertDialogBuilder.setView(commentPopupView);
 
-                final EditText userInput = (EditText) commentPopupView.findViewById(R.id.editTextDialogComment);
+                userInput = (EditText) commentPopupView.findViewById(R.id.editTextDialogComment);
 
                 // 작성한 댓글 내용 입력
                 alertDialogBuilder.setCancelable(false).setPositiveButton("등록", new DialogInterface.OnClickListener() {
@@ -235,20 +295,10 @@ public class BoardReadingActivity extends AppCompatActivity {
                             userInput.requestFocus();
 
                         } else {
-                            SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
-                            String nickname = test.getString("UserNickname", null);
+                            sendCommentToServer(); // 작성한 댓글 서버로 보내기
+                                //comment_data.add(new CommentData("ID", nickname, "날짜", userInput.getText().toString()));
 
-                            if (nickname != null) {
-                                comment_data.add(new CommentData(nickname, "날짜", userInput.getText().toString()));
-                            }
-
-                            // ListView 가져오기
-                            comment_list = (ListView) findViewById(R.id.comment_list);
-                            CommentListAdapter adapter = new CommentListAdapter(mContext, 0, comment_data);
-                            // ListView에 각각의 전공표시를 제어하는 Adapter를 설정
-                            comment_list.setAdapter(adapter);
-
-                            setListViewHeightBasedOnChildren(comment_list); // 댓글 리스트뷰 높이만큼 다 보이게 세팅
+                            sendRequest_comment(); // 댓글 읽어오기
                         }
                     }
                 })
@@ -268,6 +318,63 @@ public class BoardReadingActivity extends AppCompatActivity {
         });
     }
 
+    // 작성한 댓글 서버로 보내기
+    public void sendCommentToServer() {
+
+        SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
+        String comment_author = test.getString("UserNickname", null);
+        String comment_body = userInput.getText().toString();
+        System.out.println("comment_author는 " + comment_author + " / comment_body는" + comment_body);
+
+        Bundle extras = getIntent().getExtras();
+        String boardId = extras.getString("boardId");
+        url_comment = "http://52.78.207.133:3000/boards/comment/"+ boardId;
+        try {
+            url_comment += "author=" + URLEncoder.encode(comment_author, "utf-8");
+            url_comment += "&body=" + URLEncoder.encode(comment_body, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 댓글 읽어오기
+    public void sendRequest_comment() {
+        VolleySingleton v = VolleySingleton.getInstance();
+        RequestQueue queue = v.getRequestQueue();
+
+        Bundle extras = getIntent().getExtras();
+        String boardId = extras.getString("boardId");
+        Log.d("sendRequest의 boardId: ", boardId);
+        String url = "http://52.78.207.133:3000/boards/read/" + boardId;
+
+        // 서버에 댓글 요청
+        CustomJsonRequest request = new CustomJsonRequest(Request.Method.GET,
+                url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                System.out.println("sendRequest의 onResponse 부분");
+                JsonParser js = new JsonParser();
+                js.getComment(response);
+
+                // ListView 가져오기
+                comment_list = (ListView) findViewById(R.id.comment_list);
+                CommentListAdapter adapter = new CommentListAdapter(mContext, 0, comment_data);
+                // ListView에 각각의 전공표시를 제어하는 Adapter를 설정
+                comment_list.setAdapter(adapter);
+
+                setListViewHeightBasedOnChildren(comment_list); // 댓글 리스트뷰 높이만큼 다 보이게 세팅
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error: ", error.getMessage());
+            }
+        });
+        // queue에 Request를 추가해준다.
+        queue.add(request);
+    }
+
     private class CommentListAdapter extends ArrayAdapter<CommentData> {
 
         private ArrayList<CommentData> mCommentData;
@@ -285,13 +392,13 @@ public class BoardReadingActivity extends AppCompatActivity {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
             View rowView = inflater.inflate(R.layout.list_comment, null, true);
 
-            TextView txtNickname = (TextView) rowView.findViewById(R.id.Nickname);
+            TextView txtAuthor = (TextView) rowView.findViewById(R.id.Author);
             TextView txtDate = (TextView) rowView.findViewById(R.id.Date);
-            TextView txtContent = (TextView) rowView.findViewById(R.id.Content);
+            TextView txtBody = (TextView) rowView.findViewById(R.id.Body);
 
-            txtNickname.setText(mCommentData.get(position).getNickname());
+            txtAuthor.setText(mCommentData.get(position).getAuthor());
             txtDate.setText(mCommentData.get(position).getDate());
-            txtContent.setText(mCommentData.get(position).getContent());
+            txtBody.setText(mCommentData.get(position).getBody());
 
             return rowView;
 //            return super.getView(position, convertView, parent);
@@ -328,7 +435,7 @@ public class BoardReadingActivity extends AppCompatActivity {
             case R.id.move_boardList_btn:
                 // 상단바의 화살표 버튼 클릭 시 게시글 목록으로 나가기
                 text = "click the move button";
-                Intent intent = new Intent(BoardReadingActivity.this, NoticeBoardActivity.class);
+                Intent intent = new Intent(BoardReadingActivity.this, SwipeBoardActivity.class);
                 startActivityForResult(intent, 1000);
 
                 break;

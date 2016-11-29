@@ -2,7 +2,6 @@ package com.example.junhe.hiddencommunity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -125,20 +124,26 @@ public class SwipeBoardActivity extends AppCompatActivity {
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         MyAdapter adapter = new MyAdapter(getSupportFragmentManager());
 
-        SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
+        //사용자한테 받아올 전공 데이터
+//        SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
+//
+//        String Major1 = test.getString("UserMajor1", "");
+//        String Major2 = test.getString("UserMajor2", "");
+//        String Major3 = test.getString("UserMajor3", "");
+//
+//        adapter.addFragment( new MyFragment(), "자유");
+//        adapter.addFragment(new MyFragment(), Major1);
+//        if(Major2 != "") {
+//            adapter.addFragment(new MyFragment(), Major2);
+//        }
+//        if(Major3 != "") {
+//            adapter.addFragment(new MyFragment(), Major3);
+//        }
 
-        String Major1 = test.getString("UserMajor1", "");
-        String Major2 = test.getString("UserMajor2", "");
-        String Major3 = test.getString("UserMajor3", "");
+        adapter.addFragment(new MyFragment(), "자유");
+        adapter.addFragment(new MyFragment(), "전공1");
+        adapter.addFragment(new MyFragment(), "전공2");
 
-        adapter.addFragment( new MyFragment(), "자유");
-        adapter.addFragment(new MyFragment(), Major1);
-        if(Major2 != "") {
-            adapter.addFragment(new MyFragment(), Major2);
-        }
-        if(Major3 != "") {
-            adapter.addFragment(new MyFragment(), Major3);
-        }
         viewPager.setAdapter(adapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -219,7 +224,7 @@ public class SwipeBoardActivity extends AppCompatActivity {
             txtAuthor.setText(mBoardData.get(position).getAuthor());
             txtDate.setText(mBoardData.get(position).getDate());
             txtBody.setText(mBoardData.get(position).getBody());
-            txtTag.setText(mBoardData.get(position).getTag());
+            //txtTag.setText(mBoardData.get(position).getTag());
 
 //            txtHit.setText(mBoardData.get(position).getHit());
 //            txtLike.setText(mBoardData.get(position).getLike());

@@ -15,7 +15,7 @@ public class MyFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        int resId = R.layout.list_board;
+        int resId = R.layout.activity_board_recycler_view;
         return inflater.inflate(resId, null);
     }
 

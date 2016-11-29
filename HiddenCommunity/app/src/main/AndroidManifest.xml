@@ -2,17 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.junhe.hiddencommunity">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--&lt;!&ndash;지문인식&ndash;&gt;-->
-    <!--<uses-permission android:name="android.permission.USE_FINGERPRINT"/>-->
-    <!--&lt;!&ndash;Spass module&ndash;&gt;-->
-    <!--<uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY"/>-->
     <uses-sdk
         android:minSdkVersion="15"
         android:targetSdkVersion="8" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- <uses-permission android:name="android.permission.INTERNET" /> -->
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".network.MyApplication"
@@ -22,25 +22,38 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SplashActivity"
+            android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!--<intent-filter>-->
+            <!--<action android:name="android.intent.action.MAIN" />-->
+            <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
+        <activity
+            android:name=".SplashActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.NoTitleBar" />
         <!--android:theme="@android:style/Theme.NoTitleBar"/>-->
         <activity android:name=".LoginActivity" />
         <activity android:name=".EmailActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MajorListActivity" />
-        <activity android:name=".NoticeBoardActivity"/>
+        <activity android:name=".NoticeBoardActivity" />
         <activity android:name=".BoardWritingActivity" />
         <activity android:name=".BoardReadingActivity" />
-        <activity android:name=".SwipeBoardActivity" />
+        <activity
+            android:name=".SwipeBoardActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <!-- <activity android:name=".BoardReadingListViewActivity" /> -->
+        <activity android:name=".BoardRecyclerViewActivity" />
+
     </application>
 
 </manifest>

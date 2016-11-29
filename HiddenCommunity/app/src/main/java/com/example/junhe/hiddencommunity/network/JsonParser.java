@@ -2,72 +2,108 @@ package com.example.junhe.hiddencommunity.network;
 
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import data.BoardData;
+import data.CommentData;
 
 /**
  * Created by HongjunLim on 11/27/2016.
  */
 
 public class JsonParser {
-    BoardData data;
+    BoardData boardData;
+    CommentData commentData;
+
+    ArrayList<String> authorList = new ArrayList<>();
+    ArrayList<String> dateList = new ArrayList<>();
+    ArrayList<String> bodyList = new ArrayList<>();
+
+    JSONArray commentArray = new JSONArray();
+
     public BoardData getData(JSONObject reponse) {
         JSONObject board;
+        String tagString = null;
 
         System.out.println("JsonParser의 getData 부분");
-        String ip;
+
         if (reponse != null || reponse.length() > 0) {
             try {
                 board = reponse.getJSONObject("board");
-                String boardId = URLEncoder.encode(board.getString("_id"), "utf-8");
-                //String postCategory = URLEncoder.encode(board.getString("category"), "utf-8");
+                String boardId = board.getString("_id");
+                System.out.println("boardId 받아오기 :" + boardId);
                 String postCategory = "건축·토목";
-                String postTitle1 = URLEncoder.encode(board.getString("title"), "utf-8");
-                String postTitle2 = URLEncoder.encode(URLEncoder.encode(board.getString("title"), "utf-8"), "utf-8");
-                //URLEncoder.encode(board.getString("title"), "utf-8");
-                String postAuthor = URLEncoder.encode(board.getString("author"), "utf-8");
-                String postDate = URLEncoder.encode(board.getString("date"), "utf-8");
-                String postBody = URLEncoder.encode(board.getString("body"), "utf-8");
-                String postTag = URLEncoder.encode(board.getString("tag"), "utf-8");
+                System.out.println("category 받아오기 :" + postCategory);
+                String postTitle = board.getString("title");
+                String postAuthor = board.getString("author");
+                String postDate = board.getString("date");
+                String postBody = board.getString("body");
+                JSONArray postTag = board.getJSONArray("tag");
+                JSONObject Meta = board.getJSONObject("meta");
 
-                String Meta = URLEncoder.encode(board.getString("meta"), "utf-8");
+                int Hit = Meta.getInt("hit");
+                int Like = Meta.getInt("like");
+                int Hate = Meta.getInt("hate");
 
-//                int postHit = URLEncoder.encode(Meta.getInt("hit"), "utf-8");
-//                int postLike = URLEncoder.encode(Meta.getInt("like"), "utf-8");
-//                int postComment = URLEncoder.encode(Meta.getInt("comment"), "utf-8");
+                ArrayList tags = new ArrayList();
 
-                System.out.println(postTitle1 + "\n" + postTitle2);
+                if (tags != null) {
+                    int len = postTag.length();
+                    for (int i = 0; i < len; i++) {
+                        tags.add(postTag.get(i).toString());
+                        tagString += tags.get(i);
+                    }
+                }
 
-//                String boardId = board.getString("_id");
-//                System.out.println("boardId 받아오기 :" + boardId);
-//                //String postCategory = URLEncoder.encode(board.getString("category"), "utf-8");
-//                String postCategory = "건축·토목";
-//                System.out.println("category 받아오기 :" + postCategory);
-//                String postTitle =board.getString("title");
-//                String postAuthor = board.getString("author");
-//                String postDate = board.getString("date");
-//                String postBody = board.getString("body");
-//                String postTag = board.getString("tag");
-//                String postMeta = board.getString("meta");
 
-                Log.d("JsonParser: ", "boardId: " + boardId + " / 작성 게시판: " + postCategory + " / 글 제목: " + postTitle1 + " / 글쓴이: " + postAuthor);
-                Log.d("JsonParser: ", " / 날짜: " + postDate + " / 글내용: " + postBody + " / 태그: " + postTag + " / 싫어요 좋아요 조회수: " + Meta);
 
-                data = new BoardData(postCategory, postTitle1, postAuthor, postDate, postBody, postTag, 0,0,0);
+                Log.d("JsonParser: ", "boardId: " + boardId + " / 작성 게시판: " + postCategory + " / 글 제목: " + postTitle + " / 글쓴이: " + postAuthor);
+                Log.d("JsonParser: ", " / 날짜: " + postDate + " / 글내용: " + postBody + " / 태그: " + tagString + " / 조회 수: " + Hit + " / 좋아요 수: " + Like + " / 신고하기 수: " + Hate);
+
+                boardData = new BoardData(boardId, postCategory, postTitle, postAuthor, postDate, postBody,tagString, Hit, Like, Hate);
             } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
         }
-        return data;
+        return boardData;
     }
-    //    private List<BaseData> getListData(JSONObject reponse) {
+
+    public void getComment(JSONObject reponse) {
+        JSONObject comment;
+
+        System.out.println("JsonParser의 getComment 부분");
+
+        if (reponse != null || reponse.length() > 0) {
+            try {
+                comment = reponse.getJSONObject("board");
+                String boardId = comment.getString("_id");
+                commentArray = comment.getJSONArray("comment");
+                for (int i = 0; i < commentArray.length(); i++) {
+                    JSONObject jsonObject = commentArray.getJSONObject(i);
+                    authorList.add(jsonObject.getString("name"));
+                    dateList.add(jsonObject.getString("gender"));
+                    bodyList.add(jsonObject.getString("gender"));
+                }
+                System.out.println("" + authorList + "\n" + "" + dateList + "\n" + bodyList);
+
+                Log.d("JsonParser: ", "boardId: " + boardId + " /  글쓴이: " + authorList.get(0) + " / 날짜: " + dateList.get(0) + " / 글 내용: " + bodyList.get(0));
+
+                commentData = new CommentData(boardId, authorList.get(0), dateList.get(0), bodyList.get(0));
+            } catch (JSONException e) {
+                e.printStackTrace();
+
+            }
+
+        }
+        return ;
+    }
+}
+
+//    private List<BaseData> getListData(JSONObject reponse) {
 //        ArrayList<BaseData> listItems = null;
 //        JSONArray arrayItems;
 //        JSONObject rowCount;
@@ -105,11 +141,10 @@ public class JsonParser {
 //                e.printStackTrace();
 //            }
 //        }
-//		/*
-//		 * for(int i = 0; i < listItems.size(); i++){ Log.i("json",
-//		 * listItems.get(i).toString()); }
-//		 */
+//      /*
+//       * for(int i = 0; i < listItems.size(); i++){ Log.i("json",
+//       * listItems.get(i).toString()); }
+//       */
 //        // Log.i("json", "사이즈"+listItems.size());
 //        return listItems;
 //    }
-}

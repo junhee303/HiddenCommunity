@@ -1,29 +1,33 @@
 package data;
 
-import android.widget.EditText;
-import android.widget.TextView;
-
 /**
  * Created by YelloMobile on 2015. 4. 8..
  */
 
 public class CommentData{
-    private String Nickname;
+    private String BoardId;
+    private String Author;
     private String Date;
-    private String Content;
+    private String Body;
 
 
-    public CommentData(String Nickname, String Date, String Content) {
-        this.Nickname = Nickname;
+    public CommentData(String BoardId, String Author, String Date, String Body) {
+        this.BoardId = BoardId;
+        this.Author = Author;
         this.Date = Date;
-        this.Content = Content;
+        this.Body = Body;
     }
 
-    public String getNickname() {
-        return Nickname;
+    public String getBoardId() { return BoardId; }
+    public void setBoardId(String BoardId) {
+        this.BoardId = BoardId;
     }
-    public void setNickname(String Nickname) {
-        this.Nickname = Nickname;
+
+    public String getAuthor() {
+        return Author;
+    }
+    public void setAuthor(String Author) {
+        this.Author = Author;
     }
 
     public String getDate() {
@@ -33,11 +37,11 @@ public class CommentData{
         this.Date = Date;
     }
 
-    public String getContent() {
-        return Content;
+    public String getBody() {
+        return Body;
     }
-    public void setContent(String Content) {
-        this.Content = Content;
+    public void setBody(String Body) {
+        this.Body = Body;
     }
 }
 
