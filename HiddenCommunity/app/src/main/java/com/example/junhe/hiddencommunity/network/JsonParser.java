@@ -27,7 +27,7 @@ public class JsonParser {
 
     public BoardData getData(JSONObject reponse) {
         JSONObject board;
-        String tagString = null;
+        String tagString = "";
 
         System.out.println("JsonParser의 getData 부분");
 
@@ -45,6 +45,9 @@ public class JsonParser {
                 JSONArray postTag = board.getJSONArray("tag");
                 JSONObject Meta = board.getJSONObject("meta");
 
+                commentArray = board.getJSONArray("comment"); // 댓글 수 받아오기 위해서 댓글 Array 불러옴
+                int Comment = commentArray.length(); // 댓글 수
+
                 int Hit = Meta.getInt("hit");
                 int Like = Meta.getInt("like");
                 int Hate = Meta.getInt("hate");
@@ -55,16 +58,16 @@ public class JsonParser {
                     int len = postTag.length();
                     for (int i = 0; i < len; i++) {
                         tags.add(postTag.get(i).toString());
-                        tagString += tags.get(i);
+                        tagString += tags.get(i)+" ";
                     }
                 }
 
 
 
                 Log.d("JsonParser: ", "boardId: " + boardId + " / 작성 게시판: " + postCategory + " / 글 제목: " + postTitle + " / 글쓴이: " + postAuthor);
-                Log.d("JsonParser: ", " / 날짜: " + postDate + " / 글내용: " + postBody + " / 태그: " + tagString + " / 조회 수: " + Hit + " / 좋아요 수: " + Like + " / 신고하기 수: " + Hate);
+                Log.d("JsonParser: ", " / 날짜: " + postDate + " / 글내용: " + postBody + " / 태그: " + tagString + " / 조회 수: " + Hit + " / 좋아요 수: " + Like + " / 댓글 수: " + Comment);
 
-                boardData = new BoardData(boardId, postCategory, postTitle, postAuthor, postDate, postBody,tagString, Hit, Like, Hate);
+                boardData = new BoardData(boardId, postCategory, postTitle, postAuthor, postDate, postBody,tagString, Hit, Like, Comment);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -72,7 +75,7 @@ public class JsonParser {
         return boardData;
     }
 
-    public void getComment(JSONObject reponse) {
+    public CommentData getComment(JSONObject reponse) {
         JSONObject comment;
 
         System.out.println("JsonParser의 getComment 부분");
@@ -84,22 +87,24 @@ public class JsonParser {
                 commentArray = comment.getJSONArray("comment");
                 for (int i = 0; i < commentArray.length(); i++) {
                     JSONObject jsonObject = commentArray.getJSONObject(i);
-                    authorList.add(jsonObject.getString("name"));
-                    dateList.add(jsonObject.getString("gender"));
-                    bodyList.add(jsonObject.getString("gender"));
+                    authorList.add(jsonObject.getString("author"));
+                    dateList.add(jsonObject.getString("date"));
+                    bodyList.add(jsonObject.getString("body"));
+                    commentData = new CommentData(boardId, authorList.get(i), dateList.get(i), bodyList.get(i));
                 }
                 System.out.println("" + authorList + "\n" + "" + dateList + "\n" + bodyList);
+                // [] [] []로 뜸
 
                 Log.d("JsonParser: ", "boardId: " + boardId + " /  글쓴이: " + authorList.get(0) + " / 날짜: " + dateList.get(0) + " / 글 내용: " + bodyList.get(0));
 
-                commentData = new CommentData(boardId, authorList.get(0), dateList.get(0), bodyList.get(0));
             } catch (JSONException e) {
                 e.printStackTrace();
 
             }
 
         }
-        return ;
+        System.out.println(commentData.getAuthor());
+        return commentData;
     }
 }
 

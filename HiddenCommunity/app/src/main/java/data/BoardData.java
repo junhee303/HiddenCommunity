@@ -14,12 +14,12 @@ public class BoardData{
     private String Tag;
     private int count_hit; // 조회 수
     private int count_like; // 좋아요 수
-    private int count_hate; // 신고하기 수
+    private int count_comment; // 댓글 수
 
     public BoardData(){
 
     }
-    public BoardData(String BoardId, String Category, String Title,  String Author, String Date, String Body, String Tag, int count_hit, int count_like, int count_hate) {
+    public BoardData(String BoardId, String Category, String Title,  String Author, String Date, String Body, String Tag, int count_hit, int count_like, int count_comment) {
         this.BoardId = BoardId;
         this.Category = Category;
         this.Title = Title;
@@ -29,7 +29,7 @@ public class BoardData{
         this.Tag = Tag;
         this.count_hit = count_hit;
         this.count_like = count_like;
-        this.count_hate = count_hate;
+        this.count_comment = count_comment;
     }
 
     public String getBoardId() { return BoardId; }
@@ -94,9 +94,9 @@ public class BoardData{
         this.count_like = count_like;
     }
 
-    public int getHate() { return count_hate;}
-    public void setHate(int count_hate) {
-        this.count_hate = count_hate;
+    public int getComment() { return count_comment;}
+    public void setComment(int count_comment) {
+        this.count_comment = count_comment;
     }
 }
 

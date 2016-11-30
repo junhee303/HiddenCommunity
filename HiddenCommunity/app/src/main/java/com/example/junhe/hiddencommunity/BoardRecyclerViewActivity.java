@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -63,7 +61,7 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
 
         // StaggeredGrid 레이아웃을 사용한다
         // layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
-        layoutManager = new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this); //  new LinearLayoutManager(getActivity());
         //layoutManager = new GridLayoutManager(this,3);
 
         // 지정된 레이아웃매니저를 RecyclerView에 Set 해주어야한다.
@@ -112,7 +110,7 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
 //            holder.txtHate.setText(mItems.get(position).Hate);
 
             // txtBody 부분 텍스트 왼쪽에서 날아들어오는 애니메이션
-            setAnimation(holder.txtBody, position);
+            //setAnimation(holder.txtBody, position);
         }
 
         // // 필수로 Generate 되어야 하는 메소드 3
@@ -145,16 +143,16 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
             }
         }
 
-        private void setAnimation(View viewToAnimate, int position)
-        {
-            // 새로 보여지는 뷰라면 애니메이션을 해줍니다
-            if (position > lastPosition)
-            {
-                Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
-                viewToAnimate.startAnimation(animation);
-                lastPosition = position;
-            }
-        }
+//        private void setAnimation(View viewToAnimate, int position)
+//        {
+//            // 새로 보여지는 뷰라면 애니메이션을 해줍니다
+//            if (position > lastPosition)
+//            {
+//                Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+//                viewToAnimate.startAnimation(animation);
+//                lastPosition = position;
+//            }
+//        }
 
     }
 }

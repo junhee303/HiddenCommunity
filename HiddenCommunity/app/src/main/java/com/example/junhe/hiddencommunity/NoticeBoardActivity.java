@@ -98,7 +98,7 @@ public class NoticeBoardActivity extends AppCompatActivity {
 
             txtHit.setText(mBoardData.get(position).getHit());
             txtLike.setText(mBoardData.get(position).getLike());
-            txtComment.setText(mBoardData.get(position).getHate());
+            txtComment.setText(mBoardData.get(position).getComment());
 
 
             return rowView;
