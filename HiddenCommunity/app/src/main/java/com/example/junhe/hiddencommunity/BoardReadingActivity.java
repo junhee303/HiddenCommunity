@@ -8,10 +8,10 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +47,7 @@ import data.CommentData;
 
 public class BoardReadingActivity extends AppCompatActivity {
 
+    private Toolbar top_toolbar;
     private TextView Category;
     private TextView Title;
     private TextView Author;
@@ -62,9 +63,10 @@ public class BoardReadingActivity extends AppCompatActivity {
     private int count_like = 0;
     private int count_comment = 0;
 
+    private Button move_boardList_btn;
+    private Button setting_btn;
+
     final Context context = this;
-//    String url_boardId, result_readBoard;
-//    String url_comment, result_readComment;
 
     CustomJsonRequest request_comment;
     ListView comment_list;
@@ -75,6 +77,7 @@ public class BoardReadingActivity extends AppCompatActivity {
 
     String url, result;
 
+    // 좋아요 버튼 클릭 시 response 받아오기
     class LikeCheckTask extends AsyncTask<String, Void, String> {
         @Override
         protected void onPreExecute() {
@@ -93,7 +96,7 @@ public class BoardReadingActivity extends AppCompatActivity {
     }
 
     LikeCheckTask likeCheckTask;
-
+    // 좋아요 버튼 클릭 시 "ok" response
     private void onResponseHttp(String s) {
         if (s == null) {
             System.out.println("서버에서 전송된 response가 null입니다");
@@ -111,31 +114,11 @@ public class BoardReadingActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu items for use in the action bar
-        MenuInflater inflater = getMenuInflater();
-
-//        SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
-//        String txtAuthor = test.getString("UserNickname", null);
-//        if(Author.getText().equals(txtAuthor)) {
-//            inflater.inflate(R.menu.board_mine_reading_menu, menu);
-//        } else {
-        inflater.inflate(R.menu.board_reading_menu, menu);
-//        }
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board_reading);
 
-//        top_toolbar = (Toolbar) findViewById(R.id.top_toolbar);
-//        setSupportActionBar(top_toolbar);
-//        bottom_toolbar = (Toolbar) findViewById(R.id.bottom_toolbar);
-//        setSupportActionBar(bottom_toolbar);
-
+        top_toolbar = (Toolbar) findViewById(R.id.top_toolbar);
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         Category = (TextView) findViewById(R.id.Category);
         Title = (TextView) findViewById(R.id.Title);
@@ -148,14 +131,14 @@ public class BoardReadingActivity extends AppCompatActivity {
         bAddComment = (Button) findViewById(R.id.bAddComment);
         TheNumberOfLike = (TextView) findViewById(R.id.TheNumberOfLike);
 
-        //url_boardId = "http://52.78.207.133:3000/boards/read/" + boardId;
-
-//        postReadingTask = new PostReadingTask();
-//        postReadingTask.execute();
+        move_boardList_btn = (Button) findViewById(R.id.move_boardList_btn);
+        setting_btn = (Button) findViewById(R.id.move_boardList_btn);
 
         sendRequest_board(); // 게시물 읽어오기
         pushLikeButton(); // 좋아요 버튼 클릭
         pushCommentButton(); // 댓글 쓰기 버튼 클릭
+        pushBoardListButton(); // 상단의 [ < ] 버튼 클릭 -> 게시글 목록 화면으로 이동
+        pushSettingButton(setting_btn); // 상단의 설정 버튼 클릭 -> 대화하기, 신고하기, 수정하기
 
     }
 
@@ -339,6 +322,7 @@ public class BoardReadingActivity extends AppCompatActivity {
         queue.add(request_comment);
     }
 
+    // 댓글 Adapter
     private class CommentListAdapter extends ArrayAdapter<CommentData> {
 
         private ArrayList<CommentData> mCommentData;
@@ -353,9 +337,9 @@ public class BoardReadingActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            TextView cmtAuthor = null;
-            TextView cmtDate = null;
-            TextView cmtBody = null;
+            TextView cmtAuthor;
+            TextView cmtDate;
+            TextView cmtBody;
 
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -380,22 +364,11 @@ public class BoardReadingActivity extends AppCompatActivity {
             cmtBody.setText(mCommentData.get(position).getBody().toString());
 
             return convertView;
-
-//            System.out.println("여기 들어오지? 댓글리스트 보여야해");
-//            cmtAuthor = (TextView) view.findViewById(R.id.comment_Author);
-//            cmtDate = (TextView) view.findViewById(R.id.comment_Date);
-//            cmtBody = (TextView) view.findViewById(R.id.comment_Body);
-//
-//            cmtAuthor.setText(mCommentData.get(position).getAuthor());
-//            cmtDate.setText(mCommentData.get(position).getDate());
-//            cmtBody.setText(mCommentData.get(position).getBody());
-//
-//            //return rowView;
-//            return super.getView(position, convertView, parent);
         }
 
     }
 
+    // 댓글 수에 따라 리스트 높이 조절
     public void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) {
@@ -418,134 +391,68 @@ public class BoardReadingActivity extends AppCompatActivity {
         listView.requestLayout();
     }
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        String text = null;
+    // 상단이 [ < ] 아이콘 클릭 시
+    public void pushBoardListButton() {
+        move_boardList_btn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // 상단바의 [ < ] 버튼 클릭 시 게시글 목록으로 이동
+                Toast.makeText(BoardReadingActivity.this, "게시글 목록으로 이동", Toast.LENGTH_SHORT).show();
 
-        SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
-        String txtAuthor = test.getString("UserNickname", null);
-
-        switch (item.getItemId()) {
-            case R.id.move_boardList_btn:
-                // 상단바의 화살표 버튼 클릭 시 게시글 목록으로 나가기
-                text = "click the move button";
-                Intent intent = new Intent(BoardReadingActivity.this, SwipeBoardActivity.class);
+                Intent intent = new Intent(BoardReadingActivity.this, BoardRecyclerViewActivity.class);
                 startActivityForResult(intent, 1000);
-                break;
-            case R.id.setting_btn:
-                text = "click the setting button";
-                break;
-            case R.id.report_btn:
-                text = "해당 게시글을 신고하였습니다";
-                break;
-            case R.id.update_btn:
-                if (Author.getText().equals(txtAuthor)) {
-                    text = "click the setting button";
-                    Intent intent2 = new Intent(BoardReadingActivity.this, BoardUpdateActivity.class);
-                    Bundle extras = getIntent().getExtras();
-                    String boardId = extras.getString("boardId",null);
-                    String txtCategory = Category.getText().toString();
-                    String txtTitle = Title.getText().toString();
-                    String txtBody = Body.getText().toString();
-                    String txtTag = Tag.getText().toString();
-                    intent2.putExtra("boardId", boardId);
-                    intent2.putExtra("txtCategory", txtCategory);
-                    intent2.putExtra("txtTitle", txtTitle);
-                    intent2.putExtra("txtBody", txtBody);
-                    intent2.putExtra("txtTag", txtTag);
-                    startActivityForResult(intent2, 1000);
-                } else {
-                    text = "자신의 글만 수정할 수 있습니다";
-                }
+            }
+        });
+    }
 
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-        Toast.makeText(this, text, Toast.LENGTH_LONG).show();
-        return true;
+    // 상단이 설정 아이콘 클릭 시
+    public void pushSettingButton(View button) {
+
+        PopupMenu popUp = new PopupMenu(this, button);
+        popUp.getMenuInflater().inflate(R.menu.board_reading_menu, popUp.getMenu());
+        popUp.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
+                String txtAuthor = test.getString("UserNickname", null);
+
+                switch (item.getItemId()) {
+                    case R.id.chat_btn:
+                        Toast.makeText(BoardReadingActivity.this, "채팅하기 기능이 구현되지 않았습니다", Toast.LENGTH_SHORT).show();
+
+                        break;
+                    case R.id.report_btn:
+                        Toast.makeText(BoardReadingActivity.this, "해당 게시글을 신고하였습니다", Toast.LENGTH_SHORT).show();
+
+                        break;
+                    case R.id.update_btn:
+                        if (Author.getText().equals(txtAuthor)) {
+                            Toast.makeText(BoardReadingActivity.this, "click the setting button", Toast.LENGTH_SHORT).show();
+
+                            Intent intent2 = new Intent(BoardReadingActivity.this, BoardUpdateActivity.class);
+                            Bundle extras = getIntent().getExtras();
+                            String boardId = extras.getString("boardId", null);
+                            String txtCategory = Category.getText().toString();
+                            String txtTitle = Title.getText().toString();
+                            String txtBody = Body.getText().toString();
+                            String txtTag = Tag.getText().toString();
+                            intent2.putExtra("boardId", boardId);
+                            intent2.putExtra("txtCategory", txtCategory);
+                            intent2.putExtra("txtTitle", txtTitle);
+                            intent2.putExtra("txtBody", txtBody);
+                            intent2.putExtra("txtTag", txtTag);
+                            startActivityForResult(intent2, 1000);
+                        } else {
+                            Toast.makeText(BoardReadingActivity.this, "자신의 글만 수정할 수 있습니다", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    default:
+                        return true;
+                }
+                return true;
+            }
+        });
 
     }
 
-
-//    // 게시글 읽어오기
-//    class PostReadingTask extends AsyncTask<String, Void, String> {
-//        @Override
-//        protected void onPreExecute() {
-//        }
-//
-//        @Override
-//        protected String doInBackground(String... params) {
-//
-//            try {
-//                result_readBoard = HTTPInstance.Instance().Post(url_boardId);
-//                Log.d("doInBackground result:", result_readBoard);
-//                onResponseHttp1(result_readBoard);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//    }
-//
-//    PostReadingTask postReadingTask;
-//
-//    // 게시글 읽어오기 response
-//    private void onResponseHttp1(String s) {
-//        System.out.println("onResponseHttp의 String s 값 : " + s);
-//        if (s == null) {
-////            mProgressDialog = ProgressDialog.show(.this,"",
-////                    "잠시만 기다려 주세요",true);
-//            System.out.println("작성한 글을 받아오지 못하였습니다.");
-//            return;
-//        }
-//        Log.d("board", s);
-//        if (s != null) {
-//            System.out.println("작성한 글을 받아왔습니다.");
-//            System.out.println(s);
-//        } else {
-//
-//        }
-//    }
-//
-//    // 댓글 읽어오기
-//    class CommentReadingTask extends AsyncTask<String, Void, String> {
-//        @Override
-//        protected void onPreExecute() {
-//        }
-//
-//        @Override
-//        protected String doInBackground(String... params) {
-//
-//            try {
-//                result_readComment = HTTPInstance.Instance().Post(url_comment);
-//                Log.d("doInBackground result:", result_readComment);
-//                onResponseHttp2(result_readComment);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//    }
-//
-//    CommentReadingTask commentReadingTask;
-//
-//    // 댓글 읽어오기 response
-//    private void onResponseHttp2(String s) {
-//        System.out.println("댓글 작성 응답 : " + s);
-//        if (s == null) {
-////            mProgressDialog = ProgressDialog.show(.this,"",
-////                    "잠시만 기다려 주세요",true);
-//            System.out.println("작성한 댓글이 등록되습니다.");
-//            return;
-//        }
-//        Log.d("board", s);
-//        if (s != null) {
-//            System.out.println("작성한 글을 받아왔습니다.");
-//            System.out.println(s);
-//        } else {
-//
-//        }
-//    }
 
 }
 

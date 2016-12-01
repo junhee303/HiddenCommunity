@@ -47,20 +47,12 @@
         <activity android:name=".EmailActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MajorListActivity" />
-        <activity android:name=".NoticeBoardActivity" />
         <activity android:name=".BoardWritingActivity" />
-        <activity android:name=".BoardReadingActivity" />
-        <activity android:name=".SwipeBoardActivity" />
-        <!-- <activity android:name=".BoardReadingListViewActivity" /> -->
+        <activity android:name=".BoardReadingActivity"/>
+        <activity android:name=".BoardUpdateActivity" />
+
         <activity android:name=".BoardRecyclerViewActivity" />
 
-        <!-- <activity -->
-        <!-- android:name=".BoardViewPagerActivity"/> -->
-        <!--  -->
-
-
-        <!-- <activity android:name=".BoardBlankFragment" /> -->
-        <activity android:name=".BoardUpdateActivity"></activity>
     </application>
 
 </manifest>

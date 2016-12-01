@@ -19,7 +19,8 @@
         android:layout_above="@+id/etEmail"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dp"
-        android:id="@+id/img_Logo" />
+        android:id="@+id/img_Logo"
+       />
 
     <EditText
         android:layout_width="match_parent"
