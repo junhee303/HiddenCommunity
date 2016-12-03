@@ -1,6 +1,7 @@
 package com.example.junhe.hiddencommunity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -11,19 +12,37 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BoardRecyclerViewActivity extends AppCompatActivity {
+
+    private List<String> list = new ArrayList<>();
+    private Spinner BoardRangeSpinner;
+    private Button bHome;
+    private Button bChat;
+    private Button bSearch;
+    private Button bNotice;
+    private Button bWrite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board_recycler_view);
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        BoardRangeSpinner = (Spinner) findViewById(R.id.board_range_spinner);
+        bHome = (Button) findViewById(R.id.action_home);
+        bChat = (Button) findViewById(R.id.action_chat);
+        bSearch = (Button) findViewById(R.id.action_search);
+        bNotice = (Button) findViewById(R.id.action_notice);
+        bWrite = (Button) findViewById(R.id.action_write);
+
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -33,15 +52,15 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
         String Major2 = test.getString("UserMajor2", "");
         String Major3 = test.getString("UserMajor3", "");
 
-        ArrayList<String> tabTitles= new ArrayList<>();
+        ArrayList<String> tabTitles = new ArrayList<>();
 
 
         tabTitles.add("자유");
         tabTitles.add(Major1);
-        if(Major2 != "") {
+        if (Major2 != "") {
             tabTitles.add(Major2);
         }
-        if(Major3 != "") {
+        if (Major3 != "") {
             tabTitles.add(Major3);
         }
 
@@ -60,34 +79,35 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
             tab.setCustomView(pagerAdapter.getTabView(i));
         }
 
+        selectRangeSpinner(); // 게시판 정렬 선택
+        pushBottomIcon(); // 하단 아이콘 클릭 시 액션
     }
 
+    // 게시판 정렬 선택
+    public void selectRangeSpinner() {
+
+        BoardRangeSpinner = (Spinner) findViewById(R.id.board_range_spinner);
+
+        list.add("최신순");
+        list.add("조회순");
+        list.add("좋아요순");
+        list.add("댓글순");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        BoardRangeSpinner.setAdapter(dataAdapter);
+    }
 
     @Override
     public void onResume() {
         super.onResume();
     }
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 
+    // ViewPager Adapter
     class PagerAdapter extends FragmentPagerAdapter {
 
-        ArrayList<String> tabTitles= new ArrayList<>();
+        ArrayList<String> tabTitles = new ArrayList<>();
         Context context;
 
         public PagerAdapter(FragmentManager fm, Context context, ArrayList<String> tabTitles) {
@@ -96,11 +116,6 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
             this.tabTitles = tabTitles;
         }
 
-
-//        public void setTabTitle(ArrayList<String> tabTitles) {
-//            this.tabTitles = tabTitles;
-//
-//        }
         @Override
         public int getCount() {
             return tabTitles.size();
@@ -135,5 +150,43 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
             tv.setText(tabTitles.get(position));
             return tab;
         }
+    }
+
+    // 하단 아이콘 클릭 시 액션
+    public void pushBottomIcon() {
+        bHome.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // 상단바의 '홈 아이콘' 클릭 시 게시글 목록으로 이동
+                Toast.makeText(BoardRecyclerViewActivity.this, "자유 게시판으로 이동", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(BoardRecyclerViewActivity.this, BoardRecyclerViewActivity.class);
+                startActivityForResult(intent, 1000);
+            }
+        });
+        bChat.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // 상단바의 '채팅 아이콘' 클릭 시 채팅 메뉴로 이동
+                Toast.makeText(BoardRecyclerViewActivity.this, "채팅 메뉴로 이동", Toast.LENGTH_SHORT).show();
+            }
+        });
+        bSearch.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // 상단바의 '검색 아이콘' 클릭 시 게시글 검색 메뉴로 이동
+                Toast.makeText(BoardRecyclerViewActivity.this, "검색 메뉴로 이동", Toast.LENGTH_SHORT).show();
+            }
+        });
+        bNotice.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // 상단바의 '알림 아이콘' 클릭 시 게시글 알림 메뉴로 이동
+                Toast.makeText(BoardRecyclerViewActivity.this, "알림 메뉴로 이동", Toast.LENGTH_SHORT).show();
+            }
+        });
+        bWrite.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // 상단바의 '글쓰기 아이콘' 클릭 시 게시글 목록으로 이동
+                Toast.makeText(BoardRecyclerViewActivity.this, "게시물 작성하기", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(BoardRecyclerViewActivity.this, BoardWritingActivity.class);
+                startActivityForResult(intent, 1000);
+            }
+        });
     }
 }

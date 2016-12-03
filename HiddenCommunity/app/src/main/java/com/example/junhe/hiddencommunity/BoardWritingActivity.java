@@ -23,6 +23,7 @@ import data.BoardData;
 
 public class BoardWritingActivity extends AppCompatActivity {
 
+    private List<String> list = new ArrayList<>();
     private Spinner Category;
     private EditText Title;
     private EditText Body;
@@ -30,8 +31,6 @@ public class BoardWritingActivity extends AppCompatActivity {
     private Button bPost;
 
     String url, result;
-
-    private List<String> list = new ArrayList<String>();
 
     class PostWritingTask extends AsyncTask<String, Void, String> {
         @Override
@@ -81,10 +80,11 @@ public class BoardWritingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board_writing);
 
-        selectBoardOnSpinner();
-        write_Board();
+        selectBoardOnSpinner(); // 게시물 작성할 게시판 선택
+        write_Board(); // 게시글 작성 및 서버 전송
     }
 
+    // 게시물 작성할 게시판 선택
     public void selectBoardOnSpinner() {
 
         Category = (Spinner) findViewById(R.id.Category);
@@ -111,11 +111,7 @@ public class BoardWritingActivity extends AppCompatActivity {
         Category.setAdapter(dataAdapter);
     }
 
-//    public void selectBoardOnSpinner(){
-//        spinner = (Spinner) findViewById(R.id.spinner);
-//        spinner.setOnItemSelectedListener(new CustomOnItemSelectedListener());
-//    }
-
+    // 게시글 작성 및 서버 전송
     public void write_Board() {
         Category = (Spinner) findViewById(R.id.Category);
         Title = (EditText) findViewById(R.id.Title);

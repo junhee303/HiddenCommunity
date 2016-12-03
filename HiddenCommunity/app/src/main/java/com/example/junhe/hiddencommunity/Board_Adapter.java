@@ -33,7 +33,7 @@ public class Board_Adapter  extends RecyclerView.Adapter<Board_Adapter.MyViewHol
         public TextView txtTag;
         public TextView txtHit;
         public TextView txtLike;
-        public TextView txtCommentSet;
+        public TextView txtComment;
 
         public MyViewHolder(View v) {
             super(v);
@@ -46,7 +46,7 @@ public class Board_Adapter  extends RecyclerView.Adapter<Board_Adapter.MyViewHol
             txtTag = (TextView) v.findViewById(R.id.Tag);
             txtHit = (TextView) v.findViewById(R.id.count_hit);
             txtLike = (TextView) v.findViewById(R.id.count_like);
-            txtCommentSet = (TextView) v.findViewById(R.id.count_comment);
+            txtComment = (TextView) v.findViewById(R.id.count_comment);
 
         }
     }
@@ -85,7 +85,7 @@ public class Board_Adapter  extends RecyclerView.Adapter<Board_Adapter.MyViewHol
         holder.txtTag.setText(mTagSet[position]);
         holder.txtHit.setText("조회  " + mHitSet[position]);
         holder.txtLike.setText("좋아요  " + mLikeSet[position]);
-        holder.txtCommentSet.setText("댓글  " + mCommentSet[position]);
+        holder.txtComment.setText("댓글  " + mCommentSet[position]);
     }
 
     @Override

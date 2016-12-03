@@ -39,6 +39,7 @@ public class BoardBlankFragment extends Fragment {
         String[] mCommentSet = {"1", "2", "3", "4", "5"};
 
         Board_Adapter adapter = new Board_Adapter(mTitleSet, mAuthorSet, mDateSet, mBodySet, mTagSet, mHitSet, mLikeSet, mCommentSet);
+
         rv.setAdapter(adapter);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());

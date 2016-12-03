@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="1"
+    tools:context=".MainActivity">
 
 
     <!--<android.support.v7.widget.Toolbar-->
@@ -25,29 +25,43 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_weight="0.12"
         android:background="?attr/colorPrimary"
         android:elevation="6dp"
         android:minHeight="?attr/actionBarSize"
         app:tabIndicatorColor="@color/colorAccent"
         app:tabMode="scrollable"
         app:tabSelectedTextColor="#ffffff"
-        app:tabTextColor="#7a7a7a"
-        android:layout_weight="0.2"/>
+        app:tabTextColor="#7a7a7a">
+
+
+    </android.support.design.widget.TabLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.05">
+
+        <Spinner
+            android:id="@+id/board_range_spinner"
+            android:layout_width="116dp"
+            android:layout_height="30dp"
+            android:layout_gravity="right"/>
+    </FrameLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_below="@+id/tab_layout"
-        android:layout_weight="0.7"/>
+        android:layout_weight="0.75" />
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/bottom_toolbar_toolbar"
+    <FrameLayout
+        android:id="@+id/bottom_icon_bar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#000000"
-        android:layout_weight="0.1"
-        android:weightSum="1">
+        android:layout_weight="0.08"
+        android:background="#000000">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,50 +70,49 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                >
+                android:layout_height="wrap_content">
 
                 <Button
                     android:id="@+id/action_home"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:background="@drawable/ic_action_home"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"/>
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/ic_action_home" />
 
                 <Button
                     android:id="@+id/action_chat"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/ic_action_chat"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"/>
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/ic_action_chat" />
 
                 <Button
                     android:id="@+id/action_search"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/ic_action_search"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"/>
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/ic_action_search" />
 
                 <Button
                     android:id="@+id/action_notice"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/ic_action_notice"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"/>
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/ic_action_notice" />
 
                 <Button
                     android:id="@+id/action_write"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/ic_action_write"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"/>
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/ic_action_write" />
             </LinearLayout>
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+    </FrameLayout>
 
 </LinearLayout>
