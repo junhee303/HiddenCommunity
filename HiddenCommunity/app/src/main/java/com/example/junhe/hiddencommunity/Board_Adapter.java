@@ -1,5 +1,7 @@
 package com.example.junhe.hiddencommunity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,24 +9,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+
 /**
  * Created by junhe on 2016-12-01.
  */
 
 public class Board_Adapter  extends RecyclerView.Adapter<Board_Adapter.MyViewHolder> {
-    private String[] mTitleSet;
-    private String[] mAuthorSet;
-    private String[] mDateSet;
-    private String[] mBodySet;
-    private String[] mTagSet;
-    private String[] mHitSet;
-    private String[] mLikeSet;
-    private String[] mCommentSet;
+    private ArrayList<String> mCategory;
+    private ArrayList<String> mBoardId;
+    private ArrayList<String> mTitleSet;
+    private ArrayList<String> mAuthorSet;
+    private ArrayList<String> mDateSet;
+    private ArrayList<String> mBodySet;
+    private ArrayList<String> mTagSet;
+    private ArrayList<Integer> mHitSet;
+    private ArrayList<Integer> mLikeSet;
+    private ArrayList<Integer> mCommentSet;
+    private String url;
+
+    Context mContext;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     public static class MyViewHolder extends RecyclerView.ViewHolder {
+
         public CardView mCardView;
         public TextView txtTitle;
         public TextView txtAuthor;
@@ -34,6 +46,7 @@ public class Board_Adapter  extends RecyclerView.Adapter<Board_Adapter.MyViewHol
         public TextView txtHit;
         public TextView txtLike;
         public TextView txtComment;
+
 
         public MyViewHolder(View v) {
             super(v);
@@ -47,13 +60,19 @@ public class Board_Adapter  extends RecyclerView.Adapter<Board_Adapter.MyViewHol
             txtHit = (TextView) v.findViewById(R.id.count_hit);
             txtLike = (TextView) v.findViewById(R.id.count_like);
             txtComment = (TextView) v.findViewById(R.id.count_comment);
-
         }
     }
+    public static String getBoardId(){
+        return "boardId";
+    }
+
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public Board_Adapter(String[] mTitleSet, String[] mAuthorSet, String[] mDateSet, String[] mBodySet, String[] mTagSet, String[] mHitSet, String[] mLikeSet, String[] mCommentSet) {
+    public Board_Adapter(Context mContext, ArrayList<String> mCategory,ArrayList<String> mBoardId, ArrayList<String> mTitleSet, ArrayList<String> mAuthorSet, ArrayList<String> mDateSet, ArrayList<String> mBodySet, ArrayList<String> mTagSet, ArrayList<Integer> mHitSet, ArrayList<Integer> mLikeSet, ArrayList<Integer> mCommentSet) {
 
+        this.mContext = mContext;
+        this.mCategory = mCategory;
+        this.mBoardId = mBoardId;
         this.mTitleSet = mTitleSet;
         this.mAuthorSet = mAuthorSet;
         this.mDateSet = mDateSet;
@@ -64,6 +83,10 @@ public class Board_Adapter  extends RecyclerView.Adapter<Board_Adapter.MyViewHol
         this.mCommentSet = mCommentSet;
     }
 
+
+    public void update(){
+        notifyDataSetChanged();
+    }
     // Create new views (invoked by the layout manager)
     @Override
     public Board_Adapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
@@ -77,20 +100,45 @@ public class Board_Adapter  extends RecyclerView.Adapter<Board_Adapter.MyViewHol
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.txtTitle.setText(mTitleSet[position]);
-        holder.txtAuthor.setText(mAuthorSet[position]);
-        holder.txtDate.setText(mDateSet[position]);
-        holder.txtBody.setText(mBodySet[position]);
-        holder.txtTag.setText(mTagSet[position]);
-        holder.txtHit.setText("조회  " + mHitSet[position]);
-        holder.txtLike.setText("좋아요  " + mLikeSet[position]);
-        holder.txtComment.setText("댓글  " + mCommentSet[position]);
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
+        holder.txtTitle.setText(mTitleSet.get(position));
+        holder.txtAuthor.setText(mAuthorSet.get(position));
+        holder.txtDate.setText(mDateSet.get(position));
+        holder.txtBody.setText(mBodySet.get(position));
+        holder.txtTag.setText(mTagSet.get(position));
+        holder.txtHit.setText("조회  " + mHitSet.get(position));
+        holder.txtLike.setText("좋아요  " + mLikeSet.get(position));
+        holder.txtComment.setText("댓글  " + mCommentSet.get(position));
+
+
+        holder.mCardView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    // 아이템 클릭 시 해당 게시물의 boardId를 서버에 요청
+                   String boardId = mBoardId.get(position);
+                    String Title = mTitleSet.get(position);
+
+                    // 서버로 게시글 boardId 전달
+                    try {
+                        url = "http://52.78.207.133:3000/boards/read/"; //url 변경해야 함
+                        url += "boardId=" + URLEncoder.encode(boardId, "utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(boardId+"/"+Title);
+                   // Log.d("url", url);
+                   // mContext.startActivity(new Intent(mContext, BoardReadingActivity.class));
+
+                    Intent intent = new Intent(mContext, BoardReadingActivity.class);
+                    intent.putExtra("boardId", boardId);
+                     mContext.startActivity(intent);
+                }
+            });
     }
 
     @Override
     public int getItemCount() {
 
-        return mTitleSet.length;
+        return mTitleSet.size();
     }
+
 }

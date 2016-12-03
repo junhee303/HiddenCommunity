@@ -195,6 +195,7 @@ public class BoardReadingActivity extends AppCompatActivity {
                     Bundle extras = getIntent().getExtras();
                     String boardId = extras.getString("boardId");
                     url = "http://52.78.207.133:3000/boards/unlike/" + boardId;
+
                     Log.d("url", url);
                     likeCheckTask = new LikeCheckTask();
                     likeCheckTask.execute();
@@ -215,8 +216,15 @@ public class BoardReadingActivity extends AppCompatActivity {
                     // 좋아요 수 1++ 서버 보내기
                     Bundle extras = getIntent().getExtras();
                     String boardId = extras.getString("boardId");
-                    url = "http://52.78.207.133:3000/boards/like/" + boardId;
-                    Log.d("url", url);
+                    SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
+                    String author = test.getString("UserNickname", null);
+                    try {
+                        url = "http://52.78.207.133:3000/boards/like/" + boardId + "?";
+                        url += "&author=" + URLEncoder.encode(author, "utf-8");
+                        Log.d("url", url);
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
                     likeCheckTask = new LikeCheckTask();
                     likeCheckTask.execute();
                 }

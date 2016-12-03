@@ -1,60 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context="com.example.junhe.hiddencommunity.MajorListActivity"
     android:orientation="vertical"
-    android:weightSum="1"
-    tools:context=".MainActivity">
+    android:weightSum="1">
 
-
-    <!--<android.support.v7.widget.Toolbar-->
-    <!--android:id="@+id/toolbar"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentTop="true"-->
-    <!--android:background="?attr/colorPrimary"-->
-    <!--android:elevation="6dp"-->
-    <!--android:minHeight="?attr/actionBarSize"-->
-    <!--android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"-->
-    <!--app:popupTheme="@style/ThemeOverlay.AppCompat.Light"-->
-    <!--/>-->
-
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tab_layout"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/top_toolbar"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.12"
-        android:background="?attr/colorPrimary"
-        android:elevation="6dp"
-        android:minHeight="?attr/actionBarSize"
-        app:tabIndicatorColor="@color/colorAccent"
-        app:tabMode="scrollable"
-        app:tabSelectedTextColor="#ffffff"
-        app:tabTextColor="#7a7a7a">
+        android:background="#3f51b4"
+        android:elevation="4dp">
 
+        <TextView
+            android:id="@+id/toolbar_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="검색하기"
+            android:textColor="@android:color/white" />
 
-    </android.support.design.widget.TabLayout>
+    </android.support.v7.widget.Toolbar>
 
-    <FrameLayout
+    <android.support.v7.widget.RecyclerView
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.05">
-
-        <Spinner
-            android:id="@+id/board_range_spinner"
-            android:layout_width="116dp"
-            android:layout_height="30dp"
-            android:layout_gravity="right"/>
-    </FrameLayout>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_below="@+id/tab_layout"
-        android:layout_weight="0.75" />
+        android:id="@+id/search_recycler_view"
+        android:layout_weight="0.8">
+    </android.support.v7.widget.RecyclerView>
 
     <FrameLayout
         android:id="@+id/bottom_icon_bar"
@@ -115,5 +90,5 @@
             </LinearLayout>
         </LinearLayout>
     </FrameLayout>
-
 </LinearLayout>
+

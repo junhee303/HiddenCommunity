@@ -98,5 +98,6 @@ public class BoardData{
     public void setComment(int count_comment) {
         this.count_comment = count_comment;
     }
+
 }
 

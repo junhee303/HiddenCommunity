@@ -31,6 +31,13 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
     private Button bNotice;
     private Button bWrite;
 
+    ArrayList<String> tabTitles;
+    int board_position = 0;
+
+    String Major1;
+    String Major2;
+    String Major3;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,11 +55,11 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
 
         SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
-        String Major1 = test.getString("UserMajor1", "");
-        String Major2 = test.getString("UserMajor2", "");
-        String Major3 = test.getString("UserMajor3", "");
+        Major1 = test.getString("UserMajor1", "");
+        Major2 = test.getString("UserMajor2", "");
+        Major3 = test.getString("UserMajor3", "");
 
-        ArrayList<String> tabTitles = new ArrayList<>();
+        tabTitles = new ArrayList<>();
 
 
         tabTitles.add("자유");
@@ -102,6 +109,7 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+
     }
 
     // ViewPager Adapter
@@ -123,19 +131,34 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-
             switch (position) {
                 case 0:
-                    return new BoardBlankFragment();
+                    BoardBlankFragment fragment = new BoardBlankFragment();
+                    Bundle args = new Bundle();
+                    args.putInt("index", 0);
+                    fragment.setArguments(args);
+                    return fragment;
                 case 1:
-                    return new BoardBlankFragment();
+                    fragment = new BoardBlankFragment();
+                    args = new Bundle();
+                    args.putInt("index", 1);
+                    fragment.setArguments(args);
+                    return fragment;
                 case 2:
-                    return new BoardBlankFragment();
+                    fragment = new BoardBlankFragment();
+                    args = new Bundle();
+                    args.putInt("index", 2);
+                    fragment.setArguments(args);
+                    return fragment;
                 case 3:
-                    return new BoardBlankFragment();
+                    fragment = new BoardBlankFragment();
+                    args = new Bundle();
+                    args.putInt("index", 3);
+                    fragment.setArguments(args);
+                    return fragment;
+                default:
+                    return null;
             }
-
-            return null;
         }
 
         @Override
