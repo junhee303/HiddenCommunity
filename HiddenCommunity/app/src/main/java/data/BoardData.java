@@ -70,19 +70,6 @@ public class BoardData{
     public void setTag(String Tag) {
         this.Tag = Tag;
     }
-//    public void setTag(JSONArray Tag) {
-//        try {
-//            ArrayList tags = new ArrayList();
-//            if (tags != null) {
-//                int len = Tag.length();
-//                for (int i = 0; i < len; i++) {
-//                    tags.add(Tag.get(i).toString());
-//                }
-//            }
-//        }catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public int getHit() { return count_hit;}
     public void setHit(int count_hit) {

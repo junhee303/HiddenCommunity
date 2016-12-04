@@ -51,7 +51,8 @@
         <activity android:name=".BoardReadingActivity" />
         <activity android:name=".BoardUpdateActivity" />
         <activity android:name=".BoardRecyclerViewActivity" />
-        <activity android:name=".BoardSearchActivity"></activity>
+        <activity android:name=".BoardSearchActivity" />
+        <activity android:name=".ChatMainActivity" />
     </application>
 
 </manifest>

@@ -10,8 +10,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -37,6 +39,10 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
     String Major1;
     String Major2;
     String Major3;
+
+    int range_position;
+
+    PagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +77,7 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
             tabTitles.add(Major3);
         }
 
-        PagerAdapter pagerAdapter =
+        pagerAdapter =
                 new PagerAdapter(getSupportFragmentManager(), BoardRecyclerViewActivity.this, tabTitles);
 
         viewPager.setAdapter(pagerAdapter);
@@ -86,25 +92,63 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
             tab.setCustomView(pagerAdapter.getTabView(i));
         }
 
-        selectRangeSpinner(); // 게시판 정렬 선택
+        selectBoardRange(); // 게시판 정렬 선택
         pushBottomIcon(); // 하단 아이콘 클릭 시 액션
     }
 
     // 게시판 정렬 선택
-    public void selectRangeSpinner() {
-
+    public void selectBoardRange() {
         BoardRangeSpinner = (Spinner) findViewById(R.id.board_range_spinner);
+        BoardRangeSpinner.setOnItemSelectedListener(mOnItemSelectedListener);
 
-        list.add("최신순");
-        list.add("조회순");
-        list.add("좋아요순");
-        list.add("댓글순");
+        list.add("최신순"); // position 0
+        list.add("조회순"); // position 1
+        list.add("좋아요순"); // position 2
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         BoardRangeSpinner.setAdapter(dataAdapter);
+
     }
+
+    private AdapterView.OnItemSelectedListener mOnItemSelectedListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            Log.d("tag", "onItemSelected() entered!!");
+            range_position= BoardRangeSpinner.getSelectedItemPosition();
+            Log.d("tag", "선택한 정렬의 list position은  = " + range_position);
+
+            //pagerAdapter.update();
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            Log.d("tag", "onNothingSelected() entered!!");
+        }
+
+    };
+
+//    // 게시판 정렬 선택 시 그에 따른 게시글 정렬 변경
+//    public String changeBoardRange(int range_position) {
+//        String url_range;
+//        switch (range_position) {
+//            case 0: // 최신순 정렬
+//                url_range = "http://52.78.207.133:3000/boards/dateList/";
+//                Log.d("url", url_range);
+//                return url_range;
+//            case 1: // 조회순 정렬
+//                url_range = "http://52.78.207.133:3000/boards/hitList/";
+//                Log.d("url", url_range);
+//                return url_range;
+//            case 2: // 좋아요순 정렬
+//                url_range = "http://52.78.207.133:3000/boards/likeList/";
+//                Log.d("url", url_range);
+//                return url_range;
+//            default:
+//                return null;
+//        }
+//    }
 
     @Override
     public void onResume() {
@@ -124,6 +168,10 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
             this.tabTitles = tabTitles;
         }
 
+        public void update(){
+            notifyDataSetChanged();
+        }
+
         @Override
         public int getCount() {
             return tabTitles.size();
@@ -131,29 +179,35 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
+
+            //BoardRangeSpinner.setOnItemSelectedListener(mOnItemSelectedListener);
             switch (position) {
                 case 0:
                     BoardBlankFragment fragment = new BoardBlankFragment();
                     Bundle args = new Bundle();
                     args.putInt("index", 0);
+                    //args.putInt("range_position", range_position);
                     fragment.setArguments(args);
                     return fragment;
                 case 1:
                     fragment = new BoardBlankFragment();
                     args = new Bundle();
                     args.putInt("index", 1);
+                    //args.putInt("range_position", range_position);
                     fragment.setArguments(args);
                     return fragment;
                 case 2:
                     fragment = new BoardBlankFragment();
                     args = new Bundle();
                     args.putInt("index", 2);
+                   // args.putInt("range_position", range_position);
                     fragment.setArguments(args);
                     return fragment;
                 case 3:
                     fragment = new BoardBlankFragment();
                     args = new Bundle();
                     args.putInt("index", 3);
+                   // args.putInt("range_position", range_position);
                     fragment.setArguments(args);
                     return fragment;
                 default:
@@ -195,6 +249,8 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // 상단바의 '검색 아이콘' 클릭 시 게시글 검색 메뉴로 이동
                 Toast.makeText(BoardRecyclerViewActivity.this, "검색 메뉴로 이동", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(BoardRecyclerViewActivity.this, BoardSearchActivity.class);
+                startActivityForResult(intent, 1000);
             }
         });
         bNotice.setOnClickListener(new View.OnClickListener() {
@@ -212,4 +268,5 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
             }
         });
     }
+
 }

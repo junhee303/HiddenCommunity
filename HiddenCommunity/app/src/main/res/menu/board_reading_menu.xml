@@ -10,5 +10,8 @@
     <item
         android:id="@+id/update_btn"
         android:title="@string/수정하기" />
+    <item
+        android:id="@+id/delete_btn"
+        android:title="@string/삭제하기" />
 </menu>
 

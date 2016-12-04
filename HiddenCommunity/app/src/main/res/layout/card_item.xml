@@ -59,14 +59,14 @@
             <TextView
                 android:id="@+id/Body"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="75dp"
                 android:ems="10"
                 android:hint="내용을 입력하세요"
                 android:textColorHint="#FFCCCACA"
                 android:textSize="16dp"
                 android:textColor="#606060"
                 android:layout_marginTop="40dp"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="10dp"
                 />
 
             <TextView
@@ -79,7 +79,7 @@
                 android:textStyle="bold"
                 android:textSize="14dp"
                 android:textColor="#88bec9"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="30dp"
                 />
 

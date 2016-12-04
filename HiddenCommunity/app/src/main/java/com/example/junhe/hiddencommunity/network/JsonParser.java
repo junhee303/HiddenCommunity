@@ -17,27 +17,20 @@ import data.CommentData;
 
 public class JsonParser {
     CommentData commentData;
-
-    ArrayList<String> authorList = new ArrayList<>();
-    ArrayList<String> dateList = new ArrayList<>();
-    ArrayList<String> bodyList = new ArrayList<>();
-
-    JSONArray commentArray = new JSONArray();
-
+    JSONArray postCommentList;
 
     //JSONObject
     public ArrayList<BoardData> getBoardData(JSONObject response) {
         ArrayList<BoardData> boardDataList = new ArrayList<>();
         BoardData boardData;
-        String tagString = "";
 
         System.out.println("JsonParser의 getBoardData 부분");
 
         if (response != null || response.length() > 0) {
             try {
-                JSONArray postBoardsList =  response.getJSONArray("boards");
+                JSONArray postBoardsList = response.getJSONArray("boards");
 
-                ArrayList<JSONObject> boardsList = new ArrayList();
+                ArrayList<JSONObject> boardsList = new ArrayList<>();
 
                 System.out.println("postBoardList의 길이" + postBoardsList.length());
 
@@ -45,43 +38,43 @@ public class JsonParser {
                     int len = postBoardsList.length();
                     for (int i = 0; i < len; i++) {
                         boardsList.add(postBoardsList.getJSONObject(i));
+                        String tagString = "";
 
-                        String boardId = boardsList.get(i).getString("_id");
-                        System.out.println("boardId 받아오기 :" + boardId);
-                        String postCategory = boardsList.get(i).getString("category");
-                        // String postCategory = board.getString("자유");
-                        System.out.println("category 받아오기 :" + postCategory);
-                        String postTitle = boardsList.get(i).getString("title");
-                        String postAuthor = boardsList.get(i).getString("author");
-                        String postDate = boardsList.get(i).getString("date");
-                        String postBody = boardsList.get(i).getString("body");
-                        JSONArray postTag = boardsList.get(i).getJSONArray("tag");
-                        JSONObject Meta = boardsList.get(i).getJSONObject("meta");
+                        String boardId = boardsList.get(i).getString("_id"); // 게시글 ID
+                        String postCategory = boardsList.get(i).getString("category"); // 게시판 카테고리
+                        String postTitle = boardsList.get(i).getString("title"); // 제목
+                        String postAuthor = boardsList.get(i).getString("author"); // 작성자
+                        String postBody = boardsList.get(i).getString("body"); // 내용
+                        JSONArray postTag = boardsList.get(i).getJSONArray("tag"); // 태그 배열
+                        JSONObject Meta = boardsList.get(i).getJSONObject("meta"); // 조회 수, 좋아요 수
+                        postCommentList = boardsList.get(i).getJSONArray("comment"); // 댓글 수 받아오기 위해서 댓글 Array 불러옴
+                        int Hit = Meta.getInt("hit"); // 조회 수
+                        int Like = Meta.getInt("like"); // 좋아요 수
+                        int Comment = postCommentList.length(); // 댓글 수
+                        //int Hate = Meta.getInt("hate"); // 신고하기 수
 
-                        commentArray = boardsList.get(i).getJSONArray("comment"); // 댓글 수 받아오기 위해서 댓글 Array 불러옴
-                        int Comment = commentArray.length(); // 댓글 수
-
-                        int Hit = Meta.getInt("hit");
-                        int Like = Meta.getInt("like");
-                        int Hate = Meta.getInt("hate");
-
-                        ArrayList tags2 = new ArrayList();
-
-
-//                            int len2 = postTag.length();
-//                            for (int j = 0; j < len; j++) {
-//                                tags2.add(postTag.get(j).toString());
-//                                tagString += tags2.get(j) + " ";
-//                            }
-
+                        ArrayList tags2 = new ArrayList(); // 태그 배열 스트링으로 바꾸기
+                        if (tags2 != null) {
+                            int len2 = postTag.length();
+                            for (int j = 0; j < len2; j++) {
+                                tags2.add(postTag.get(j).toString());
+                                tagString += tags2.get(j) + " ";
+                            }
+                        }
+                        // postDate를 T를 기준으로 날짜와 시간으로 나누기
+                        String totalDate = boardsList.get(i).getString("date"); // 날짜
+                        String date = totalDate.substring(0,totalDate.indexOf("T"));
+                        String time = totalDate.substring(totalDate.indexOf("T")+1, totalDate.indexOf("."));
+                        String postDate = date + "      " + time;
 
 
                         Log.d("JsonParser: ", "boardId: " + boardId + " / 작성 게시판: " + postCategory + " / 글 제목: " + postTitle + " / 글쓴이: " + postAuthor);
-                        Log.d("JsonParser: ", " / 날짜: " + postDate + " / 글내용: " + postBody + " / 태그: " + "tagString" + " / 조회 수: " + Hit + " / 좋아요 수: " + Like + " / 댓글 수: " + Comment);
+                        Log.d("JsonParser: ", " / 날짜: " + postDate + " / 글내용: " + postBody + " / 태그: " + tagString + " / 조회 수: " + Hit + " / 좋아요 수: " + Like + " / 댓글 수: " + Comment);
 
 
                         boardData = new BoardData(boardId, postCategory, postTitle, postAuthor, postDate, postBody, tagString, Hit, Like, Comment);
                         boardDataList.add(boardData);
+
 
                     }
                 }
@@ -104,27 +97,20 @@ public class JsonParser {
         if (response != null || response.length() > 0) {
             try {
                 board = response.getJSONObject("board");
-                String boardId = board.getString("_id");
-                System.out.println("boardId 받아오기 :" + boardId);
-                String postCategory = board.getString("category");
-                // String postCategory = board.getString("자유");
-                System.out.println("category 받아오기 :" + postCategory);
-                String postTitle = board.getString("title");
-                String postAuthor = board.getString("author");
-                String postDate = board.getString("date");
-                String postBody = board.getString("body");
-                JSONArray postTag = board.getJSONArray("tag");
-                JSONObject Meta = board.getJSONObject("meta");
+                String boardId = board.getString("_id"); // 게시글 ID
+                String postCategory = board.getString("category"); // 게시판 카테고리
+                String postTitle = board.getString("title"); // 제목
+                String postAuthor = board.getString("author"); // 작성자
+                String postBody = board.getString("body"); // 내용
+                JSONArray postTag = board.getJSONArray("tag"); // 태그 배열
+                JSONObject Meta = board.getJSONObject("meta"); // 조회 수, 좋아요 수
+                postCommentList = board.getJSONArray("comment"); // 댓글 수 받아오기 위해서 댓글 Array 불러옴
+                int Hit = Meta.getInt("hit"); // 조회 수
+                int Like = Meta.getInt("like"); // 좋아요 수
+                int Comment = postCommentList.length(); // 댓글 수
+                //int Hate = Meta.getInt("hate"); // 신고하기 수
 
-                commentArray = board.getJSONArray("comment"); // 댓글 수 받아오기 위해서 댓글 Array 불러옴
-                int Comment = commentArray.length(); // 댓글 수
-
-                int Hit = Meta.getInt("hit");
-                int Like = Meta.getInt("like");
-                int Hate = Meta.getInt("hate");
-
-                ArrayList tags = new ArrayList();
-
+                ArrayList tags = new ArrayList(); // 태그 배열 스트링으로 바꾸기
                 if (tags != null) {
                     int len = postTag.length();
                     for (int i = 0; i < len; i++) {
@@ -133,6 +119,12 @@ public class JsonParser {
                     }
                 }
 
+                //getComment(response);
+
+                String totalDate = board.getString("date"); // 날짜
+                String date = totalDate.substring(0,totalDate.indexOf("T"));
+                String time = totalDate.substring(totalDate.indexOf("T")+1, totalDate.indexOf("."));
+                String postDate = date + "      " + time;
 
                 Log.d("JsonParser: ", "boardId: " + boardId + " / 작성 게시판: " + postCategory + " / 글 제목: " + postTitle + " / 글쓴이: " + postAuthor);
                 Log.d("JsonParser: ", " / 날짜: " + postDate + " / 글내용: " + postBody + " / 태그: " + tagString + " / 조회 수: " + Hit + " / 좋아요 수: " + Like + " / 댓글 수: " + Comment);
@@ -145,36 +137,45 @@ public class JsonParser {
         return boardData;
     }
 
-    public CommentData getComment(JSONObject response) {
-        JSONObject comment;
+    public ArrayList<CommentData> getComment(JSONObject response) {
+        ArrayList<CommentData> commentDataList = new ArrayList<>();
+        CommentData commentData;
 
         System.out.println("JsonParser의 getComment 부분");
 
         if (response != null || response.length() > 0) {
             try {
-                comment = response.getJSONObject("board");
-                String boardId = comment.getString("_id");
-                commentArray = comment.getJSONArray("comment");
-                for (int i = 0; i < commentArray.length(); i++) {
-                    JSONObject jsonObject = commentArray.getJSONObject(i);
-                    authorList.add(jsonObject.getString("author"));
-                    dateList.add(jsonObject.getString("date"));
-                    bodyList.add(jsonObject.getString("body"));
-                    commentData = new CommentData(boardId, authorList.get(i), dateList.get(i), bodyList.get(i));
+                JSONObject board = response.getJSONObject("board");
+                String boardId = board.getString("_id");
+                postCommentList = board.getJSONArray("comment");
+
+                ArrayList<JSONObject> commentList = new ArrayList<>();
+                System.out.println("postCommentList의 길이" + postCommentList.length());
+                if (commentList != null) {
+                    int len = postCommentList.length();
+                    for (int i = 0; i < len; i++) {
+                        commentList.add(postCommentList.getJSONObject(i));
+
+                        String commentId = commentList.get(i).getString("_id");
+                        String commentAuthor = commentList.get(i).getString("author");
+                        String commentBody = commentList.get(i).getString("body");
+
+                        String totalDate = commentList.get(i).getString("date"); // 날짜
+                        String date = totalDate.substring(0,totalDate.indexOf("T"));
+                        String time = totalDate.substring(totalDate.indexOf("T")+1, totalDate.indexOf("."));
+                        String commentDate = date + "      " + time;
+
+                        Log.d("JsonParser: ", "boardId: " + boardId + " / commentId: " + commentId + " /  댓글쓴이: " + commentAuthor + " / 댓글 쓴 날짜: " + commentDate + " / 댓글 내용: " + commentBody);
+
+                        commentData = new CommentData(boardId, commentAuthor, commentDate, commentBody);
+                        commentDataList.add(commentData);
+                    }
                 }
-                System.out.println("" + authorList + "\n" + "" + dateList + "\n" + bodyList);
-                // [] [] []로 뜸
-
-                Log.d("JsonParser: ", "boardId: " + boardId + " /  글쓴이: " + authorList.get(0) + " / 날짜: " + dateList.get(0) + " / 글 내용: " + bodyList.get(0));
-
             } catch (JSONException e) {
                 e.printStackTrace();
-
             }
-
         }
-        System.out.println(commentData.getAuthor());
-        return commentData;
+        return commentDataList;
     }
 
 //    private ArrayList<BoardData> getListData(JSONObject reponse) {

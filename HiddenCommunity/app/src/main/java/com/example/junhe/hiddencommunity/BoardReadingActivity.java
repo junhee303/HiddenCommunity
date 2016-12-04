@@ -48,34 +48,41 @@ import data.CommentData;
 public class BoardReadingActivity extends AppCompatActivity {
 
     private Toolbar top_toolbar;
+    private Button move_boardList_btn;
+    // private Button setting_btn;
+
     private TextView Category;
     private TextView Title;
     private TextView Author;
     private TextView Date;
     private TextView Body;
     private TextView Tag;
+
     private Button bLikeOn;
     private Button bLikeOff;
+
     private EditText userInput;
     private Button bAddComment;
-    private TextView TheNumberOfLike;
+    //private RecyclerView comment_recyclerView;
     private boolean click_like = false;
-    private int count_like = 0;
-    private int count_comment = 0;
-
-    private Button move_boardList_btn;
-    private Button setting_btn;
-
-    final Context context = this;
-
     CustomJsonRequest request_comment;
     ListView comment_list;
     ScrollView scrollView;
 
-    private ArrayList<CommentData> comment_data = new ArrayList<CommentData>();
+
+    CommentListAdapter mCommentAdapter;
+    CommentData commentData;
+    //Comment_Adapter mCommentAdapter;
+//    private ArrayList<CommentData> comment_data = new ArrayList<CommentData>();
+//    ArrayList<String> mCommentBoardId = new ArrayList<>();
+//    ArrayList<String> mCommentAuthorSet = new ArrayList<>();
+//    ArrayList<String> mCommentDateSet = new ArrayList<>();
+//    ArrayList<String> mCommentBodySet = new ArrayList<>();
+
     Context mContext = this;
 
     String url, result;
+    String url_delete, result_delete;
 
     // 좋아요 버튼 클릭 시 response 받아오기
     class LikeCheckTask extends AsyncTask<String, Void, String> {
@@ -96,6 +103,7 @@ public class BoardReadingActivity extends AppCompatActivity {
     }
 
     LikeCheckTask likeCheckTask;
+
     // 좋아요 버튼 클릭 시 "ok" response
     private void onResponseHttp(String s) {
         if (s == null) {
@@ -113,33 +121,70 @@ public class BoardReadingActivity extends AppCompatActivity {
         }
     }
 
+    // 삭제 시 response 받아오기
+    class DeleteTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                result_delete = HTTPInstance.Instance().Post(url_delete);
+                onResponseHttp2(result_delete);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    DeleteTask deleteTask;
+
+    // 삭제 완료 시 "ok" response
+    private void onResponseHttp2(String s) {
+        if (s == null) {
+            System.out.println("서버에서 전송된 response가 null입니다");
+            return;
+        }
+        Log.d("RESPONSE", s);
+        if (s.compareTo("ok") == 0) {
+            System.out.println("해당 게시물이 삭제되었습니다");
+//            Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+//            startActivityForResult(intent, 1000);
+        } else {
+            System.out.println("해당 게시물이 삭제되지 않았습니다");
+            //Toast.makeText(EmailActivity.this, "다시 인증해 주세요", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board_reading);
 
         top_toolbar = (Toolbar) findViewById(R.id.top_toolbar);
+        move_boardList_btn = (Button) findViewById(R.id.move_boardList_btn);
+        //setting_btn = (Button) findViewById(R.id.setting_btn);
         scrollView = (ScrollView) findViewById(R.id.scrollView);
+
         Category = (TextView) findViewById(R.id.Category);
         Title = (TextView) findViewById(R.id.Title);
         Author = (TextView) findViewById(R.id.Author);
         Date = (TextView) findViewById(R.id.Date);
         Body = (TextView) findViewById(R.id.Body);
         Tag = (TextView) findViewById(R.id.Tag);
+
         bLikeOn = (Button) findViewById(R.id.bLikeOn);
         bLikeOff = (Button) findViewById(R.id.bLikeOff);
         bAddComment = (Button) findViewById(R.id.bAddComment);
-        TheNumberOfLike = (TextView) findViewById(R.id.TheNumberOfLike);
 
-        move_boardList_btn = (Button) findViewById(R.id.move_boardList_btn);
-        setting_btn = (Button) findViewById(R.id.move_boardList_btn);
 
         sendRequest_board(); // 게시물 읽어오기
         pushLikeButton(); // 좋아요 버튼 클릭
         pushCommentButton(); // 댓글 쓰기 버튼 클릭
         pushBoardListButton(); // 상단의 [ < ] 버튼 클릭 -> 게시글 목록 화면으로 이동
-        pushSettingButton(setting_btn); // 상단의 설정 버튼 클릭 -> 대화하기, 신고하기, 수정하기
-
     }
 
     // 게시물 읽어오기
@@ -159,17 +204,41 @@ public class BoardReadingActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONObject response) {
                 System.out.println("sendRequest의 onResponse 부분");
-                JsonParser js = new JsonParser();
-                BoardData data = js.getData(response);
-                System.out.println("JsonParser의 response 받아서 BoardData에 넣기");
+                JsonParser js1 = new JsonParser();
+                BoardData data = js1.getData(response);
+                System.out.println("JsonParser1의 response 받아서 BoardData에 넣기");
                 Category.setText(data.getCategory());
                 Title.setText(data.getTitle());
                 Author.setText(data.getAuthor());
                 Date.setText(data.getDate());
                 Body.setText(data.getBody());
                 Tag.setText(data.getTag());
-
                 System.out.println("BoardData에서 받아와서 Title에 getText : " + Title.getText());
+
+                JsonParser js2 = new JsonParser();
+                ArrayList<CommentData> data_comment = js2.getComment(response);
+                System.out.println("JsonParser2의 response 받아서 data_comment에 넣기");
+                int comment_count = data_comment.size();
+                System.out.println("comment_count는 " + comment_count);
+
+                for (int i = 0; i < comment_count; i++) {
+                    String mCommentBoardId = data_comment.get(i).getBoardId();
+                    String mCommentAuthorSet = data_comment.get(i).getAuthor();
+                    String mCommentDateSet = data_comment.get(i).getDate();
+                    String mCommentBodySet = data_comment.get(i).getBody();
+
+                    commentData = new CommentData(mCommentBoardId, mCommentAuthorSet, mCommentDateSet, mCommentBodySet);
+                    data_comment.add(commentData);
+
+                }
+
+                comment_list = (ListView) findViewById(R.id.comment_list);
+                mCommentAdapter = new CommentListAdapter(getApplicationContext(), R.layout.card_comment_item, data_comment);
+                // ListView에 각각의 전공표시를 제어하는 Adapter를 설정
+                comment_list.setAdapter(mCommentAdapter);
+                setListViewHeightBasedOnChildren(comment_list);
+
+                mCommentAdapter.update();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -200,8 +269,8 @@ public class BoardReadingActivity extends AppCompatActivity {
                     likeCheckTask = new LikeCheckTask();
                     likeCheckTask.execute();
                 }
-                count_like--;
-                TheNumberOfLike.setText("좋아요 수 : " + count_like + "click_like 클릭 상태 : " + click_like);
+
+                //TheNumberOfLike.setText("좋아요 수 : " + count_like + "click_like 클릭 상태 : " + click_like);
             }
         });
 
@@ -228,8 +297,8 @@ public class BoardReadingActivity extends AppCompatActivity {
                     likeCheckTask = new LikeCheckTask();
                     likeCheckTask.execute();
                 }
-                count_like++;
-                TheNumberOfLike.setText("좋아요 수 : " + count_like + "click_like 클릭 상태 : " + click_like);
+
+                //TheNumberOfLike.setText("좋아요 수 : " + count_like + "click_like 클릭 상태 : " + click_like);
             }
         });
     }
@@ -239,10 +308,10 @@ public class BoardReadingActivity extends AppCompatActivity {
         bAddComment.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                LayoutInflater li = LayoutInflater.from(context);
+                LayoutInflater li = LayoutInflater.from(mContext);
                 View commentPopupView = li.inflate(R.layout.comment_post_popup, null);
 
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
                 alertDialogBuilder.setView(commentPopupView);
 
                 userInput = (EditText) commentPopupView.findViewById(R.id.editTextDialogComment);
@@ -277,7 +346,7 @@ public class BoardReadingActivity extends AppCompatActivity {
         });
     }
 
-    // 댓글 보내고 읽어오기
+    //  댓글 서버에 등록하고 댓글리스트 읽어오기
     public void sendRequest_comment() {
         VolleySingleton v = VolleySingleton.getInstance();
         RequestQueue queue = v.getRequestQueue();
@@ -287,6 +356,7 @@ public class BoardReadingActivity extends AppCompatActivity {
         String comment_body = userInput.getText().toString();
         System.out.println("comment_author는 " + comment_author + " / comment_body는" + comment_body);
 
+        // 서버로 댓글 전달
         try {
             Bundle extras = getIntent().getExtras();
             String boardId = extras.getString("boardId");
@@ -301,18 +371,41 @@ public class BoardReadingActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(JSONObject response) {
                     System.out.println("sendRequest의 onResponse 부분");
-                    JsonParser js = new JsonParser();
-                    CommentData data = js.getComment(response);
+                    JsonParser js2 = new JsonParser();
+                    ArrayList<CommentData> data_comment = js2.getComment(response);
+                    System.out.println("JsonParser2의 response 받아서 data_comment에 넣기");
+                    int comment_count = data_comment.size();
+                    System.out.println("comment_count는 " + comment_count);
+
+
+                    for (int i = 0; i < comment_count; i++) {
+                        String mCommentBoardId = data_comment.get(i).getBoardId();
+                        String mCommentAuthorSet = data_comment.get(i).getAuthor();
+                        String mCommentDateSet = data_comment.get(i).getDate();
+                        String mCommentBodySet = data_comment.get(i).getBody();
+                        System.out.println(mCommentBoardId + " / " + mCommentAuthorSet+ " / " + mCommentDateSet + " / " + mCommentBodySet);
+                        commentData = new CommentData(mCommentBoardId, mCommentAuthorSet, mCommentDateSet, mCommentBodySet);
+                        data_comment.add(commentData);
+
+
+                    }
+
+//                    mCommentAdapter = new CommentListAdapter(getApplicationContext(), R.layout.card_comment_item, data_comment);
+//                    comment_list.setAdapter(mCommentAdapter);
+//                    mCommentAdapter.notifyDataSetChanged();
+//                    mCommentAdapter.notifyDataSetChanged();
 
                     // ListView 가져오기
+
                     comment_list = (ListView) findViewById(R.id.comment_list);
-                    CommentListAdapter adapter = new CommentListAdapter(mContext, 0, comment_data);
-                    adapter.add(data);
+                    mCommentAdapter = new CommentListAdapter(getApplicationContext(), R.layout.card_comment_item, data_comment);
+
                     // ListView에 각각의 전공표시를 제어하는 Adapter를 설정
-                    comment_list.setAdapter(adapter);
+                    comment_list.setAdapter(mCommentAdapter);
 
                     setListViewHeightBasedOnChildren(comment_list); // 댓글 리스트뷰 높이만큼 다 보이게 세팅
 
+                    mCommentAdapter.update();
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -324,56 +417,8 @@ public class BoardReadingActivity extends AppCompatActivity {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
-
         // queue에 Request를 추가해준다.
         queue.add(request_comment);
-    }
-
-    // 댓글 Adapter
-    private class CommentListAdapter extends ArrayAdapter<CommentData> {
-
-        private ArrayList<CommentData> mCommentData;
-
-        public CommentListAdapter(Context context, int resource, ArrayList<CommentData> commentData) {
-            super(context, resource, commentData);
-
-            mCommentData = commentData;
-        }
-
-        // 댓글 리스트 보이기
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-
-            TextView cmtAuthor;
-            TextView cmtDate;
-            TextView cmtBody;
-
-            if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.list_comment, parent, false);
-
-                cmtAuthor = (TextView) convertView.findViewById(R.id.comment_Author);
-                cmtDate = (TextView) convertView.findViewById(R.id.comment_Date);
-                cmtBody = (TextView) convertView.findViewById(R.id.comment_Body);
-
-                convertView.setTag(cmtAuthor);
-                convertView.setTag(cmtDate);
-                convertView.setTag(cmtBody);
-            } else {
-                cmtAuthor = (TextView) convertView.getTag();
-                cmtDate = (TextView) convertView.getTag();
-                cmtBody = (TextView) convertView.getTag();
-            }
-
-            System.out.println(position);
-            cmtAuthor.setText(mCommentData.get(position).getAuthor().toString());
-            cmtDate.setText(mCommentData.get(position).getDate().toString());
-            cmtBody.setText(mCommentData.get(position).getBody().toString());
-
-            return convertView;
-        }
-
     }
 
     // 댓글 수에 따라 리스트 높이 조절
@@ -399,7 +444,7 @@ public class BoardReadingActivity extends AppCompatActivity {
         listView.requestLayout();
     }
 
-    // 상단이 [ < ] 아이콘 클릭 시
+    // 상단의 [ < ] 아이콘 클릭 시
     public void pushBoardListButton() {
         move_boardList_btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -413,27 +458,31 @@ public class BoardReadingActivity extends AppCompatActivity {
     }
 
     // 상단이 설정 아이콘 클릭 시
-    public void pushSettingButton(View button) {
+    public void pushSettingButton(View view) {
+        PopupMenu popUp = new PopupMenu(this, view);
+        popUp.inflate(R.menu.board_reading_menu);
+        popUp.show();
 
-        PopupMenu popUp = new PopupMenu(this, button);
-        popUp.getMenuInflater().inflate(R.menu.board_reading_menu, popUp.getMenu());
         popUp.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             public boolean onMenuItemClick(MenuItem item) {
                 SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
-                String txtAuthor = test.getString("UserNickname", null);
+                String myNickname = test.getString("UserNickname", null);
 
                 switch (item.getItemId()) {
                     case R.id.chat_btn:
                         Toast.makeText(BoardReadingActivity.this, "채팅하기 기능이 구현되지 않았습니다", Toast.LENGTH_SHORT).show();
-
+                        Intent intent1 = new Intent(BoardReadingActivity.this, ChatMainActivity.class);
+                        String author = Author.getText().toString();
+                        intent1.putExtra("Author", author);
+                        startActivityForResult(intent1, 1000);
                         break;
                     case R.id.report_btn:
                         Toast.makeText(BoardReadingActivity.this, "해당 게시글을 신고하였습니다", Toast.LENGTH_SHORT).show();
 
                         break;
                     case R.id.update_btn:
-                        if (Author.getText().equals(txtAuthor)) {
-                            Toast.makeText(BoardReadingActivity.this, "click the setting button", Toast.LENGTH_SHORT).show();
+                        if (Author.getText().equals(myNickname)) {
+                            Toast.makeText(BoardReadingActivity.this, "해당 게시물을 수정합니다", Toast.LENGTH_SHORT).show();
 
                             Intent intent2 = new Intent(BoardReadingActivity.this, BoardUpdateActivity.class);
                             Bundle extras = getIntent().getExtras();
@@ -452,16 +501,87 @@ public class BoardReadingActivity extends AppCompatActivity {
                             Toast.makeText(BoardReadingActivity.this, "자신의 글만 수정할 수 있습니다", Toast.LENGTH_SHORT).show();
                         }
                         break;
+                    case R.id.delete_btn:
+                        if (Author.getText().equals(myNickname)) {
+                            Intent intent3 = new Intent(BoardReadingActivity.this, BoardRecyclerViewActivity.class); // 게시글 목록으로 나가기
+                            Bundle extras = getIntent().getExtras();
+                            String boardId = extras.getString("boardId", null);
+
+                            url_delete = "http://52.78.207.133:3000/boards/delete/" + boardId;
+                            Log.d("url", url_delete);
+                            startActivityForResult(intent3, 1000);
+
+                            Toast.makeText(BoardReadingActivity.this, "해당 게시물을 삭제합니다", Toast.LENGTH_SHORT).show();
+
+                            deleteTask = new DeleteTask();
+                            deleteTask.execute();
+
+                        } else {
+                            Toast.makeText(BoardReadingActivity.this, "자신의 글만 삭제할 수 있습니다", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
                     default:
                         return true;
                 }
                 return true;
+
             }
         });
+    }
+
+    // 댓글 Adapter
+    private class CommentListAdapter extends ArrayAdapter<CommentData> {
+
+        private ArrayList<CommentData> mCommentData;
+
+        public CommentListAdapter(Context context, int resource, ArrayList<CommentData> commentData) {
+            super(context, resource, commentData);
+
+            mCommentData = commentData;
+        }
+
+        // 댓글 리스트 보이기
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            TextView cmtAuthor;
+            TextView cmtDate;
+            TextView cmtBody;
+
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.card_comment_item, parent, false);
+
+                cmtAuthor = (TextView) convertView.findViewById(R.id.comment_Author);
+                cmtDate = (TextView) convertView.findViewById(R.id.comment_Date);
+                cmtBody = (TextView) convertView.findViewById(R.id.comment_Body);
+
+                convertView.setTag(cmtAuthor);
+                convertView.setTag(cmtDate);
+                convertView.setTag(cmtBody);
+            } else {
+                cmtAuthor = (TextView) convertView.getTag();
+                cmtDate = (TextView) convertView.getTag();
+                cmtBody = (TextView) convertView.getTag();
+            }
+
+            System.out.println(position);
+            cmtAuthor.setText(mCommentData.get(position).getAuthor().toString());
+            cmtDate.setText(mCommentData.get(position).getDate().toString());
+            cmtBody.setText(mCommentData.get(position).getBody().toString());
+
+            return convertView;
+        }
+
+        public void update(){
+            notifyDataSetChanged();
+        }
 
     }
 
 
 }
+
+
 
 

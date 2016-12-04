@@ -10,6 +10,7 @@
     <string name="대화하기">대화하기</string>
     <string name="신고하기">신고하기</string>
     <string name="수정하기">수정하기</string>
+    <string name="삭제하기">삭제하기</string>
 
     <string name="home">home</string>
     <string name="chat">chat</string>

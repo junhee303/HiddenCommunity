@@ -38,6 +38,7 @@ public class BoardBlankFragment extends Fragment {
     ArrayList<Integer> mCommentSet = new ArrayList<>();
     Board_Adapter mAdapter;
     int mParam1;
+    int range_position;
 
     public BoardBlankFragment() {
 
@@ -50,10 +51,26 @@ public class BoardBlankFragment extends Fragment {
 
         if (getArguments() != null) {
             mParam1 = getArguments().getInt("index");
+            //range_position = getArguments().getInt("range_position");
         }else{
             mParam1 = 0;
+            //range_position = 4;
         }
 
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser)
+    {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser)
+        {
+            //화면에 실제로 보일때
+        }
+        else
+        {
+            //preload 될때(전페이지에 있을때)
+        }
     }
 
 //    public BoardBlankFragment newInstance(String category) {
@@ -121,10 +138,12 @@ public class BoardBlankFragment extends Fragment {
         final String category = _Caterogy;
         System.out.println("2해당 게시글의 카테고리는 " + category);
 
+        int range = ((BoardRecyclerViewActivity)getActivity()).range_position;
         // 서버로 카테고리 전달
         try {
             String url_category = "http://52.78.207.133:3000/boards/list/";
-            url_category += URLEncoder.encode(category, "utf-8");
+            url_category += URLEncoder.encode(category, "utf-8")+ "/";
+            url_category += range;
             Log.d("url", url_category);
 
             CustomJsonRequest request = new CustomJsonRequest(Request.Method.GET,

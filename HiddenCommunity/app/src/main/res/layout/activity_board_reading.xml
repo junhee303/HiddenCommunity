@@ -30,7 +30,8 @@
                 android:layout_height="40dp"
                 android:layout_gravity="right"
                 android:layout_marginRight="10dp"
-                android:background="@drawable/ic_action_settings" />
+                android:background="@drawable/ic_action_settings"
+                android:onClick="pushSettingButton"/>
         </android.support.v7.widget.Toolbar>
 
         <LinearLayout
@@ -165,31 +166,20 @@
                     android:text="댓글 쓰기" />
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/TheNumberOfLike"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/LikeButtonFrame"
-                android:ems="10"
-                android:hint="좋아요 수"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:textColor="#606060"
-                android:textSize="15dp" />
-
             <ListView
-                android:id="@+id/comment_list"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="8.75"
-                android:divider="#cecece"
-                android:dividerHeight="1px"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:scrollbars="vertical"></ListView>
+            android:id="@+id/comment_list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="8.75"
+            android:divider="#cecece"
+            android:dividerHeight="1px"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:scrollbars="vertical"></ListView>
 
-        </LinearLayout>
+
+
+    </LinearLayout>
 
     </LinearLayout>
 

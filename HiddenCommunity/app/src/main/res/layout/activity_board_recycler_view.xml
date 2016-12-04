@@ -44,7 +44,7 @@
 
         <Spinner
             android:id="@+id/board_range_spinner"
-            android:layout_width="116dp"
+            android:layout_width="125dp"
             android:layout_height="30dp"
             android:layout_gravity="right"/>
     </FrameLayout>

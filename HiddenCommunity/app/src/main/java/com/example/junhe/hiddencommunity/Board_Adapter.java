@@ -83,10 +83,10 @@ public class Board_Adapter  extends RecyclerView.Adapter<Board_Adapter.MyViewHol
         this.mCommentSet = mCommentSet;
     }
 
-
     public void update(){
         notifyDataSetChanged();
     }
+
     // Create new views (invoked by the layout manager)
     @Override
     public Board_Adapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
@@ -119,7 +119,7 @@ public class Board_Adapter  extends RecyclerView.Adapter<Board_Adapter.MyViewHol
 
                     // 서버로 게시글 boardId 전달
                     try {
-                        url = "http://52.78.207.133:3000/boards/read/"; //url 변경해야 함
+                        url = "http://52.78.207.133:3000/boards/read/";
                         url += "boardId=" + URLEncoder.encode(boardId, "utf-8");
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
