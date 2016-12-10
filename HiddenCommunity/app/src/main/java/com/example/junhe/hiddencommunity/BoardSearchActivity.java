@@ -95,7 +95,7 @@ public class BoardSearchActivity extends AppCompatActivity {
                     enter_search.requestFocus();
                     return;
                 }
-              keyword = enter_search.getText().toString();
+                keyword = enter_search.getText().toString();
                 System.out.println("검색어는 " + keyword);
                 sendRequest_searchList(keyword);
             }

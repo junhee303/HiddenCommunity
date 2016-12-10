@@ -1,11 +1,12 @@
 package com.example.junhe.hiddencommunity;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import java.util.List;
 public class ChatMessageAdapter extends ArrayAdapter {
 
     List msgs = new ArrayList();
+    //boolean message_left = true;
+    private LinearLayout chatMessageContainer;
 
     public ChatMessageAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
@@ -36,25 +39,35 @@ public class ChatMessageAdapter extends ArrayAdapter {
 
     @Override
     public ChatMessage getItem(int index) {
-        return (ChatMessage) msgs.get(index);
+        return (ChatMessage)msgs.get(index);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
+
+
         if (row == null) {
             // inflator를 생성하여, chatting_message.xml을 읽어서 View객체로 생성한다.
             LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(R.layout.chatting_message, parent, false);
         }
-
+        chatMessageContainer = (LinearLayout)row.findViewById(R.id.chatmessage_container);
         // Array List에 들어 있는 채팅 문자열을 읽어
-        ChatMessage msg = (ChatMessage) msgs.get(position);
-
+        ChatMessage msg = (ChatMessage)msgs.get(position);
         // Inflater를 이용해서 생성한 View에, ChatMessage를 삽입한다.
         TextView msgText = (TextView) row.findViewById(R.id.chatmessage);
         msgText.setText(msg.getMessage());
-        msgText.setTextColor(Color.parseColor("#000000"));
+        System.out.println("msgText.setText는 : " + msg.getMessage());
+
+        // 9 패치 이미지로 채팅 버블을 출력
+        if(msg.getSide() == false) {// 나의 메세지
+            msgText.setBackground(this.getContext().getResources().getDrawable(R.drawable.bubble_a));
+            chatMessageContainer.setGravity(Gravity.END);
+        } else if(msg.getSide() == true) { // 상대방의 메세지
+            msgText.setBackground(this.getContext().getResources().getDrawable(R.drawable.bubble_b));
+            chatMessageContainer.setGravity(Gravity.START);
+        }
 
         return row;
 

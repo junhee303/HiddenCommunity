@@ -43,7 +43,6 @@ import java.util.ArrayList;
 import data.BoardData;
 import data.CommentData;
 
-//import org.apache.http.impl.client.DefaultHttpClient;
 
 public class BoardReadingActivity extends AppCompatActivity {
 
@@ -65,19 +64,16 @@ public class BoardReadingActivity extends AppCompatActivity {
     private Button bAddComment;
     //private RecyclerView comment_recyclerView;
     private boolean click_like = false;
-    CustomJsonRequest request_comment;
+
+    CustomJsonRequest request_comment = null;
+    CustomJsonRequest request = null;
+
     ListView comment_list;
     ScrollView scrollView;
 
 
     CommentListAdapter mCommentAdapter;
     CommentData commentData;
-    //Comment_Adapter mCommentAdapter;
-//    private ArrayList<CommentData> comment_data = new ArrayList<CommentData>();
-//    ArrayList<String> mCommentBoardId = new ArrayList<>();
-//    ArrayList<String> mCommentAuthorSet = new ArrayList<>();
-//    ArrayList<String> mCommentDateSet = new ArrayList<>();
-//    ArrayList<String> mCommentBodySet = new ArrayList<>();
 
     Context mContext = this;
 
@@ -164,7 +160,6 @@ public class BoardReadingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board_reading);
 
-        top_toolbar = (Toolbar) findViewById(R.id.top_toolbar);
         move_boardList_btn = (Button) findViewById(R.id.move_boardList_btn);
         //setting_btn = (Button) findViewById(R.id.setting_btn);
         scrollView = (ScrollView) findViewById(R.id.scrollView);
@@ -197,9 +192,9 @@ public class BoardReadingActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         String boardId = extras.getString("boardId");
         Log.d("sendRequest의 boardId: ", boardId);
-        String url_boardId = "http://52.78.207.133:3000/boards/read/" + boardId;
+        final String url_boardId = "http://52.78.207.133:3000/boards/read/" + boardId;
         Log.d("url", url_boardId);
-        CustomJsonRequest request = new CustomJsonRequest(Request.Method.GET,
+        request = new CustomJsonRequest(Request.Method.GET,
                 url_boardId, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -215,30 +210,7 @@ public class BoardReadingActivity extends AppCompatActivity {
                 Tag.setText(data.getTag());
                 System.out.println("BoardData에서 받아와서 Title에 getText : " + Title.getText());
 
-                JsonParser js2 = new JsonParser();
-                ArrayList<CommentData> data_comment = js2.getComment(response);
-                System.out.println("JsonParser2의 response 받아서 data_comment에 넣기");
-                int comment_count = data_comment.size();
-                System.out.println("comment_count는 " + comment_count);
-
-                for (int i = 0; i < comment_count; i++) {
-                    String mCommentBoardId = data_comment.get(i).getBoardId();
-                    String mCommentAuthorSet = data_comment.get(i).getAuthor();
-                    String mCommentDateSet = data_comment.get(i).getDate();
-                    String mCommentBodySet = data_comment.get(i).getBody();
-
-                    commentData = new CommentData(mCommentBoardId, mCommentAuthorSet, mCommentDateSet, mCommentBodySet);
-                    data_comment.add(commentData);
-
-                }
-
-                comment_list = (ListView) findViewById(R.id.comment_list);
-                mCommentAdapter = new CommentListAdapter(getApplicationContext(), R.layout.card_comment_item, data_comment);
-                // ListView에 각각의 전공표시를 제어하는 Adapter를 설정
-                comment_list.setAdapter(mCommentAdapter);
-                setListViewHeightBasedOnChildren(comment_list);
-
-                mCommentAdapter.update();
+                sendRequest_comment(url_boardId); // 게시글과 함께 댓글리스트 읽어오기
             }
         }, new Response.ErrorListener() {
             @Override
@@ -326,7 +298,25 @@ public class BoardReadingActivity extends AppCompatActivity {
                             userInput.requestFocus();
 
                         } else {
-                            sendRequest_comment(); // 댓글 서버에 등록하고 댓글리스트 읽어오기
+                            SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
+                            String comment_author = test.getString("UserNickname", null);
+                            String comment_body = userInput.getText().toString();
+                            System.out.println("comment_author는 " + comment_author + " / comment_body는" + comment_body);
+
+                            // 서버로 댓글 전달
+                            try {
+                                Bundle extras = getIntent().getExtras();
+                                String boardId = extras.getString("boardId");
+                                String url_comment = "http://52.78.207.133:3000/boards/comment/" + boardId + "?";
+                                url_comment += "author=" + URLEncoder.encode(comment_author, "utf-8");
+                                url_comment += "&body=" + URLEncoder.encode(comment_body, "utf-8");
+                                Log.d("url", url_comment);
+
+                                sendRequest_comment(url_comment); // 댓글 서버에 등록하고 댓글리스트 읽어오기
+
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 })
@@ -346,77 +336,52 @@ public class BoardReadingActivity extends AppCompatActivity {
         });
     }
 
-    //  댓글 서버에 등록하고 댓글리스트 읽어오기
-    public void sendRequest_comment() {
+    //  서버에서 댓글리스트 읽어오기
+    public void sendRequest_comment(String url) {
         VolleySingleton v = VolleySingleton.getInstance();
         RequestQueue queue = v.getRequestQueue();
 
-        SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
-        String comment_author = test.getString("UserNickname", null);
-        String comment_body = userInput.getText().toString();
-        System.out.println("comment_author는 " + comment_author + " / comment_body는" + comment_body);
-
-        // 서버로 댓글 전달
-        try {
-            Bundle extras = getIntent().getExtras();
-            String boardId = extras.getString("boardId");
-            String url_comment = "http://52.78.207.133:3000/boards/comment/" + boardId + "?";
-            url_comment += "author=" + URLEncoder.encode(comment_author, "utf-8");
-            url_comment += "&body=" + URLEncoder.encode(comment_body, "utf-8");
-            Log.d("url", url_comment);
-
-            // 서버에 댓글 요청
-            request_comment = new CustomJsonRequest(Request.Method.GET,
-                    url_comment, null, new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    System.out.println("sendRequest의 onResponse 부분");
-                    JsonParser js2 = new JsonParser();
-                    ArrayList<CommentData> data_comment = js2.getComment(response);
-                    System.out.println("JsonParser2의 response 받아서 data_comment에 넣기");
-                    int comment_count = data_comment.size();
-                    System.out.println("comment_count는 " + comment_count);
+        request_comment = new CustomJsonRequest(Request.Method.GET,
+                url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                System.out.println("sendRequest의 onResponse 부분");
+                JsonParser js2 = new JsonParser();
+                ArrayList<CommentData> data_comment = js2.getComment(response);
+                System.out.println("JsonParser2의 response 받아서 data_comment에 넣기");
+                int comment_count = data_comment.size();
+                System.out.println("comment_count는 " + comment_count);
+//
+//
+//                for (int i = 0; i < comment_count; i++) {
+//                    String mCommentBoardId = data_comment.get(i).getBoardId();
+//                    String mCommentAuthorSet = data_comment.get(i).getAuthor();
+//                    String mCommentDateSet = data_comment.get(i).getDate();
+//                    String mCommentBodySet = data_comment.get(i).getBody();
+//                    System.out.println(mCommentBoardId + " / " + mCommentAuthorSet + " / " + mCommentDateSet + " / " + mCommentBodySet);
+//                    commentData = new CommentData(mCommentBoardId, mCommentAuthorSet, mCommentDateSet, mCommentBodySet);
+//                    data_comment.add(commentData);
+//
+//
+//                }
 
 
-                    for (int i = 0; i < comment_count; i++) {
-                        String mCommentBoardId = data_comment.get(i).getBoardId();
-                        String mCommentAuthorSet = data_comment.get(i).getAuthor();
-                        String mCommentDateSet = data_comment.get(i).getDate();
-                        String mCommentBodySet = data_comment.get(i).getBody();
-                        System.out.println(mCommentBoardId + " / " + mCommentAuthorSet+ " / " + mCommentDateSet + " / " + mCommentBodySet);
-                        commentData = new CommentData(mCommentBoardId, mCommentAuthorSet, mCommentDateSet, mCommentBodySet);
-                        data_comment.add(commentData);
+                // ListView 가져오기
+                comment_list = (ListView) findViewById(R.id.comment_list);
+                mCommentAdapter = new CommentListAdapter(getApplicationContext(), R.layout.list_comment, data_comment);
+                // ListView에 각각의 전공표시를 제어하는 Adapter를 설정
+                comment_list.setAdapter(mCommentAdapter);
+                setListViewHeightBasedOnChildren(comment_list); // 댓글 리스트뷰 높이만큼 다 보이게 세팅
+                //comment_list.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL); // 새로운 아이템이 추가되었을때 스크롤이 되도록 설정
+                mCommentAdapter.update();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                VolleyLog.e("Error: ", error.getMessage());
+            }
+        });
 
-
-                    }
-
-//                    mCommentAdapter = new CommentListAdapter(getApplicationContext(), R.layout.card_comment_item, data_comment);
-//                    comment_list.setAdapter(mCommentAdapter);
-//                    mCommentAdapter.notifyDataSetChanged();
-//                    mCommentAdapter.notifyDataSetChanged();
-
-                    // ListView 가져오기
-
-                    comment_list = (ListView) findViewById(R.id.comment_list);
-                    mCommentAdapter = new CommentListAdapter(getApplicationContext(), R.layout.card_comment_item, data_comment);
-
-                    // ListView에 각각의 전공표시를 제어하는 Adapter를 설정
-                    comment_list.setAdapter(mCommentAdapter);
-
-                    setListViewHeightBasedOnChildren(comment_list); // 댓글 리스트뷰 높이만큼 다 보이게 세팅
-
-                    mCommentAdapter.update();
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    VolleyLog.e("Error: ", error.getMessage());
-                }
-            });
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
         // queue에 Request를 추가해준다.
         queue.add(request_comment);
     }
@@ -550,7 +515,7 @@ public class BoardReadingActivity extends AppCompatActivity {
 
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.card_comment_item, parent, false);
+                convertView = inflater.inflate(R.layout.list_comment, parent, false);
 
                 cmtAuthor = (TextView) convertView.findViewById(R.id.comment_Author);
                 cmtDate = (TextView) convertView.findViewById(R.id.comment_Date);
@@ -573,7 +538,7 @@ public class BoardReadingActivity extends AppCompatActivity {
             return convertView;
         }
 
-        public void update(){
+        public void update() {
             notifyDataSetChanged();
         }
 

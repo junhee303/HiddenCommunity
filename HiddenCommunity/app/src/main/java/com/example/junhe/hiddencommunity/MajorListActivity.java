@@ -19,7 +19,7 @@ import data.MajorData;
 
 public class MajorListActivity extends AppCompatActivity {
 
-    private ArrayList<MajorData> major_data = new ArrayList<MajorData>();
+    private ArrayList<MajorData> major_data = new ArrayList();
     Context mContext = this;
 
     @Override

@@ -31,7 +31,7 @@
                 android:layout_gravity="right"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/ic_action_settings"
-                android:onClick="pushSettingButton"/>
+                android:onClick="pushSettingButton" />
         </android.support.v7.widget.Toolbar>
 
         <LinearLayout
@@ -94,26 +94,27 @@
                 android:textColorHint="#FFCCCACA"
                 android:textSize="12dp" />
 
-            <ScrollView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin">
+            <!--<ScrollView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingLeft="@dimen/activity_horizontal_margin"-->
+            <!--android:paddingRight="@dimen/activity_horizontal_margin">-->
 
-                <TextView
-                    android:id="@+id/Body"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:layout_below="@+id/DateOfWriting"
-                    android:layout_marginTop="15dp"
-                    android:ems="10"
-                    android:gravity="top"
-                    android:hint="내용을 입력하세요"
-                    android:textColor="#606060"
-                    android:textColorHint="#FFCCCACA"
-                    android:textSize="16dp"
-                    android:textStyle="bold" />
-            </ScrollView>
+            <TextView
+                android:id="@+id/Body"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_below="@+id/DateOfWriting"
+                android:layout_marginTop="15dp"
+                android:ems="10"
+                android:gravity="top"
+                android:hint="내용을 입력하세요"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:textColor="#606060"
+                android:textColorHint="#FFCCCACA"
+                android:textSize="16dp"
+                android:textStyle="bold"></TextView>
 
             <TextView
                 android:id="@+id/Tag"
@@ -167,19 +168,18 @@
             </RelativeLayout>
 
             <ListView
-            android:id="@+id/comment_list"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="8.75"
-            android:divider="#cecece"
-            android:dividerHeight="1px"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:scrollbars="vertical"></ListView>
+                android:id="@+id/comment_list"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="8.75"
+                android:divider="#cecece"
+                android:dividerHeight="1px"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:scrollbars="vertical"></ListView>
 
 
-
-    </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

@@ -72,7 +72,7 @@ public class RegisterActivity extends AppCompatActivity {
         Log.d("RESPONSE", s);
         if (s.compareTo("ok") == 0) {
             System.out.println("가입이 완료되었습니다.");
-            Intent intent = new Intent(getApplicationContext(), BoardWritingActivity.class);
+            Intent intent = new Intent(getApplicationContext(), BoardRecyclerViewActivity.class);
             startActivityForResult(intent, 1000);
         } else {
 

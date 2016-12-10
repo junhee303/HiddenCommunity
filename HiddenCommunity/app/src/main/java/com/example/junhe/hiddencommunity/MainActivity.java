@@ -20,16 +20,16 @@ public class MainActivity extends AppCompatActivity {
         //startActivity(new Intent(this, SplashActivity.class)); // --> 3초간 왜 안뜨지..
 
         //  게시판 만들기 편하게 메일 입력에서 바로 게시판 뛰어넘게 해둠 / 나중에 경로 다시 수정
-
-                Intent intent = new Intent(getApplicationContext(), BoardRecyclerViewActivity.class);
-                startActivityForResult(intent, 1000);
 //
+                Intent intent = new Intent(getApplicationContext(), ChatMainActivity.class);
+                startActivityForResult(intent, 1000);
+
 //        SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
 //
 //        String email = test.getString("UserEmail", null);
 //
 //        if(email != null) {
-//            Intent intent = new Intent(getApplicationContext(), BoardWritingActivity.class);
+//            Intent intent = new Intent(getApplicationContext(), BoardRecyclerViewActivity.class);
 //            startActivityForResult(intent, 1000);
 //            System.out.println("사용자 세션 존재하므로 게시판 화면으로 이동");
 //            System.out.println(email);
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 //            System.out.println("사용자 세션 없으므로 로그인 화면으로 이동");
 //            System.out.println(email);
 //        }
-
+//
     }
 
 }
