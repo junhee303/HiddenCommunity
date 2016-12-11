@@ -435,8 +435,8 @@ public class BoardReadingActivity extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.chat_btn:
-                        Toast.makeText(BoardReadingActivity.this, "채팅하기 기능이 구현되지 않았습니다", Toast.LENGTH_SHORT).show();
-                        Intent intent1 = new Intent(BoardReadingActivity.this, ChatMainActivity.class);
+                        Toast.makeText(BoardReadingActivity.this, "해당 작성자와 채팅을 시작합니다", Toast.LENGTH_SHORT).show();
+                        Intent intent1 = new Intent(BoardReadingActivity.this, ChatRoomActivity.class);
                         String author = Author.getText().toString();
                         intent1.putExtra("Author", author);
                         startActivityForResult(intent1, 1000);

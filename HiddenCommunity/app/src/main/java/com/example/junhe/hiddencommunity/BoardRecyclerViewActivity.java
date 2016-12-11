@@ -243,6 +243,8 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // 상단바의 '채팅 아이콘' 클릭 시 채팅 메뉴로 이동
                 Toast.makeText(BoardRecyclerViewActivity.this, "채팅 메뉴로 이동", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(BoardRecyclerViewActivity.this, BoardRecyclerViewActivity.class);
+                startActivityForResult(intent, 1000);
             }
         });
         bSearch.setOnClickListener(new View.OnClickListener() {

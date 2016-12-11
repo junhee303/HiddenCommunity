@@ -17,10 +17,10 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/logo"/>
+            android:background="@drawable/chat_logo"/>
 
         <TextView
-            android:id="@+id/Sender"
+            android:id="@+id/chat_otherNickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="발신자 닉네임"
@@ -28,6 +28,17 @@
             android:textSize="18dp"
             android:textColor="#000000"
             android:paddingLeft="20dp"
+            android:layout_gravity="center"
+            />
+        <TextView
+            android:id="@+id/chat_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="님과 대화하기"
+            android:textSize="16dp"
+            android:textColor="#000000"
+            android:paddingLeft="5dp"
+            android:layout_gravity="center"
             />
 
 

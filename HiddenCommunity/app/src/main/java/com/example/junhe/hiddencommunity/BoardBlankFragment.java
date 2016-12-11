@@ -93,9 +93,6 @@ public class BoardBlankFragment extends Fragment {
         RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_recycler_view);
         rv.setHasFixedSize(true);
 
-        System.out.println("onCreatView 좀 들어와주라..");
-
-        //int board_position = ((BoardRecyclerViewActivity)getActivity()).board_position;
         int board_position = mParam1;
         String category = ((BoardRecyclerViewActivity)getActivity()).tabTitles.get(board_position);
 
@@ -112,8 +109,6 @@ public class BoardBlankFragment extends Fragment {
         mLikeSet.clear();
         mCommentSet.clear();
 
-
-
         mAdapter = new Board_Adapter(getActivity(), mCategory, mBoardId, mTitleSet, mAuthorSet, mDateSet, mBodySet, mTagSet, mHitSet, mLikeSet, mCommentSet);
 
         rv.setAdapter(mAdapter);
@@ -121,13 +116,10 @@ public class BoardBlankFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(llm);
 
-
         sendRequest_boardList(category); // 게시글 목록 받아오기
 
         return rootView;
     }
-
-
 
     // 게시글 목록 받아오기 - JsonObject
     public void sendRequest_boardList(String _Caterogy) {
@@ -150,7 +142,6 @@ public class BoardBlankFragment extends Fragment {
                     url_category, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-
 
                     System.out.println("sendRequest의 onResponse 부분");
                     JsonParser js = new JsonParser();

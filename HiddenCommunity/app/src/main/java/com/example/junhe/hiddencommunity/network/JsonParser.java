@@ -2,6 +2,8 @@ package com.example.junhe.hiddencommunity.network;
 
 import android.util.Log;
 
+import com.example.junhe.hiddencommunity.ChatMessage;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -177,6 +179,83 @@ public class JsonParser {
         }
         return commentDataList;
     }
+
+    public ArrayList<String> getChatList (JSONObject response) {
+        ArrayList<String> chat_otherNicknameList = new ArrayList<>();
+
+        System.out.println("JsonParser의 getChatList 부분");
+
+        if (response != null || response.length() > 0) {
+            try {
+                JSONArray members = response.getJSONArray("members");
+
+                //ArrayList<JSONObject> chatOtherList = new ArrayList<>();
+
+                System.out.println("members 길이" + members.length());
+
+                if (chat_otherNicknameList != null) {
+                    int len = members.length();
+                    for (int i = 0; i < len; i++) {
+                        chat_otherNicknameList.add(members.get(i).toString());
+                        System.out.println("chat_otherNicknameList에 저장된 닉네임 : " + chat_otherNicknameList.get(i));
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return chat_otherNicknameList;
+    }
+
+    public ArrayList<ChatMessage> getChat (JSONObject response, String myNickname) {
+        ArrayList<ChatMessage> chatDataList = new ArrayList<>();
+        ChatMessage chatMessage;
+
+        System.out.println("JsonParser의 getChat 부분");
+
+        if (response != null || response.length() > 0) {
+            try {
+                JSONArray chats = response.getJSONArray("msgs");
+
+                ArrayList<JSONObject> chatsList = new ArrayList<>();
+
+                System.out.println("해당 채팅방 메세지 갯수" + chats.length());
+
+                if (chatsList != null) {
+                    int len = chats.length();
+                    for (int i = 0; i < len; i++) {
+                        chatsList.add(chats.getJSONObject(i));
+
+                        String recipient = chatsList.get(i).getString("recipient"); // 수신자
+                        String body = chatsList.get(i).getString("body"); // 채팅 메세지
+                        String sender = chatsList.get(i).getString("sender"); // 발신자
+
+                        String totalDate = chatsList.get(i).getString("date"); // 날짜
+                        String date = totalDate.substring(0,totalDate.indexOf("T"));
+                        String time = totalDate.substring(totalDate.indexOf("T")+1, totalDate.indexOf("."));
+                        String chatDate = date + "      " + time;
+
+                        if(recipient.equals(myNickname)){ // 상대방이 보낸 메세지 - 왼쪽 정렬
+                            chatMessage = new ChatMessage(true, recipient, body, sender, chatDate);
+                            chatDataList.add(chatMessage);
+                            Log.d("JsonParser", "left: true / " + "recipient: " + recipient + " / body : " + body + " / sender: " + sender + " / chatDate: " + chatDate);
+                        } else if(sender.equals(myNickname)) { // 내가 보낸 메세지 - 오른쪽 정렬
+                            chatMessage = new ChatMessage(false, recipient, body, sender, chatDate);
+                            chatDataList.add(chatMessage);
+                            Log.d("JsonParser", "left: false / " + "recipient: " + recipient + " / body : " + body + " / sender: " + sender + " / chatDate: " + chatDate);
+                        }
+
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return chatDataList;
+    }
+
+
 
 //    private ArrayList<BoardData> getListData(JSONObject reponse) {
 //        ArrayList<BaseData> listItems = null;
