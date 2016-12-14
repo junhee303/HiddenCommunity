@@ -20,16 +20,16 @@
 
             <ImageView
                 android:id="@+id/noticeIcon"
-                android:layout_width="70dp"
-                android:layout_height="50dp" />
+                android:layout_width="60dp"
+                android:layout_height="45dp" />
 
             <TextView
                 android:id="@+id/actionAuthor"
-                android:layout_width="wrap_content"
+                android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:hint="발신자 닉네임"
-                android:paddingLeft="20dp"
+                android:paddingLeft="18dp"
                 android:textColor="#000000"
                 android:textSize="18dp"
                 android:textStyle="bold" />
@@ -42,7 +42,7 @@
                 android:hint="님이 00을 00하였습니다"
                 android:paddingLeft="5dp"
                 android:textColor="#000000"
-                android:textSize="16dp" />
+                android:textSize="15dp" />
 
         </LinearLayout>
 

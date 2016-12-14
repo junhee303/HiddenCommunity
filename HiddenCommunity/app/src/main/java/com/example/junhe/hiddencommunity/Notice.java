@@ -5,14 +5,16 @@ package com.example.junhe.hiddencommunity;
  */
 
 public class Notice {
+    public String noticeId;
     public String boardId;
     public String actionAuthor;
     public String type;
     public boolean check;
     public String date;
 
-    public  Notice(String boardId, String actionAuthor, String type, boolean check, String date) {
+    public  Notice(String noticeId, String boardId, String actionAuthor, String type, boolean check, String date) {
         super();
+        this.noticeId = noticeId;
         this.boardId = boardId;
         this.actionAuthor = actionAuthor;
         this.type = type;
@@ -20,6 +22,7 @@ public class Notice {
         this.date = date;
     }
 
+    public String getNoticeId() { return  noticeId; }
     public String getBoardId(){
         return boardId;
     }

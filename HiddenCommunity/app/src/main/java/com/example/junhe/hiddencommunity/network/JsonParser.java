@@ -275,6 +275,7 @@ public class JsonParser {
                     for (int i = 0; i < len; i++) {
                         noticeList.add(notices.getJSONObject(i));
 
+                        String noticeId = noticeList.get(i).getString("_id"); // 해당 알림 ID
                         String boardId = noticeList.get(i).getString("boardId"); // 해당 게시글 ID
                         String actionAuthor = noticeList.get(i).getString("actionAuthor"); // 알림 상대방
                         String type = noticeList.get(i).getString("type"); // 알림 종류
@@ -286,9 +287,9 @@ public class JsonParser {
                         String noticeDate = date + "      " + time;
 
 
-                            notice = new Notice(boardId, actionAuthor, type, check, noticeDate);
+                            notice = new Notice(noticeId, boardId, actionAuthor, type, check, noticeDate);
                             noticeDataList.add(notice);
-                            Log.d("JsonParser", "boardId : " + boardId + " / actionAuthor : " + actionAuthor + " / type : " + type + " / check : " + check + " / noticeDate : " + noticeDate);
+                            Log.d("JsonParser", "noticeId : " + noticeId + " / boardId : " + boardId + " / actionAuthor : " + actionAuthor + " / type : " + type + " / check : " + check + " / noticeDate : " + noticeDate);
 
                     }
                 }

@@ -141,14 +141,6 @@ public class NoticeListActivity  extends AppCompatActivity {
                 System.out.println("알림 타입이 좋아요");
             }
 
-            if( mNotice_List.get(position).type == "comment") { // comment
-                System.out.println("알림 타입이 댓글2");
-            } else if(mNotice_List.get(position).type == "like") { // like
-                System.out.println("알림 타입이 좋아요2");
-            }
-
-
-
             if(mNotice_List.get(position).getCheck() == false) { // 새로운 메시지
                 newIcon.setBackground(this.getContext().getResources().getDrawable(R.drawable.newnew));
             }
@@ -178,7 +170,7 @@ public class NoticeListActivity  extends AppCompatActivity {
     }
 
     //서버에서 알림목록 읽어오기
-    public void sendRequest_noticeList (String url_notice) {
+    public void sendRequest_noticeList (final String url_notice) {
         VolleySingleton v = VolleySingleton.getInstance();
         RequestQueue queue = v.getRequestQueue();
         request_noticeList = new CustomJsonRequest(Request.Method.GET,
@@ -211,8 +203,10 @@ public class NoticeListActivity  extends AppCompatActivity {
 
                         // 서버로 해당 알림이 울린 boardId 전달
                         try {
+                            String noticeId = notice_List.get(notice_List_position).noticeId;
+
                             url_check = "http://52.78.207.133:3000/notices/check/";
-                            url_check += URLEncoder.encode(notice_List.get(notice_List_position).boardId, "utf-8");
+                            url_check += URLEncoder.encode(noticeId, "utf-8");
 
                             Log.d("url", url_check);
 
