@@ -79,6 +79,7 @@ public class BoardReadingActivity extends AppCompatActivity {
 
     String url, result;
     String url_delete, result_delete;
+    String url_hate, result_hate;
 
     // 좋아요 버튼 클릭 시 response 받아오기
     class LikeCheckTask extends AsyncTask<String, Void, String> {
@@ -90,7 +91,7 @@ public class BoardReadingActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
             try {
                 result = HTTPInstance.Instance().Post(url);
-                onResponseHttp(result);
+                onResponseHttp1(result);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -101,7 +102,7 @@ public class BoardReadingActivity extends AppCompatActivity {
     LikeCheckTask likeCheckTask;
 
     // 좋아요 버튼 클릭 시 "ok" response
-    private void onResponseHttp(String s) {
+    private void onResponseHttp1(String s) {
         if (s == null) {
             System.out.println("서버에서 전송된 response가 null입니다");
             return;
@@ -117,6 +118,43 @@ public class BoardReadingActivity extends AppCompatActivity {
         }
     }
 
+    // 신고하기 버튼 클릭 시 response 받아오기
+    class HateCheckTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                result_hate = HTTPInstance.Instance().Post(url_hate);
+                onResponseHttp2(result_hate);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    HateCheckTask hateCheckTask;
+
+    // 좋아요 버튼 클릭 시 "ok" response
+    private void onResponseHttp2(String s) {
+        if (s == null) {
+            System.out.println("서버에서 전송된 response가 null입니다");
+            return;
+        }
+        Log.d("RESPONSE", s);
+        if (s.compareTo("ok") == 0) {
+            System.out.println("신고하기 수 1 증가");
+//            Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+//            startActivityForResult(intent, 1000);
+        } else {
+            System.out.println("신고하기가 반영되지 않았습니다");
+            //Toast.makeText(EmailActivity.this, "다시 인증해 주세요", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     // 삭제 시 response 받아오기
     class DeleteTask extends AsyncTask<String, Void, String> {
         @Override
@@ -127,7 +165,7 @@ public class BoardReadingActivity extends AppCompatActivity {
         protected String doInBackground(String... params) {
             try {
                 result_delete = HTTPInstance.Instance().Post(url_delete);
-                onResponseHttp2(result_delete);
+                onResponseHttp3(result_delete);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -138,7 +176,7 @@ public class BoardReadingActivity extends AppCompatActivity {
     DeleteTask deleteTask;
 
     // 삭제 완료 시 "ok" response
-    private void onResponseHttp2(String s) {
+    private void onResponseHttp3(String s) {
         if (s == null) {
             System.out.println("서버에서 전송된 response가 null입니다");
             return;
@@ -386,114 +424,6 @@ public class BoardReadingActivity extends AppCompatActivity {
         queue.add(request_comment);
     }
 
-    // 댓글 수에 따라 리스트 높이 조절
-    public void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            // pre-condition
-            return;
-        }
-
-        int totalHeight = 0;
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
-
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-        listView.requestLayout();
-    }
-
-    // 상단의 [ < ] 아이콘 클릭 시
-    public void pushBoardListButton() {
-        move_boardList_btn.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // 상단바의 [ < ] 버튼 클릭 시 게시글 목록으로 이동
-                Toast.makeText(BoardReadingActivity.this, "게시글 목록으로 이동", Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(BoardReadingActivity.this, BoardRecyclerViewActivity.class);
-                startActivityForResult(intent, 1000);
-            }
-        });
-    }
-
-    // 상단이 설정 아이콘 클릭 시
-    public void pushSettingButton(View view) {
-        PopupMenu popUp = new PopupMenu(this, view);
-        popUp.inflate(R.menu.board_reading_menu);
-        popUp.show();
-
-        popUp.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
-                String myNickname = test.getString("UserNickname", null);
-
-                switch (item.getItemId()) {
-                    case R.id.message_btn:
-                        Toast.makeText(BoardReadingActivity.this, "해당 작성자에게 메시지를 보냅니다", Toast.LENGTH_SHORT).show();
-                        Intent intent1 = new Intent(BoardReadingActivity.this, MessageRoomActivity.class);
-                        String author = Author.getText().toString();
-                        intent1.putExtra("Author", author);
-                        startActivityForResult(intent1, 1000);
-                        break;
-                    case R.id.report_btn:
-                        Toast.makeText(BoardReadingActivity.this, "해당 게시글을 신고하였습니다", Toast.LENGTH_SHORT).show();
-
-                        break;
-                    case R.id.update_btn:
-                        if (Author.getText().equals(myNickname)) {
-                            Toast.makeText(BoardReadingActivity.this, "해당 게시물을 수정합니다", Toast.LENGTH_SHORT).show();
-
-                            Intent intent2 = new Intent(BoardReadingActivity.this, BoardUpdateActivity.class);
-                            Bundle extras = getIntent().getExtras();
-                            String boardId = extras.getString("boardId", null);
-                            String txtCategory = Category.getText().toString();
-                            String txtTitle = Title.getText().toString();
-                            String txtBody = Body.getText().toString();
-                            String txtTag = Tag.getText().toString();
-                            intent2.putExtra("boardId", boardId);
-                            intent2.putExtra("txtCategory", txtCategory);
-                            intent2.putExtra("txtTitle", txtTitle);
-                            intent2.putExtra("txtBody", txtBody);
-                            intent2.putExtra("txtTag", txtTag);
-                            startActivityForResult(intent2, 1000);
-                        } else {
-                            Toast.makeText(BoardReadingActivity.this, "자신의 글만 수정할 수 있습니다", Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    case R.id.delete_btn:
-                        if (Author.getText().equals(myNickname)) {
-                            Intent intent3 = new Intent(BoardReadingActivity.this, BoardRecyclerViewActivity.class); // 게시글 목록으로 나가기
-                            Bundle extras = getIntent().getExtras();
-                            String boardId = extras.getString("boardId", null);
-
-                            url_delete = "http://52.78.207.133:3000/boards/delete/" + boardId;
-                            Log.d("url", url_delete);
-                            startActivityForResult(intent3, 1000);
-
-                            Toast.makeText(BoardReadingActivity.this, "해당 게시물을 삭제합니다", Toast.LENGTH_SHORT).show();
-
-                            deleteTask = new DeleteTask();
-                            deleteTask.execute();
-
-                        } else {
-                            Toast.makeText(BoardReadingActivity.this, "자신의 글만 삭제할 수 있습니다", Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    default:
-                        return true;
-                }
-                return true;
-
-            }
-        });
-    }
-
     // 댓글 Adapter
     private class CommentListAdapter extends ArrayAdapter<CommentData> {
 
@@ -544,7 +474,119 @@ public class BoardReadingActivity extends AppCompatActivity {
 
     }
 
+    // 댓글 수에 따라 리스트 높이 조절
+    public void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
 
+        int totalHeight = 0;
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
+    // 상단의 [ < ] 아이콘 클릭 시
+    public void pushBoardListButton() {
+        move_boardList_btn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // 상단바의 [ < ] 버튼 클릭 시 게시글 목록으로 이동
+                Toast.makeText(BoardReadingActivity.this, "게시글 목록으로 이동", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(BoardReadingActivity.this, BoardRecyclerViewActivity.class);
+                startActivityForResult(intent, 1000);
+            }
+        });
+    }
+
+    // 상단이 설정 아이콘 클릭 시
+    public void pushSettingButton(View view) {
+        PopupMenu popUp = new PopupMenu(this, view);
+        popUp.inflate(R.menu.board_reading_menu);
+        popUp.show();
+
+        popUp.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
+                String myNickname = test.getString("UserNickname", null);
+                Bundle extras = getIntent().getExtras();
+                String boardId = extras.getString("boardId");
+
+                switch (item.getItemId()) {
+                    case R.id.message_btn:
+                        Toast.makeText(BoardReadingActivity.this, "해당 작성자에게 메시지를 보냅니다", Toast.LENGTH_SHORT).show();
+                        Intent intent1 = new Intent(BoardReadingActivity.this, MessageRoomActivity.class);
+                        String author = Author.getText().toString();
+                        intent1.putExtra("Author", author);
+                        startActivityForResult(intent1, 1000);
+                        break;
+                    case R.id.report_btn:
+                        Toast.makeText(BoardReadingActivity.this, "해당 게시글을 신고하였습니다", Toast.LENGTH_SHORT).show();
+
+                        // 신고하기 수 1++ 서버 보내기
+                        url_hate = "http://52.78.207.133:3000/boards/hate/" + boardId;
+                        Log.d("url", url_hate);
+
+                        hateCheckTask = new HateCheckTask();
+                        hateCheckTask.execute();
+
+                        break;
+                    case R.id.update_btn:
+                        if (Author.getText().equals(myNickname)) {
+                            Toast.makeText(BoardReadingActivity.this, "해당 게시물을 수정합니다", Toast.LENGTH_SHORT).show();
+
+                            Intent intent2 = new Intent(BoardReadingActivity.this, BoardUpdateActivity.class);
+
+                            String txtCategory = Category.getText().toString();
+                            String txtTitle = Title.getText().toString();
+                            String txtBody = Body.getText().toString();
+                            String txtTag = Tag.getText().toString();
+                            intent2.putExtra("boardId", boardId);
+                            intent2.putExtra("txtCategory", txtCategory);
+                            intent2.putExtra("txtTitle", txtTitle);
+                            intent2.putExtra("txtBody", txtBody);
+                            intent2.putExtra("txtTag", txtTag);
+                            startActivityForResult(intent2, 1000);
+                        } else {
+                            Toast.makeText(BoardReadingActivity.this, "자신의 글만 수정할 수 있습니다", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case R.id.delete_btn:
+                        if (Author.getText().equals(myNickname)) {
+                            Intent intent3 = new Intent(BoardReadingActivity.this, BoardRecyclerViewActivity.class); // 게시글 목록으로 나가기
+
+                            url_delete = "http://52.78.207.133:3000/boards/delete/" + boardId;
+                            Log.d("url", url_delete);
+                            startActivityForResult(intent3, 1000);
+
+                            Toast.makeText(BoardReadingActivity.this, "해당 게시물을 삭제합니다", Toast.LENGTH_SHORT).show();
+
+                            deleteTask = new DeleteTask();
+                            deleteTask.execute();
+
+                        } else {
+                            Toast.makeText(BoardReadingActivity.this, "자신의 글만 삭제할 수 있습니다", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    default:
+                        return true;
+                }
+                return true;
+
+            }
+        });
+    }
 }
 
 

@@ -122,8 +122,10 @@ public class NoticeListActivity  extends AppCompatActivity {
             TextView actionAuthor = (TextView) rowView.findViewById(R.id.actionAuthor);
             TextView noticeText = (TextView) rowView.findViewById(R.id.noticeText);
             ImageView newIcon = (ImageView) rowView.findViewById(R.id.newIcon);
+            TextView noticeDate = (TextView) rowView.findViewById(R.id.noticeDate);
 
             actionAuthor.setText(mNotice_List.get(position).actionAuthor);
+            noticeDate.setText(mNotice_List.get(position).date);
 
             System.out.println(" getView : " +mNotice_List.get(position).actionAuthor);
 

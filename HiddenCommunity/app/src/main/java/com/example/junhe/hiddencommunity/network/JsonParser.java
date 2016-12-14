@@ -282,10 +282,7 @@ public class JsonParser {
                         boolean check = noticeList.get(i).getBoolean("check"); // 알림 확인 유무
 
                         String totalDate = noticeList.get(i).getString("date"); // 날짜
-                        String date = totalDate.substring(0,totalDate.indexOf("T"));
-                        String time = totalDate.substring(totalDate.indexOf("T")+1, totalDate.indexOf("."));
-                        String noticeDate = date + "      " + time;
-
+                        String noticeDate = totalDate.substring(0,totalDate.indexOf("T"));
 
                             notice = new Notice(noticeId, boardId, actionAuthor, type, check, noticeDate);
                             noticeDataList.add(notice);
