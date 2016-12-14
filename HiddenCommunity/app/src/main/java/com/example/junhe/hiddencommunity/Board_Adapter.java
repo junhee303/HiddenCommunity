@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
  * Created by junhe on 2016-12-01.
  */
 
-public class Board_Adapter  extends RecyclerView.Adapter<Board_Adapter.MyViewHolder> {
+public class Board_Adapter extends RecyclerView.Adapter<Board_Adapter.MyViewHolder> {
     private ArrayList<String> mCategory;
     private ArrayList<String> mBoardId;
     private ArrayList<String> mTitleSet;
@@ -62,13 +63,14 @@ public class Board_Adapter  extends RecyclerView.Adapter<Board_Adapter.MyViewHol
             txtComment = (TextView) v.findViewById(R.id.count_comment);
         }
     }
-    public static String getBoardId(){
+
+    public static String getBoardId() {
         return "boardId";
     }
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public Board_Adapter(Context mContext, ArrayList<String> mCategory,ArrayList<String> mBoardId, ArrayList<String> mTitleSet, ArrayList<String> mAuthorSet, ArrayList<String> mDateSet, ArrayList<String> mBodySet, ArrayList<String> mTagSet, ArrayList<Integer> mHitSet, ArrayList<Integer> mLikeSet, ArrayList<Integer> mCommentSet) {
+    public Board_Adapter(Context mContext, ArrayList<String> mCategory, ArrayList<String> mBoardId, ArrayList<String> mTitleSet, ArrayList<String> mAuthorSet, ArrayList<String> mDateSet, ArrayList<String> mBodySet, ArrayList<String> mTagSet, ArrayList<Integer> mHitSet, ArrayList<Integer> mLikeSet, ArrayList<Integer> mCommentSet) {
 
         this.mContext = mContext;
         this.mCategory = mCategory;
@@ -83,14 +85,14 @@ public class Board_Adapter  extends RecyclerView.Adapter<Board_Adapter.MyViewHol
         this.mCommentSet = mCommentSet;
     }
 
-    public void update(){
+    public void update() {
         notifyDataSetChanged();
     }
 
     // Create new views (invoked by the layout manager)
     @Override
     public Board_Adapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
-                                                     int viewType) {
+                                                         int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card_item, parent, false);
@@ -112,27 +114,25 @@ public class Board_Adapter  extends RecyclerView.Adapter<Board_Adapter.MyViewHol
 
 
         holder.mCardView.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View v) {
-                    // 아이템 클릭 시 해당 게시물의 boardId를 서버에 요청
-                   String boardId = mBoardId.get(position);
-                    String Title = mTitleSet.get(position);
+            @Override
+            public void onClick(View v) {
+                // 아이템 클릭 시 해당 게시물의 boardId를 서버에 요청
+                String boardId = mBoardId.get(position);
 
-                    // 서버로 게시글 boardId 전달
-                    try {
-                        url = "http://52.78.207.133:3000/boards/read/";
-                        url += "boardId=" + URLEncoder.encode(boardId, "utf-8");
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                    System.out.println(boardId+"/"+Title);
-                   // Log.d("url", url);
-                   // mContext.startActivity(new Intent(mContext, BoardReadingActivity.class));
-
-                    Intent intent = new Intent(mContext, BoardReadingActivity.class);
-                    intent.putExtra("boardId", boardId);
-                     mContext.startActivity(intent);
+                // 서버로 게시글 boardId 전달
+                try {
+                    url = "http://52.78.207.133:3000/boards/read/";
+                    url += "boardId=" + URLEncoder.encode(boardId, "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
                 }
-            });
+                Log.d("url", url);
+
+                Intent intent = new Intent(mContext, BoardReadingActivity.class);
+                intent.putExtra("boardId", boardId);
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override

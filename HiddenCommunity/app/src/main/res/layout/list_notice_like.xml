@@ -1,0 +1,61 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.junhe.hiddencommunity.MajorListActivity">
+
+    <LinearLayout
+        android:id="@+id/linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/noticeIcon_liket"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:background="@drawable/ic_notice_like" />
+
+            <TextView
+                android:id="@+id/noticeLike_Nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:hint="발신자 닉네임"
+                android:paddingLeft="20dp"
+                android:textColor="#000000"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/noticeLike_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingLeft="5dp"
+                android:text="님이 회원님의 글을 좋아합니다"
+                android:textColor="#000000"
+                android:textSize="16dp" />
+
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/newIcon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
+

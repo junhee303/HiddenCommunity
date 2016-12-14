@@ -20,7 +20,7 @@
             android:background="@drawable/chat_logo"/>
 
         <TextView
-            android:id="@+id/chat_otherNickname"
+            android:id="@+id/message_otherNickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="발신자 닉네임"

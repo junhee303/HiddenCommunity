@@ -12,9 +12,9 @@
         android:orderInCategory="101"
         android:title="@string/home" />
     <item
-        android:id="@+id/action_chat"
+        android:id="@+id/action_message"
         app:showAsAction="always"
-        android:icon="@drawable/ic_action_chat"
+        android:icon="@drawable/ic_action_message"
         android:orderInCategory="102"
         android:title="@string/chat" />
 

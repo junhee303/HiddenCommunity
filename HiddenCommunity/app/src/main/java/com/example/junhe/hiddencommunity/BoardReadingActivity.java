@@ -434,9 +434,9 @@ public class BoardReadingActivity extends AppCompatActivity {
                 String myNickname = test.getString("UserNickname", null);
 
                 switch (item.getItemId()) {
-                    case R.id.chat_btn:
-                        Toast.makeText(BoardReadingActivity.this, "해당 작성자와 채팅을 시작합니다", Toast.LENGTH_SHORT).show();
-                        Intent intent1 = new Intent(BoardReadingActivity.this, ChatRoomActivity.class);
+                    case R.id.message_btn:
+                        Toast.makeText(BoardReadingActivity.this, "해당 작성자에게 메시지를 보냅니다", Toast.LENGTH_SHORT).show();
+                        Intent intent1 = new Intent(BoardReadingActivity.this, MessageRoomActivity.class);
                         String author = Author.getText().toString();
                         intent1.putExtra("Author", author);
                         startActivityForResult(intent1, 1000);

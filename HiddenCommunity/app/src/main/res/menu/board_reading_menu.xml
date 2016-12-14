@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/chat_btn"
-        android:title="@string/대화하기" />
+        android:id="@+id/message_btn"
+        android:title="@string/쪽지보내기" />
     <item
         android:id="@+id/report_btn"
         android:title="@string/신고하기" />

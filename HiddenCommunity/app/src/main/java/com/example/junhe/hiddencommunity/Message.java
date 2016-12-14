@@ -4,14 +4,14 @@ package com.example.junhe.hiddencommunity;
  * Created by junhe on 2016-11-28.
  */
 
-public class ChatMessage {
+public class Message {
     public boolean left;
     public String recipient;
     public String message;
     public String sender;
     public String date;
 
-    public ChatMessage(boolean left, String recipient, String message, String sender, String date) {
+    public  Message(boolean left, String recipient, String message, String sender, String date) {
         super();
         this.left = left;
         this.recipient = recipient;

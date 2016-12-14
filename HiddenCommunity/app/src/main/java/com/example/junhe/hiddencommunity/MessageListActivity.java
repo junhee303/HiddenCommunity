@@ -35,13 +35,13 @@ import java.util.ArrayList;
  * Created by junhe on 2016-12-11.
  */
 
-public class ChatListActivity extends AppCompatActivity {
-    private CustomJsonRequest request_chatList;
-    private ArrayList<String> chat_otherNicknameList = new ArrayList();
+public class MessageListActivity extends AppCompatActivity {
+    private CustomJsonRequest request_messageList;
+    private ArrayList<String> message_otherNicknameList = new ArrayList();
     Context mContext = this;
 
     private Button bHome;
-    private Button bChat;
+    private Button bMessage;
     private Button bSearch;
     private Button bNotice;
     private Button bWrite;
@@ -49,27 +49,27 @@ public class ChatListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat_list);
+        setContentView(R.layout.activity_message_list);
 
         bHome = (Button) findViewById(R.id.action_home);
-        bChat = (Button) findViewById(R.id.action_chat);
+        bMessage = (Button) findViewById(R.id.action_message);
         bSearch = (Button) findViewById(R.id.action_search);
         bNotice = (Button) findViewById(R.id.action_notice);
         bWrite = (Button) findViewById(R.id.action_write);
 
-        getChatList(); // 서버에 채팅목록 요청하기
+        getMessageList(); // 서버에 채팅목록 요청하기
         pushBottomIcon(); // 하단 아이콘 클릭 시 액션
     }
 
-    private class ChatListAdapter extends ArrayAdapter<String> {
+    private class MessageListAdapter extends ArrayAdapter<String> {
 
-        private ArrayList<String> mChat_otherNicknameList;
+        private ArrayList<String> mMessage_otherNicknameList;
 
-        public ChatListAdapter(Context context, int resource, ArrayList<String> chatOtherNicknameList) {
-            super(context, resource, chatOtherNicknameList);
+        public MessageListAdapter(Context context, int resource, ArrayList<String> messageOtherNicknameList) {
+            super(context, resource, messageOtherNicknameList);
 
-            System.out.println("ChatListAdapter 부분");
-            mChat_otherNicknameList = chatOtherNicknameList;
+            System.out.println("MessageListAdapter 부분");
+            mMessage_otherNicknameList = messageOtherNicknameList;
         }
 
 
@@ -77,19 +77,19 @@ public class ChatListActivity extends AppCompatActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
-            View rowView = inflater.inflate(R.layout.list_chat, null, true);
+            View rowView = inflater.inflate(R.layout.list_message, null, true);
 
-            TextView txtOtherNickname = (TextView) rowView.findViewById(R.id.chat_otherNickname);
+            TextView txtOtherNickname = (TextView) rowView.findViewById(R.id.message_otherNickname);
 
-            txtOtherNickname.setText(mChat_otherNicknameList.get(position));
+            txtOtherNickname.setText(mMessage_otherNicknameList.get(position));
 
-            System.out.println(" getView : " +mChat_otherNicknameList.get(position));
+            System.out.println(" getView : " +mMessage_otherNicknameList.get(position));
             return rowView;
         }
     }
 
     // 서버에 채팅목록 요청하기
-    public void getChatList() {
+    public void getMessageList() {
         SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
         String myNickname = test.getString("UserNickname", null);
         System.out.println("내 닉네임 : " + myNickname);
@@ -100,7 +100,7 @@ public class ChatListActivity extends AppCompatActivity {
             url += URLEncoder.encode(myNickname, "utf-8");
 
             Log.d("url", url);
-            sendRequest_chatList(url); // 서버에서 채팅목록 읽어오기
+            sendRequest_messageList(url); // 서버에서 채팅목록 읽어오기
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -108,36 +108,36 @@ public class ChatListActivity extends AppCompatActivity {
     }
 
     //서버에서 채팅목록 읽어오기
-    public void sendRequest_chatList (String url) {
+    public void sendRequest_messageList(String url) {
         VolleySingleton v = VolleySingleton.getInstance();
         RequestQueue queue = v.getRequestQueue();
-        request_chatList = new CustomJsonRequest(Request.Method.GET,
+        request_messageList = new CustomJsonRequest(Request.Method.GET,
                 url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                System.out.println("sendRequest_chatList의 onResponse 부분");
+                System.out.println("sendRequest_messageList의 onResponse 부분");
                 JsonParser js = new JsonParser();
-                chat_otherNicknameList = js.getChatList(response);
-                System.out.println("JsonParser의 response 받아서 chat_otherNicknameList 넣기");
-                int chatOther_count = chat_otherNicknameList.size();
-                System.out.println("해당 채팅목록 상대방 chatOther_count " + chatOther_count);
+                message_otherNicknameList = js.getMessageList(response);
+                System.out.println("JsonParser의 response 받아서 message_otherNicknameList 넣기");
+                int messageOther_count = message_otherNicknameList.size();
+                System.out.println("해당 채팅목록 상대방 messageOther_count " + messageOther_count);
 
                 // ListView 가져오기
-                final ListView chatListView = (ListView) findViewById(R.id.chatListView);
+                final ListView messageListView = (ListView) findViewById(R.id.messageListView);
 
-                ChatListAdapter adapter = new ChatListAdapter(mContext, 0, chat_otherNicknameList);
+                MessageListAdapter adapter = new MessageListAdapter(mContext, 0, message_otherNicknameList);
                 // ListView에 각각의 채팅방를 제어하는 Adapter를 설정
-                chatListView.setAdapter(adapter);
+                messageListView.setAdapter(adapter);
 
                 // 채팅방 클릭시 이벤트 리스너 등록
-                chatListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                messageListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         // TODO 아이템 클릭시에 구현할 내용은 여기에.
-                        Intent intent = new Intent(getApplicationContext(), ChatRoomActivity.class);
+                        Intent intent = new Intent(getApplicationContext(), MessageRoomActivity.class);
 
-                        // 채팅방 선택시 ChatRoomActivity에 상대방 닉네임 전달
-                        String otherNickname = chat_otherNicknameList.get(position);
+                        // 채팅방 선택시 MessageRoomActivity에 상대방 닉네임 전달
+                        String otherNickname = message_otherNicknameList.get(position);
                         intent.putExtra("Author", otherNickname);
                         startActivityForResult(intent, 1000);
                     }
@@ -152,7 +152,7 @@ public class ChatListActivity extends AppCompatActivity {
         });
 
         // queue에 Request를 추가해준다.
-        queue.add(request_chatList);
+        queue.add(request_messageList);
     }
 
     // 하단 아이콘 클릭 시 액션
@@ -160,38 +160,40 @@ public class ChatListActivity extends AppCompatActivity {
         bHome.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // 상단바의 '홈 아이콘' 클릭 시 게시글 목록으로 이동
-                Toast.makeText(ChatListActivity.this, "자유 게시판으로 이동", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ChatListActivity.this, BoardRecyclerViewActivity.class);
+                Toast.makeText(MessageListActivity.this, "자유 게시판으로 이동", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MessageListActivity.this, BoardRecyclerViewActivity.class);
                 startActivityForResult(intent, 1000);
             }
         });
-        bChat.setOnClickListener(new View.OnClickListener() {
+        bMessage.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // 상단바의 '채팅 아이콘' 클릭 시 채팅 메뉴로 이동
-                Toast.makeText(ChatListActivity.this, "채팅 메뉴로 이동", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ChatListActivity.this, ChatListActivity.class);
+                // 상단바의 '말풍선 아이콘' 클릭 시 대화하기 메뉴로 이동
+                Toast.makeText(MessageListActivity.this, "대화하기 메뉴로 이동", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MessageListActivity.this, MessageListActivity.class);
                 startActivityForResult(intent, 1000);
             }
         });
         bSearch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // 상단바의 '검색 아이콘' 클릭 시 게시글 검색 메뉴로 이동
-                Toast.makeText(ChatListActivity.this, "검색 메뉴로 이동", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ChatListActivity.this, BoardSearchActivity.class);
+                Toast.makeText(MessageListActivity.this, "검색 메뉴로 이동", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MessageListActivity.this, BoardSearchActivity.class);
                 startActivityForResult(intent, 1000);
             }
         });
         bNotice.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // 상단바의 '알림 아이콘' 클릭 시 게시글 알림 메뉴로 이동
-                Toast.makeText(ChatListActivity.this, "알림 메뉴로 이동", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MessageListActivity.this, "알림 메뉴로 이동", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MessageListActivity.this, NoticeListActivity.class);
+                startActivityForResult(intent, 1000);
             }
         });
         bWrite.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // 상단바의 '글쓰기 아이콘' 클릭 시 게시글 목록으로 이동
-                Toast.makeText(ChatListActivity.this, "게시물 작성하기", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ChatListActivity.this, BoardWritingActivity.class);
+                Toast.makeText(MessageListActivity.this, "게시물 작성하기", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MessageListActivity.this, BoardWritingActivity.class);
                 startActivityForResult(intent, 1000);
             }
         });

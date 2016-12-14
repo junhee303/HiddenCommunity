@@ -2,7 +2,8 @@ package com.example.junhe.hiddencommunity.network;
 
 import android.util.Log;
 
-import com.example.junhe.hiddencommunity.ChatMessage;
+import com.example.junhe.hiddencommunity.Message;
+import com.example.junhe.hiddencommunity.Notice;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -180,24 +181,24 @@ public class JsonParser {
         return commentDataList;
     }
 
-    public ArrayList<String> getChatList (JSONObject response) {
-        ArrayList<String> chat_otherNicknameList = new ArrayList<>();
+    public ArrayList<String> getMessageList (JSONObject response) {
+        ArrayList<String> message_otherNicknameList = new ArrayList<>();
 
-        System.out.println("JsonParser의 getChatList 부분");
+        System.out.println("JsonParser의 getMessageList 부분");
 
         if (response != null || response.length() > 0) {
             try {
                 JSONArray members = response.getJSONArray("members");
 
-                //ArrayList<JSONObject> chatOtherList = new ArrayList<>();
+                //ArrayList<JSONObject> messageOtherList = new ArrayList<>();
 
                 System.out.println("members 길이" + members.length());
 
-                if (chat_otherNicknameList != null) {
+                if (message_otherNicknameList != null) {
                     int len = members.length();
                     for (int i = 0; i < len; i++) {
-                        chat_otherNicknameList.add(members.get(i).toString());
-                        System.out.println("chat_otherNicknameList에 저장된 닉네임 : " + chat_otherNicknameList.get(i));
+                        message_otherNicknameList.add(members.get(i).toString());
+                        System.out.println("message_otherNicknameList에 저장된 닉네임 : " + message_otherNicknameList.get(i));
                     }
                 }
             } catch (JSONException e) {
@@ -205,45 +206,45 @@ public class JsonParser {
             }
         }
 
-        return chat_otherNicknameList;
+        return message_otherNicknameList;
     }
 
-    public ArrayList<ChatMessage> getChat (JSONObject response, String myNickname) {
-        ArrayList<ChatMessage> chatDataList = new ArrayList<>();
-        ChatMessage chatMessage;
+    public ArrayList<Message> getMessage (JSONObject response, String myNickname) {
+        ArrayList<Message> messageDataList = new ArrayList<>();
+        Message message;
 
-        System.out.println("JsonParser의 getChat 부분");
+        System.out.println("JsonParser의 getMessage 부분");
 
         if (response != null || response.length() > 0) {
             try {
-                JSONArray chats = response.getJSONArray("msgs");
+                JSONArray messages = response.getJSONArray("msgs");
 
-                ArrayList<JSONObject> chatsList = new ArrayList<>();
+                ArrayList<JSONObject> messagesList = new ArrayList<>();
 
-                System.out.println("해당 채팅방 메세지 갯수" + chats.length());
+                System.out.println("해당 채팅방 메세지 갯수" + messages.length());
 
-                if (chatsList != null) {
-                    int len = chats.length();
+                if (messagesList != null) {
+                    int len = messages.length();
                     for (int i = 0; i < len; i++) {
-                        chatsList.add(chats.getJSONObject(i));
+                        messagesList.add(messages.getJSONObject(i));
 
-                        String recipient = chatsList.get(i).getString("recipient"); // 수신자
-                        String body = chatsList.get(i).getString("body"); // 채팅 메세지
-                        String sender = chatsList.get(i).getString("sender"); // 발신자
+                        String recipient = messagesList.get(i).getString("recipient"); // 수신자
+                        String body = messagesList.get(i).getString("body"); // 채팅 메세지
+                        String sender = messagesList.get(i).getString("sender"); // 발신자
 
-                        String totalDate = chatsList.get(i).getString("date"); // 날짜
+                        String totalDate = messagesList.get(i).getString("date"); // 날짜
                         String date = totalDate.substring(0,totalDate.indexOf("T"));
                         String time = totalDate.substring(totalDate.indexOf("T")+1, totalDate.indexOf("."));
-                        String chatDate = date + "      " + time;
+                        String messageDate = date + "      " + time;
 
                         if(recipient.equals(myNickname)){ // 상대방이 보낸 메세지 - 왼쪽 정렬
-                            chatMessage = new ChatMessage(true, recipient, body, sender, chatDate);
-                            chatDataList.add(chatMessage);
-                            Log.d("JsonParser", "left: true / " + "recipient: " + recipient + " / body : " + body + " / sender: " + sender + " / chatDate: " + chatDate);
+                            message = new Message(true, recipient, body, sender, messageDate);
+                            messageDataList.add(message);
+                            Log.d("JsonParser", "left: true / " + "recipient: " + recipient + " / body : " + body + " / sender: " + sender + " / messageDate: " + messageDate);
                         } else if(sender.equals(myNickname)) { // 내가 보낸 메세지 - 오른쪽 정렬
-                            chatMessage = new ChatMessage(false, recipient, body, sender, chatDate);
-                            chatDataList.add(chatMessage);
-                            Log.d("JsonParser", "left: false / " + "recipient: " + recipient + " / body : " + body + " / sender: " + sender + " / chatDate: " + chatDate);
+                            message = new Message(false, recipient, body, sender, messageDate);
+                            messageDataList.add(message);
+                            Log.d("JsonParser", "left: false / " + "recipient: " + recipient + " / body : " + body + " / sender: " + sender + " / messageDate: " + messageDate);
                         }
 
                     }
@@ -252,9 +253,51 @@ public class JsonParser {
                 e.printStackTrace();
             }
         }
-        return chatDataList;
+        return messageDataList;
     }
 
+    public ArrayList<Notice> getNoticeList (JSONObject response) {
+        ArrayList<Notice> noticeDataList = new ArrayList<>();
+        Notice notice;
+
+        System.out.println("JsonParser의 getNoticeList 부분");
+
+        if (response != null || response.length() > 0) {
+            try {
+                JSONArray notices = response.getJSONArray("notices");
+
+                ArrayList<JSONObject> noticeList = new ArrayList<>();
+
+                System.out.println("알림 갯수" + notices.length());
+
+                if (noticeList != null) {
+                    int len = notices.length();
+                    for (int i = 0; i < len; i++) {
+                        noticeList.add(notices.getJSONObject(i));
+
+                        String boardId = noticeList.get(i).getString("boardId"); // 해당 게시글 ID
+                        String actionAuthor = noticeList.get(i).getString("actionAuthor"); // 알림 상대방
+                        String type = noticeList.get(i).getString("type"); // 알림 종류
+                        boolean check = noticeList.get(i).getBoolean("check"); // 알림 확인 유무
+
+                        String totalDate = noticeList.get(i).getString("date"); // 날짜
+                        String date = totalDate.substring(0,totalDate.indexOf("T"));
+                        String time = totalDate.substring(totalDate.indexOf("T")+1, totalDate.indexOf("."));
+                        String noticeDate = date + "      " + time;
+
+
+                            notice = new Notice(boardId, actionAuthor, type, check, noticeDate);
+                            noticeDataList.add(notice);
+                            Log.d("JsonParser", "boardId : " + boardId + " / actionAuthor : " + actionAuthor + " / type : " + type + " / check : " + check + " / noticeDate : " + noticeDate);
+
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return noticeDataList;
+    }
 
 
 //    private ArrayList<BoardData> getListData(JSONObject reponse) {

@@ -28,7 +28,7 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
     private List<String> list = new ArrayList<>();
     private Spinner BoardRangeSpinner;
     private Button bHome;
-    private Button bChat;
+    private Button bMessage;
     private Button bSearch;
     private Button bNotice;
     private Button bWrite;
@@ -51,7 +51,7 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
 
         BoardRangeSpinner = (Spinner) findViewById(R.id.board_range_spinner);
         bHome = (Button) findViewById(R.id.action_home);
-        bChat = (Button) findViewById(R.id.action_chat);
+        bMessage = (Button) findViewById(R.id.action_message);
         bSearch = (Button) findViewById(R.id.action_search);
         bNotice = (Button) findViewById(R.id.action_notice);
         bWrite = (Button) findViewById(R.id.action_write);
@@ -239,11 +239,11 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
                 startActivityForResult(intent, 1000);
             }
         });
-        bChat.setOnClickListener(new View.OnClickListener() {
+        bMessage.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // 상단바의 '채팅 아이콘' 클릭 시 채팅 메뉴로 이동
-                Toast.makeText(BoardRecyclerViewActivity.this, "채팅 메뉴로 이동", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(BoardRecyclerViewActivity.this, BoardRecyclerViewActivity.class);
+                // 상단바의 '말풍선 아이콘' 클릭 시 대화하기 메뉴로 이동
+                Toast.makeText(BoardRecyclerViewActivity.this, "대화하기 메뉴로 이동", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(BoardRecyclerViewActivity.this, MessageListActivity.class);
                 startActivityForResult(intent, 1000);
             }
         });
@@ -259,6 +259,8 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // 상단바의 '알림 아이콘' 클릭 시 게시글 알림 메뉴로 이동
                 Toast.makeText(BoardRecyclerViewActivity.this, "알림 메뉴로 이동", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(BoardRecyclerViewActivity.this, NoticeListActivity.class);
+                startActivityForResult(intent, 1000);
             }
         });
         bWrite.setOnClickListener(new View.OnClickListener() {
