@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
         //  게시판 만들기 편하게 메일 입력에서 바로 게시판 뛰어넘게 해둠 / 나중에 경로 다시 수정
 //
-                Intent intent = new Intent(getApplicationContext(), NoticeListActivity.class);
+                Intent intent = new Intent(getApplicationContext(), BoardRecyclerViewActivity.class);
                 startActivityForResult(intent, 1000);
 
 //        SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);

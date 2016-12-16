@@ -8,6 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,10 +26,14 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 import data.BoardData;
 
 public class BoardBlankFragment extends Fragment {
+
+    private Spinner BoardRangeSpinner;
+
     ArrayList<String> mBoardId = new ArrayList<>();
     ArrayList<String> mCategory = new ArrayList<>();
     ArrayList<String> mTitleSet = new ArrayList<>();
@@ -37,66 +45,111 @@ public class BoardBlankFragment extends Fragment {
     ArrayList<Integer> mLikeSet = new ArrayList<>();
     ArrayList<Integer> mCommentSet = new ArrayList<>();
     Board_Adapter mAdapter;
+    String mCategory_name;
     int mParam1;
     int range_position;
 
     public BoardBlankFragment() {
-
         // Required empty public constructor
     }
 
+    //    public void func(int position){
+//        Log.d("range",""+position);
+//        range_position = position;
+//        System.out.println("category는 " + mCategory_name + " / position은 " + range_position);
+//
+//        sendRequest_boardList(mCategory_name); // 게시글 목록 받아오기
+//    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
             mParam1 = getArguments().getInt("index");
-            //range_position = getArguments().getInt("range_position");
-        }else{
+        } else {
             mParam1 = 0;
-            //range_position = 4;
         }
-
+        int board_position = mParam1;
+        mCategory_name = ((BoardRecyclerViewActivity) getActivity()).tabTitles.get(board_position);
+        //System.out.println("OnCreate Method : board_position은 " + board_position + "/ category는 " + mCategory_name);
     }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser)
-    {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser)
-        {
-            //화면에 실제로 보일때
-        }
-        else
-        {
-            //preload 될때(전페이지에 있을때)
-        }
-    }
-
-//    public BoardBlankFragment newInstance(String category) {
-//        BoardBlankFragment fragment = new BoardBlankFragment();
-//        Bundle args = new Bundle();
-//        args.putSerializable("category", category);
-//        System.out.println("1해당 게시글의 카테고리는 " + args.get("category"));
-//
-//        sendRequest_boardList(args.get("category").toString()); // 게시글 목록 받아오기
-//
-//        return fragment;
+    
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//        if (isVisibleToUser) {
+//            //화면에 실제로 보일때
+//        } else {
+//            //preload 될때(전페이지에 있을때)
+//        }
 //    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        System.out.println(mCategory_name + ": onCreateView Method invoked!!!!!!!!!!!!! position : " + range_position);
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.board_blank_fragment, container, false);
+        BoardRangeSpinner = (Spinner) rootView.findViewById(R.id.board_range_spinner);
+
+        selectBoardRange(); // 게시판 정렬 선택
 
         RecyclerView rv = (RecyclerView) rootView.findViewById(R.id.rv_recycler_view);
         rv.setHasFixedSize(true);
 
-        int board_position = mParam1;
-        String category = ((BoardRecyclerViewActivity)getActivity()).tabTitles.get(board_position);
+        mAdapter = new Board_Adapter(getActivity(), mCategory, mBoardId, mTitleSet, mAuthorSet, mDateSet, mBodySet, mTagSet, mHitSet, mLikeSet, mCommentSet);
+        rv.setAdapter(mAdapter);
 
-        System.out.println("☆☆☆board_position은 " + board_position + "/ category는 " + category);
+        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
+        rv.setLayoutManager(llm);
+
+        sendRequest_boardList(mCategory_name); // 게시글 목록 받아오기
+
+        return rootView;
+    }
+
+    // 게시판 정렬 선택
+    public void selectBoardRange() {
+        BoardRangeSpinner.setOnItemSelectedListener(mOnItemSelectedListener);
+
+        List<String> list = new ArrayList<>();
+        list.add("최신순"); // position 0
+        list.add("조회순"); // position 1
+        list.add("좋아요순"); // position 2
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        BoardRangeSpinner.setAdapter(dataAdapter);
+
+    }
+
+    private AdapterView.OnItemSelectedListener mOnItemSelectedListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            Log.d("tag", "onItemSelected() entered!!");
+            range_position = BoardRangeSpinner.getSelectedItemPosition();
+            Log.d("tag", "선택한 정렬의 list position은  = " + range_position);
+            // 최신순 : 0 / 조회순 : 1 / 좋아요순 : 2
+
+            sendRequest_boardList(mCategory_name); // 게시글 목록 받아오기
+
+//            Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + mViewPager.getCurrentItem());
+//            // based on the current position you can then cast the page to the correct
+//            // class and call the method:
+//            if (mViewPager.getCurrentItem() == 0 && page != null) {
+//                ((BoardBlankFragment)page).func(range_position);
+//            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            Log.d("tag", "onNothingSelected() entered!!");
+        }
+
+    };
+
+    // 게시글 목록 받아오기 - JsonObject
+    public void sendRequest_boardList(String _Caterogy) {
 
         mBoardId.clear();
         mTitleSet.clear();
@@ -109,32 +162,20 @@ public class BoardBlankFragment extends Fragment {
         mLikeSet.clear();
         mCommentSet.clear();
 
-        mAdapter = new Board_Adapter(getActivity(), mCategory, mBoardId, mTitleSet, mAuthorSet, mDateSet, mBodySet, mTagSet, mHitSet, mLikeSet, mCommentSet);
-
-        rv.setAdapter(mAdapter);
-
-        LinearLayoutManager llm = new LinearLayoutManager(getActivity());
-        rv.setLayoutManager(llm);
-
-        sendRequest_boardList(category); // 게시글 목록 받아오기
-
-        return rootView;
-    }
-
-    // 게시글 목록 받아오기 - JsonObject
-    public void sendRequest_boardList(String _Caterogy) {
 
         VolleySingleton v = VolleySingleton.getInstance();
         RequestQueue queue = v.getRequestQueue();
 
         final String category = _Caterogy;
-        System.out.println("2해당 게시글의 카테고리는 " + category);
+        //System.out.println("2해당 게시글의 카테고리는 " + category);
 
-        int range = ((BoardRecyclerViewActivity)getActivity()).range_position;
+        int range = range_position; // 선택한 정렬
+        //System.out.println("선택한 정렬의 ranges는  = " + range);
+
         // 서버로 카테고리 전달
         try {
             String url_category = "http://52.78.207.133:3000/boards/list/";
-            url_category += URLEncoder.encode(category, "utf-8")+ "/";
+            url_category += URLEncoder.encode(category, "utf-8") + "/";
             url_category += range;
             Log.d("url", url_category);
 
@@ -146,17 +187,17 @@ public class BoardBlankFragment extends Fragment {
                     System.out.println("sendRequest의 onResponse 부분");
                     JsonParser js = new JsonParser();
 
-                    String Major1 = ((BoardRecyclerViewActivity)getActivity()).Major1;
-                    String Major2 = ((BoardRecyclerViewActivity)getActivity()).Major2;
-                    String Major3 = ((BoardRecyclerViewActivity)getActivity()).Major3;
+                    String Major1 = ((BoardRecyclerViewActivity) getActivity()).Major1;
+                    String Major2 = ((BoardRecyclerViewActivity) getActivity()).Major2;
+                    String Major3 = ((BoardRecyclerViewActivity) getActivity()).Major3;
 
-                    if(category.equals("자유")) {
+                    if (category.equals("자유")) {
                         ArrayList<BoardData> data_freeBoard = js.getBoardData(response);
 
                         System.out.println("JsonParser의 response 받아서 data_freeBoard에 넣기");
                         System.out.println(data_freeBoard.size());
 
-                        for(int i = 0; i <data_freeBoard.size(); i++) {
+                        for (int i = 0; i < data_freeBoard.size(); i++) {
                             System.out.println("data.get(i).getBoardId() : " + data_freeBoard.get(i).getBoardId());
                             mBoardId.add(data_freeBoard.get(i).getBoardId());
                             mCategory.add(data_freeBoard.get(i).getCategory());
@@ -178,7 +219,7 @@ public class BoardBlankFragment extends Fragment {
                         System.out.println("JsonParser의 response 받아서 data_major1에 넣기");
                         System.out.println(data_major1.size());
 
-                        for(int i = 0; i <data_major1.size(); i++) {
+                        for (int i = 0; i < data_major1.size(); i++) {
                             System.out.println("data.get(i).getBoardId() : " + data_major1.get(i).getBoardId());
                             mBoardId.add(data_major1.get(i).getBoardId());
                             mCategory.add(data_major1.get(i).getCategory());
@@ -200,7 +241,7 @@ public class BoardBlankFragment extends Fragment {
                         System.out.println("JsonParser의 response 받아서 data_major2에 넣기");
                         System.out.println(data_major2.size());
 
-                        for(int i = 0; i <data_major2.size(); i++) {
+                        for (int i = 0; i < data_major2.size(); i++) {
                             System.out.println("data.get(i).getBoardId() : " + data_major2.get(i).getBoardId());
                             mBoardId.add(data_major2.get(i).getBoardId());
                             mCategory.add(data_major2.get(i).getCategory());
@@ -222,7 +263,7 @@ public class BoardBlankFragment extends Fragment {
                         System.out.println("JsonParser의 response 받아서 data_major3에 넣기");
                         System.out.println(data_major3.size());
 
-                        for(int i = 0; i <data_major3.size(); i++) {
+                        for (int i = 0; i < data_major3.size(); i++) {
                             System.out.println("data.get(i).getBoardId() : " + data_major3.get(i).getBoardId());
                             mBoardId.add(data_major3.get(i).getBoardId());
                             mCategory.add(data_major3.get(i).getCategory());

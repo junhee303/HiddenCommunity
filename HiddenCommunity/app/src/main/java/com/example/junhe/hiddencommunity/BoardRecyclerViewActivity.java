@@ -10,23 +10,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class BoardRecyclerViewActivity extends AppCompatActivity {
 
-    private List<String> list = new ArrayList<>();
-    private Spinner BoardRangeSpinner;
     private Button bHome;
     private Button bMessage;
     private Button bSearch;
@@ -43,13 +36,12 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
     int range_position;
 
     PagerAdapter pagerAdapter;
-
+    ViewPager mViewPager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board_recycler_view);
 
-        BoardRangeSpinner = (Spinner) findViewById(R.id.board_range_spinner);
         bHome = (Button) findViewById(R.id.action_home);
         bMessage = (Button) findViewById(R.id.action_message);
         bSearch = (Button) findViewById(R.id.action_search);
@@ -58,7 +50,7 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
 
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
 
         SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
         Major1 = test.getString("UserMajor1", "");
@@ -80,11 +72,11 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
         pagerAdapter =
                 new PagerAdapter(getSupportFragmentManager(), BoardRecyclerViewActivity.this, tabTitles);
 
-        viewPager.setAdapter(pagerAdapter);
+        mViewPager.setAdapter(pagerAdapter);
 
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setupWithViewPager(mViewPager);
 
         // Iterate over all tabs and set the custom view
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
@@ -92,42 +84,9 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
             tab.setCustomView(pagerAdapter.getTabView(i));
         }
 
-        selectBoardRange(); // 게시판 정렬 선택
         pushBottomIcon(); // 하단 아이콘 클릭 시 액션
     }
 
-    // 게시판 정렬 선택
-    public void selectBoardRange() {
-        BoardRangeSpinner = (Spinner) findViewById(R.id.board_range_spinner);
-        BoardRangeSpinner.setOnItemSelectedListener(mOnItemSelectedListener);
-
-        list.add("최신순"); // position 0
-        list.add("조회순"); // position 1
-        list.add("좋아요순"); // position 2
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        BoardRangeSpinner.setAdapter(dataAdapter);
-
-    }
-
-    private AdapterView.OnItemSelectedListener mOnItemSelectedListener = new AdapterView.OnItemSelectedListener() {
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            Log.d("tag", "onItemSelected() entered!!");
-            range_position= BoardRangeSpinner.getSelectedItemPosition();
-            Log.d("tag", "선택한 정렬의 list position은  = " + range_position);
-
-            //pagerAdapter.update();
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-            Log.d("tag", "onNothingSelected() entered!!");
-        }
-
-    };
 
 //    // 게시판 정렬 선택 시 그에 따른 게시글 정렬 변경
 //    public String changeBoardRange(int range_position) {
@@ -162,6 +121,7 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
         ArrayList<String> tabTitles = new ArrayList<>();
         Context context;
 
+
         public PagerAdapter(FragmentManager fm, Context context, ArrayList<String> tabTitles) {
             super(fm);
             this.context = context;
@@ -171,6 +131,7 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
         public void update(){
             notifyDataSetChanged();
         }
+
 
         @Override
         public int getCount() {
@@ -186,28 +147,24 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
                     BoardBlankFragment fragment = new BoardBlankFragment();
                     Bundle args = new Bundle();
                     args.putInt("index", 0);
-                    //args.putInt("range_position", range_position);
                     fragment.setArguments(args);
                     return fragment;
                 case 1:
                     fragment = new BoardBlankFragment();
                     args = new Bundle();
                     args.putInt("index", 1);
-                    //args.putInt("range_position", range_position);
                     fragment.setArguments(args);
                     return fragment;
                 case 2:
                     fragment = new BoardBlankFragment();
                     args = new Bundle();
                     args.putInt("index", 2);
-                   // args.putInt("range_position", range_position);
                     fragment.setArguments(args);
                     return fragment;
                 case 3:
                     fragment = new BoardBlankFragment();
                     args = new Bundle();
                     args.putInt("index", 3);
-                   // args.putInt("range_position", range_position);
                     fragment.setArguments(args);
                     return fragment;
                 default:
@@ -227,6 +184,7 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
             tv.setText(tabTitles.get(position));
             return tab;
         }
+
     }
 
     // 하단 아이콘 클릭 시 액션

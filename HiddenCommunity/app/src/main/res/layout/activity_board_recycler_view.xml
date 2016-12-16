@@ -37,24 +37,13 @@
 
     </android.support.design.widget.TabLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.05">
-
-        <Spinner
-            android:id="@+id/board_range_spinner"
-            android:layout_width="125dp"
-            android:layout_height="30dp"
-            android:layout_gravity="right"/>
-    </FrameLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_below="@+id/tab_layout"
-        android:layout_weight="0.75" />
+        android:layout_weight="0.8" />
 
     <FrameLayout
         android:id="@+id/bottom_icon_bar"
