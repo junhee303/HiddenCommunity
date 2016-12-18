@@ -30,7 +30,8 @@
         android:elevation="6dp"
         android:minHeight="?attr/actionBarSize"
         app:tabIndicatorColor="@color/colorAccent"
-        app:tabMode="scrollable"
+        app:tabGravity="fill"
+        app:tabMode="fixed"
         app:tabSelectedTextColor="#ffffff"
         app:tabTextColor="#7a7a7a">
 
@@ -76,7 +77,7 @@
                     android:layout_height="40dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:background="@drawable/ic_action_message" />
+                    android:background="@drawable/ic_action_message2" />
 
                 <Button
                     android:id="@+id/action_search"

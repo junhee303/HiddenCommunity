@@ -66,10 +66,10 @@ public class MessageAdapter extends ArrayAdapter {
 
         // 9 패치 이미지로 채팅 버블을 출력
         if(msg.getSide() == false) {// 나의 메세지 - 오른쪽 배치
-            msgText.setBackground(this.getContext().getResources().getDrawable(R.drawable.bubble_a));
+            msgText.setBackground(this.getContext().getResources().getDrawable(R.drawable.bubble_me));
             messageContainer.setGravity(Gravity.END);
         } else if(msg.getSide() == true) { // 상대방의 메세지 - 왼쪽 배치
-            msgText.setBackground(this.getContext().getResources().getDrawable(R.drawable.bubble_b));
+            msgText.setBackground(this.getContext().getResources().getDrawable(R.drawable.bubble_other));
             messageContainer.setGravity(Gravity.START);
         }
 

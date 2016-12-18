@@ -525,7 +525,7 @@ public class BoardReadingActivity extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.message_btn:
-                        Toast.makeText(BoardReadingActivity.this, "해당 작성자에게 메시지를 보냅니다", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BoardReadingActivity.this, "해당 작성자에게 쪽지를 보냅니다", Toast.LENGTH_SHORT).show();
                         Intent intent1 = new Intent(BoardReadingActivity.this, MessageRoomActivity.class);
                         String author = Author.getText().toString();
                         intent1.putExtra("Author", author);

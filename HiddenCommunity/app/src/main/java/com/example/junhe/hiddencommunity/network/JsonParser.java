@@ -9,7 +9,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import data.BoardData;
 import data.CommentData;
@@ -66,9 +71,7 @@ public class JsonParser {
                         }
                         // postDate를 T를 기준으로 날짜와 시간으로 나누기
                         String totalDate = boardsList.get(i).getString("date"); // 날짜
-                        String date = totalDate.substring(0,totalDate.indexOf("T"));
-                        String time = totalDate.substring(totalDate.indexOf("T")+1, totalDate.indexOf("."));
-                        String postDate = date + "      " + time;
+                        String postDate = convertToDate(totalDate);
 
 
                         Log.d("JsonParser: ", "boardId: " + boardId + " / 작성 게시판: " + postCategory + " / 글 제목: " + postTitle + " / 글쓴이: " + postAuthor);
@@ -88,7 +91,6 @@ public class JsonParser {
         }
         return boardDataList;
     }
-
 
     public BoardData getData(JSONObject response) {
         BoardData boardData = null;
@@ -125,9 +127,7 @@ public class JsonParser {
                 //getComment(response);
 
                 String totalDate = board.getString("date"); // 날짜
-                String date = totalDate.substring(0,totalDate.indexOf("T"));
-                String time = totalDate.substring(totalDate.indexOf("T")+1, totalDate.indexOf("."));
-                String postDate = date + "      " + time;
+                String postDate = convertToDate(totalDate);
 
                 Log.d("JsonParser: ", "boardId: " + boardId + " / 작성 게시판: " + postCategory + " / 글 제목: " + postTitle + " / 글쓴이: " + postAuthor);
                 Log.d("JsonParser: ", " / 날짜: " + postDate + " / 글내용: " + postBody + " / 태그: " + tagString + " / 조회 수: " + Hit + " / 좋아요 수: " + Like + " / 댓글 수: " + Comment);
@@ -164,9 +164,7 @@ public class JsonParser {
                         String commentBody = commentList.get(i).getString("body");
 
                         String totalDate = commentList.get(i).getString("date"); // 날짜
-                        String date = totalDate.substring(0,totalDate.indexOf("T"));
-                        String time = totalDate.substring(totalDate.indexOf("T")+1, totalDate.indexOf("."));
-                        String commentDate = date + "      " + time;
+                        String commentDate = convertToDate(totalDate);
 
                         Log.d("JsonParser: ", "boardId: " + boardId + " / commentId: " + commentId + " /  댓글쓴이: " + commentAuthor + " / 댓글 쓴 날짜: " + commentDate + " / 댓글 내용: " + commentBody);
 
@@ -233,9 +231,7 @@ public class JsonParser {
                         String sender = messagesList.get(i).getString("sender"); // 발신자
 
                         String totalDate = messagesList.get(i).getString("date"); // 날짜
-                        String date = totalDate.substring(0,totalDate.indexOf("T"));
-                        String time = totalDate.substring(totalDate.indexOf("T")+1, totalDate.indexOf("."));
-                        String messageDate = date + "      " + time;
+                        String messageDate = convertToDate(totalDate);
 
                         if(recipient.equals(myNickname)){ // 상대방이 보낸 메세지 - 왼쪽 정렬
                             message = new Message(true, recipient, body, sender, messageDate);
@@ -282,7 +278,12 @@ public class JsonParser {
                         boolean check = noticeList.get(i).getBoolean("check"); // 알림 확인 유무
 
                         String totalDate = noticeList.get(i).getString("date"); // 날짜
-                        String noticeDate = totalDate.substring(0,totalDate.indexOf("T"));
+                        String convertedDate = convertToDate(totalDate);
+                        String noticeDate = convertedDate.substring(0,convertedDate.indexOf(" "));
+
+
+
+
 
                             notice = new Notice(noticeId, boardId, actionAuthor, type, check, noticeDate);
                             noticeDataList.add(notice);
@@ -297,52 +298,35 @@ public class JsonParser {
         return noticeDataList;
     }
 
+    public String convertToDate (String totalDate) {
+        System.out.println(totalDate);
+        // dateString = "2016-12-14T 12:34:39.022Z"
 
-//    private ArrayList<BoardData> getListData(JSONObject reponse) {
-//        ArrayList<BaseData> listItems = null;
-//        JSONArray arrayItems;
-//        JSONObject rowCount;
-//        if (reponse != null || reponse.length() > 0) {
-//            try {
-//                listItems = new ArrayList<BaseData>();
-//
-//                rowCount = reponse.getJSONObject(KEY_ROW_COUNT);
-//                ROW_COUNT = rowCount.getInt(KEY_ROW_CNT);
-//
-//                arrayItems = reponse.getJSONArray("tag");
-//
-//                for (int i = 0; i < arrayItems.length(); i++) {
-//                    JSONObject currentItem = arrayItems.getJSONObject(i);
-//                    String barcode = currentItem.getString(KEY_BARCODE);
-//                    String name = currentItem.getString(KEY_NAME);
-//                    int sPrice = currentItem.getInt(KEY_S_PRICE);
-//                    int price = currentItem.getInt(KEY_PRICE);
-//                    String imageUrlLow = currentItem
-//                            .getString(KEY_IMAGE_URL_LOW);
-//                    String imageUrlHigh = currentItem
-//                            .getString(KEY_IMAGE_URL_HIGH);
-//
-//                    ItemData item = new ItemData();
-//                    item.setBarcode(barcode);
-//                    item.setName(name);
-//                    item.setSPrice(sPrice);
-//                    item.setPrice(price);
-//                    item.setImageUrlLow(imageUrlLow);
-//                    item.setImageUrlHigh(imageUrlHigh);
-//                    listItems.add(item);
-//                }
-//
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//      /*
-//       * for(int i = 0; i < listItems.size(); i++){ Log.i("json",
-//       * listItems.get(i).toString()); }
-//       */
-//        // Log.i("json", "사이즈"+listItems.size());
-//        return listItems;
-//
-//    }
+        String date = totalDate.substring(0,totalDate.indexOf("T"));
+        String time = totalDate.substring(totalDate.indexOf("T")+1, totalDate.indexOf("."));
+        String dateString = date + "  " + time;
+
+        Date convertedDate = new Date();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
+
+        DateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd  HH:mm", Locale.getDefault());
+        String formattedDate = null;
+        String formattedHour = null;
+
+        try {
+            convertedDate = dateFormat.parse(dateString);
+            convertedDate.setHours(convertedDate.getHours()+9);
+            formattedDate = targetFormat.format(convertedDate);
+
+            System.out.println("try구문 안  : " + formattedHour + " / " + formattedDate );
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        System.out.println(formattedDate);
+        return formattedDate;
+    }
+
 }
 

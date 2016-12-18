@@ -1,6 +1,5 @@
 package com.example.junhe.hiddencommunity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -28,6 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText etMajor1;
     private EditText etMajor2;
     private EditText etMajor3;
+    private Button bNicknameOverlapCheck;
     private Button bMajorAdd;
     private Button bStart;
     private TextView CheckPasswordNotice;
@@ -40,10 +40,46 @@ public class RegisterActivity extends AppCompatActivity {
     private int addMajor;
     private int count_major;
 
-    String url, result;
+    String url_nickname, result_nickname;
+    String url_register, result_register;
+
+    private boolean nickname_overlap = false;
 
 
-    private ProgressDialog mProgressDialog;
+    //private ProgressDialog mProgressDialog;
+
+    class NicknameOverlapTask extends AsyncTask<String, Void, String> {
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                result_nickname = HTTPInstance.Instance().Post(url_nickname);
+                onResponseHttp_nickname(result_nickname);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    NicknameOverlapTask nicknameOverlapTask;
+
+    private void onResponseHttp_nickname(String s) {
+        Log.d("RESPONSE", s);
+        if (s.compareTo("no") == 0) {
+            System.out.println("중복된 닉네임입니다");
+            //Toast.makeText(RegisterActivity.this, "중복된 닉네임입니다", Toast.LENGTH_SHORT).show();
+        } else {
+        //} else if (s.compareTo("ok") == 0) {
+            System.out.println("사용 가능한 닉네임입니다");
+            //Toast.makeText(RegisterActivity.this, "사용 가능한 닉네임입니다", Toast.LENGTH_SHORT).show();
+            nickname_overlap = true; // 닉네임 중복 체크 true
+            System.out.println("nickname_overlap은 " + nickname_overlap);
+        }
+    }
 
     class RegisterTask extends AsyncTask<String, Void, String> {
         @Override
@@ -53,8 +89,8 @@ public class RegisterActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             try {
-                result = HTTPInstance.Instance().Post(url);
-                onResponseHttp(result);
+                result_register = HTTPInstance.Instance().Post(url_register);
+                onResponseHttp_register(result_register);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -64,18 +100,16 @@ public class RegisterActivity extends AppCompatActivity {
 
     RegisterTask registerTask;
 
-    private void onResponseHttp(String s) {
+    private void onResponseHttp_register(String s) {
         if (s == null) {
             System.out.println("회원 정보를 정확히 입력해주세요");
             return;
         }
         Log.d("RESPONSE", s);
         if (s.compareTo("ok") == 0) {
-            System.out.println("가입이 완료되었습니다.");
+            System.out.println("가입이 완료되었습니다");
             Intent intent = new Intent(getApplicationContext(), BoardRecyclerViewActivity.class);
             startActivityForResult(intent, 1000);
-        } else {
-
         }
     }
 
@@ -90,15 +124,14 @@ public class RegisterActivity extends AppCompatActivity {
         etMajor1 = (EditText) findViewById(R.id.etMajor1);
         etMajor2 = (EditText) findViewById(R.id.etMajor2);
         etMajor3 = (EditText) findViewById(R.id.etMajor3);
+        bNicknameOverlapCheck = (Button) findViewById(R.id.bNicknameOverlapCheck);
         bMajorAdd = (Button) findViewById(R.id.bMajorAdd);
         bStart = (Button) findViewById(R.id.bStart);
         CheckPasswordNotice = (TextView) findViewById(R.id.CheckPasswordNotice);
         CheckNicknameNotice = (TextView) findViewById(R.id.CheckNicknameNotice);
         passwordCheck = (ImageView) findViewById(R.id.passwordCheck);
         passwordError = (ImageView) findViewById(R.id.passwordError);
-        nicknameCheck = (ImageView) findViewById(R.id.nicknameCheck);
-        nicknameError = (ImageView) findViewById(R.id.nicknameError);
-        server_nickname = "server"; // 닉네임 중복 체크 위해 임의로 만든 닉네임
+        //server_nickname = "server"; // 닉네임 중복 체크 위해 임의로 만든 닉네임
         count_major = 1;
 
         conformPassword(); // 비밀번호 일치 검사
@@ -139,41 +172,36 @@ public class RegisterActivity extends AppCompatActivity {
 
     // 닉네임 중복 검사
     public void conformNickname() {
-        etNickname.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+        bNicknameOverlapCheck.setOnClickListener
+                (new View.OnClickListener() {
+                     public void onClick(View v) {
+                         String nickname = etNickname.getText().toString();
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String nickname = etNickname.getText().toString();
-                String serverName = server_nickname;
+                         if (etNickname.getText().toString().length() != 0) {
+                             try {
+                                 url_nickname = "http://52.78.207.133:3000/members/checkNickname/";
+                                 url_nickname += URLEncoder.encode(nickname, "utf-8");
+                             } catch (UnsupportedEncodingException e) {
+                                 e.printStackTrace();
+                             }
+                         } else {
+                             Toast.makeText(RegisterActivity.this, "닉네임을 입력하세요", Toast.LENGTH_SHORT).show();
+                             etNickname.requestFocus();
+                         }
 
-                if (nickname.equals(serverName) || nickname.length() == 0) {
-                    nicknameCheck.setVisibility(View.INVISIBLE);
-                    nicknameError.setVisibility(View.VISIBLE);
-                    CheckNicknameNotice.setVisibility(View.INVISIBLE);
-                } else {
-                    nicknameCheck.setVisibility(View.VISIBLE);
-                    nicknameError.setVisibility(View.INVISIBLE);
-                    CheckNicknameNotice.setVisibility(View.VISIBLE);
-                }
-            }
+                         nicknameOverlapTask = new NicknameOverlapTask();
+                         nicknameOverlapTask.execute();
 
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
+                         if(nickname_overlap == true) {
+                             Toast.makeText(RegisterActivity.this, "사용 가능한 닉네임입니다", Toast.LENGTH_SHORT).show();
+                             CheckNicknameNotice.setText("사용 가능한 닉네임입니다");
+                         }
+
+                     }
+
+                 }
+                );
     }
-
-//        etNickname.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                //'k2df456'라는 텍스트 값 넣어놨으나, 랜덤 닉네임 주어지게 바꿔야 함!!☆☆☆
-//                etNickname.setText("");
-//                etNickname.requestFocus();
-//                return;
-//            }
-//        });
 
     // 전공 입력 칸 누르면 MajorListActivity로 이동
     public void selectMajor() {
@@ -253,15 +281,6 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
-                //닉네임 중복 확인 ---> 서버 상의 데이터로 중복 확인 가능??☆☆☆☆☆☆☆☆☆☆☆☆
-                if (etNickname.getText().toString().equals(server_nickname)) {
-                    Toast.makeText(RegisterActivity.this, "이미 존재하는 닉네임입니다.", Toast.LENGTH_SHORT).show();
-                    //etPassword.setText("");
-                    etNickname.setText("");
-                    etNickname.requestFocus();
-                    return;
-                }
-
                 // 전공 입력 확인
                 if (etMajor1.getText().toString().length() == 0) {
                     Toast.makeText(RegisterActivity.this, "전공을 입력하세요", Toast.LENGTH_SHORT).show();
@@ -277,34 +296,40 @@ public class RegisterActivity extends AppCompatActivity {
                 String major2 = etMajor2.getText().toString();
                 String major3 = etMajor3.getText().toString();
 
+                //닉네임 중복 확인 유무
+                if (nickname_overlap == false) {
+                    Toast.makeText(RegisterActivity.this, "닉네임 중복 확인이 필요합니다.", Toast.LENGTH_SHORT).show();
+                    etNickname.requestFocus();
+                    return;
+                } else {
+                    // 서버로 회원 정보 전달
+                    try {
+                        url_register = "http://52.78.207.133:3000/members/addInfo?";
+                        url_register += "email=" + URLEncoder.encode(email, "utf-8");
+                        url_register += "&password=" + URLEncoder.encode(password, "utf-8");
+                        url_register += "&nickname=" + URLEncoder.encode(nickname, "utf-8");
+                        url_register += "&major1=" + URLEncoder.encode(major1, "utf-8");
+                        url_register += "&major2=" + URLEncoder.encode(major2, "utf-8");
+                        url_register += "&major3=" + URLEncoder.encode(major3, "utf-8");
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
 
-                // 서버로 회원 정보 전달
-                try {
-                    url = "http://52.78.207.133:3000/members/addInfo?";
-                    url += "email=" + URLEncoder.encode(email, "utf-8");
-                    url += "&password=" + URLEncoder.encode(password, "utf-8");
-                    url += "&nickname=" + URLEncoder.encode(nickname, "utf-8");
-                    url += "&major1=" + URLEncoder.encode(major1, "utf-8");
-                    url += "&major2=" + URLEncoder.encode(major2, "utf-8");
-                    url += "&major3=" + URLEncoder.encode(major3, "utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+                    registerTask = new RegisterTask();
+                    registerTask.execute();
+
+                    // 자동 로그인위해 SharedPreferences 사용하여 UserInfo 데이터 저장
+                    SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = test.edit();
+                    editor.putString("UserEmail", email); // UserEmail 파일에 email 데이터를 저장
+                    editor.putString("UserNickname", nickname); // UserNickname 파일에 nickname 데이터를 저장
+                    editor.putString("UserMajor1", major1); // UserMajor1 파일에 major1 데이터를 저장
+                    editor.putString("UserMajor2", major2); // UserMajor2 파일에 major2 데이터를 저장
+                    editor.putString("UserMajor3", major3); // UserMajor3 파일에 major3 데이터를 저장
+
+                    editor.commit(); // UserInfo 데이터 저장 완료
+
                 }
-
-                registerTask = new RegisterTask();
-                registerTask.execute();
-
-                // 자동 로그인위해 SharedPreferences 사용하여 UserInfo 데이터 저장
-                SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
-                SharedPreferences.Editor editor = test.edit();
-                editor.putString("UserEmail", email); // UserEmail 파일에 email 데이터를 저장
-                editor.putString("UserNickname", nickname); // UserNickname 파일에 nickname 데이터를 저장
-                editor.putString("UserMajor1", major1); // UserMajor1 파일에 major1 데이터를 저장
-                editor.putString("UserMajor2", major2); // UserMajor2 파일에 major2 데이터를 저장
-                editor.putString("UserMajor3", major3); // UserMajor3 파일에 major3 데이터를 저장
-
-                editor.commit(); //완료한다.
-
             }
         });
     }
@@ -317,11 +342,11 @@ public class RegisterActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {// 액티비티가 정상적으로 종료되었을 경우
             if (requestCode == 1000) {// MajorListActivity에서 호출한 경우에만 처리
                 // 받아온 전공명을 MajorListActivity에 표시
-                if(count_major == 1){
+                if (count_major == 1) {
                     etMajor1.setText(data.getStringExtra("selected_major"));
-                } else if(count_major == 2){
+                } else if (count_major == 2) {
                     etMajor2.setText(data.getStringExtra("selected_major"));
-                } else if(count_major == 3){
+                } else if (count_major == 3) {
                     etMajor3.setText(data.getStringExtra("selected_major"));
                 }
             }

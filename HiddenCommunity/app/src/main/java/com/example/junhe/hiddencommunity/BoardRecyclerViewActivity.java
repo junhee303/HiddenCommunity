@@ -156,17 +156,21 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
                     fragment.setArguments(args);
                     return fragment;
                 case 2:
-                    fragment = new BoardBlankFragment();
-                    args = new Bundle();
-                    args.putInt("index", 2);
-                    fragment.setArguments(args);
-                    return fragment;
+                    if (Major2 != "") {
+                        fragment = new BoardBlankFragment();
+                        args = new Bundle();
+                        args.putInt("index", 2);
+                        fragment.setArguments(args);
+                        return fragment;
+                    }
                 case 3:
-                    fragment = new BoardBlankFragment();
-                    args = new Bundle();
-                    args.putInt("index", 3);
-                    fragment.setArguments(args);
-                    return fragment;
+                    if (Major3 != "") {
+                        fragment = new BoardBlankFragment();
+                        args = new Bundle();
+                        args.putInt("index", 3);
+                        fragment.setArguments(args);
+                        return fragment;
+                    }
                 default:
                     return null;
             }
@@ -199,8 +203,8 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
         });
         bMessage.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // 상단바의 '말풍선 아이콘' 클릭 시 대화하기 메뉴로 이동
-                Toast.makeText(BoardRecyclerViewActivity.this, "대화하기 메뉴로 이동", Toast.LENGTH_SHORT).show();
+                // 상단바의 '말풍선 아이콘' 클릭 시 쪽지 보내기 메뉴로 이동
+                Toast.makeText(BoardRecyclerViewActivity.this, "쪽지 보내기 메뉴로 이동", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(BoardRecyclerViewActivity.this, MessageListActivity.class);
                 startActivityForResult(intent, 1000);
             }

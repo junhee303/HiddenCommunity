@@ -245,8 +245,8 @@ public class NoticeListActivity  extends AppCompatActivity {
         });
         bMessage.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // 상단바의 '말풍선 아이콘' 클릭 시 대화하기 메뉴로 이동
-                Toast.makeText(NoticeListActivity.this, "대화하기 메뉴로 이동", Toast.LENGTH_SHORT).show();
+                // 상단바의 '말풍선 아이콘' 클릭 시 쪽지 보내기 메뉴로 이동
+                Toast.makeText(NoticeListActivity.this, "쪽지 보내기 메뉴로 이동", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(NoticeListActivity.this, MessageListActivity.class);
                 startActivityForResult(intent, 1000);
             }

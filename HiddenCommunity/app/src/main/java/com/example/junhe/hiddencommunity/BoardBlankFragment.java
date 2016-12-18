@@ -73,7 +73,7 @@ public class BoardBlankFragment extends Fragment {
         mCategory_name = ((BoardRecyclerViewActivity) getActivity()).tabTitles.get(board_position);
         //System.out.println("OnCreate Method : board_position은 " + board_position + "/ category는 " + mCategory_name);
     }
-    
+
 //    @Override
 //    public void setUserVisibleHint(boolean isVisibleToUser) {
 //        super.setUserVisibleHint(isVisibleToUser);
@@ -103,7 +103,7 @@ public class BoardBlankFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         rv.setLayoutManager(llm);
 
-        sendRequest_boardList(mCategory_name); // 게시글 목록 받아오기
+       // sendRequest_boardList(mCategory_name); // 게시글 목록 받아오기
 
         return rootView;
     }
@@ -131,7 +131,7 @@ public class BoardBlankFragment extends Fragment {
             Log.d("tag", "선택한 정렬의 list position은  = " + range_position);
             // 최신순 : 0 / 조회순 : 1 / 좋아요순 : 2
 
-            sendRequest_boardList(mCategory_name); // 게시글 목록 받아오기
+           sendRequest_boardList(mCategory_name); // 게시글 목록 받아오기
 
 //            Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + mViewPager.getCurrentItem());
 //            // based on the current position you can then cast the page to the correct
@@ -166,7 +166,7 @@ public class BoardBlankFragment extends Fragment {
         VolleySingleton v = VolleySingleton.getInstance();
         RequestQueue queue = v.getRequestQueue();
 
-        final String category = _Caterogy;
+        //final String category = _Caterogy;
         //System.out.println("2해당 게시글의 카테고리는 " + category);
 
         int range = range_position; // 선택한 정렬
@@ -175,7 +175,7 @@ public class BoardBlankFragment extends Fragment {
         // 서버로 카테고리 전달
         try {
             String url_category = "http://52.78.207.133:3000/boards/list/";
-            url_category += URLEncoder.encode(category, "utf-8") + "/";
+            url_category += URLEncoder.encode(mCategory_name, "utf-8") + "/";
             url_category += range;
             Log.d("url", url_category);
 
@@ -191,7 +191,7 @@ public class BoardBlankFragment extends Fragment {
                     String Major2 = ((BoardRecyclerViewActivity) getActivity()).Major2;
                     String Major3 = ((BoardRecyclerViewActivity) getActivity()).Major3;
 
-                    if (category.equals("자유")) {
+                    if (mCategory_name.equals("자유")) {
                         ArrayList<BoardData> data_freeBoard = js.getBoardData(response);
 
                         System.out.println("JsonParser의 response 받아서 data_freeBoard에 넣기");
@@ -213,7 +213,7 @@ public class BoardBlankFragment extends Fragment {
 
                         System.out.println("BoardData에서 받아와서 mAuthorSet에 add : " + mAuthorSet);
 
-                    } else if (category.equals(Major1)) {
+                    } else if (mCategory_name.equals(Major1)) {
                         ArrayList<BoardData> data_major1 = js.getBoardData(response);
 
                         System.out.println("JsonParser의 response 받아서 data_major1에 넣기");
@@ -235,7 +235,7 @@ public class BoardBlankFragment extends Fragment {
 
                         System.out.println("BoardData에서 받아와서 mAuthorSet에 add : " + mAuthorSet);
 
-                    } else if (category.equals(Major2)) {
+                    } else if (mCategory_name.equals(Major2)) {
                         ArrayList<BoardData> data_major2 = js.getBoardData(response);
 
                         System.out.println("JsonParser의 response 받아서 data_major2에 넣기");
@@ -257,7 +257,7 @@ public class BoardBlankFragment extends Fragment {
 
                         System.out.println("BoardData에서 받아와서 mAuthorSet에 add : " + mAuthorSet);
 
-                    } else if (category.equals(Major3)) {
+                    } else if (mCategory_name.equals(Major3)) {
                         ArrayList<BoardData> data_major3 = js.getBoardData(response);
 
                         System.out.println("JsonParser의 response 받아서 data_major3에 넣기");
