@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         // App 실행 시 Splash 띄우기
-        //startActivity(new Intent(this, SplashActivity.class)); // --> 3초간 왜 안뜨지..
+       // startActivity(new Intent(this, SplashActivity.class)); // --> 3초간 왜 안뜨지..
 
         //  게시판 만들기 편하게 메일 입력에서 바로 게시판 뛰어넘게 해둠 / 나중에 경로 다시 수정
 //
