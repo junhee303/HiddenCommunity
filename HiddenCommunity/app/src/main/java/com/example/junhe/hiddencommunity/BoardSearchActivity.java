@@ -65,17 +65,6 @@ public class BoardSearchActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        mBoardId.clear();
-        mTitleSet.clear();
-        mCategory.clear();
-        mAuthorSet.clear();
-        mDateSet.clear();
-        mBodySet.clear();
-        mTagSet.clear();
-        mHitSet.clear();
-        mLikeSet.clear();
-        mCommentSet.clear();
-
         mAdapter = new Board_Adapter(getApplicationContext(), mCategory, mBoardId, mTitleSet, mAuthorSet, mDateSet, mBodySet, mTagSet, mHitSet, mLikeSet, mCommentSet);
         recyclerView.setAdapter(mAdapter);
     }
@@ -90,6 +79,18 @@ public class BoardSearchActivity extends AppCompatActivity {
         bSearch.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
+                // 지난 검색 결과 비우기
+                mBoardId.clear();
+                mTitleSet.clear();
+                mCategory.clear();
+                mAuthorSet.clear();
+                mDateSet.clear();
+                mBodySet.clear();
+                mTagSet.clear();
+                mHitSet.clear();
+                mLikeSet.clear();
+                mCommentSet.clear();
+
                 if (enter_search.getText().toString().length() == 0) {
                     Toast.makeText(BoardSearchActivity.this, "검색어를 입력하세요", Toast.LENGTH_SHORT).show();
                     enter_search.requestFocus();
@@ -97,6 +98,7 @@ public class BoardSearchActivity extends AppCompatActivity {
                 }
                 keyword = enter_search.getText().toString();
                 System.out.println("검색어는 " + keyword);
+
                 sendRequest_searchList(keyword);
             }
         });

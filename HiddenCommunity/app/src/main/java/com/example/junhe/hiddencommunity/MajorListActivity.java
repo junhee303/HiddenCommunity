@@ -37,7 +37,6 @@ public class MajorListActivity extends AppCompatActivity {
         major_data.add(new MajorData("기타 언어·문학", "언어학, 교양어·문학"));
         major_data.add(new MajorData("농림·수산", "농업학, 수산학, 산림·원예학"));
         major_data.add(new MajorData("동양 언어·문학", "국어·국문학, 일본어·문학, 중국어·문학, 기타아시아어·문학"));
-        major_data.add(new MajorData("국어·국문학, 일본어·문학, 중국어·문학, 기타아시아어·문학", "ㅇ"));
         major_data.add(new MajorData("디자인", "디자인일반, 산업디자인, 시각디자인, 패션디자인, 기타디자인"));
         major_data.add(new MajorData("무용·체육", "무용, 체육"));
         major_data.add(new MajorData("미술·조형", "순수미술, 응용미술, 조형"));

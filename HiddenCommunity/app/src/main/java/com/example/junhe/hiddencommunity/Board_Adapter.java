@@ -70,19 +70,19 @@ public class Board_Adapter extends RecyclerView.Adapter<Board_Adapter.MyViewHold
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public Board_Adapter(Context mContext, ArrayList<String> mCategory, ArrayList<String> mBoardId, ArrayList<String> mTitleSet, ArrayList<String> mAuthorSet, ArrayList<String> mDateSet, ArrayList<String> mBodySet, ArrayList<String> mTagSet, ArrayList<Integer> mHitSet, ArrayList<Integer> mLikeSet, ArrayList<Integer> mCommentSet) {
+    public Board_Adapter(Context context, ArrayList<String> Category, ArrayList<String> BoardId, ArrayList<String> TitleSet, ArrayList<String> AuthorSet, ArrayList<String> DateSet, ArrayList<String> BodySet, ArrayList<String> TagSet, ArrayList<Integer> HitSet, ArrayList<Integer> LikeSet, ArrayList<Integer> CommentSet) {
 
-        this.mContext = mContext;
-        this.mCategory = mCategory;
-        this.mBoardId = mBoardId;
-        this.mTitleSet = mTitleSet;
-        this.mAuthorSet = mAuthorSet;
-        this.mDateSet = mDateSet;
-        this.mBodySet = mBodySet;
-        this.mTagSet = mTagSet;
-        this.mHitSet = mHitSet;
-        this.mLikeSet = mLikeSet;
-        this.mCommentSet = mCommentSet;
+        this.mContext = context;
+        this.mCategory = Category;
+        this.mBoardId = BoardId;
+        this.mTitleSet = TitleSet;
+        this.mAuthorSet = AuthorSet;
+        this.mDateSet = DateSet;
+        this.mBodySet = BodySet;
+        this.mTagSet = TagSet;
+        this.mHitSet = HitSet;
+        this.mLikeSet = LikeSet;
+        this.mCommentSet = CommentSet;
     }
 
     public void update() {
@@ -130,6 +130,7 @@ public class Board_Adapter extends RecyclerView.Adapter<Board_Adapter.MyViewHold
 
                 Intent intent = new Intent(mContext, BoardReadingActivity.class);
                 intent.putExtra("boardId", boardId);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
             }
         });
