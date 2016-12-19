@@ -24,8 +24,8 @@ public class SplashActivity extends AppCompatActivity {
         loadingIcon.setAnimation(animation);
 
         Handler hd = new Handler();
-        hd.postDelayed(new splashhandler(), 2000); // 3초 후에 gd handler 실행
-        System.out.println("spalsh 3초간 실행");
+        hd.postDelayed(new splashhandler(), 2000); // 2초 후에 gd handler 실행
+        System.out.println("spalsh 2초간 실행");
     }
 
     private  class splashhandler implements Runnable{

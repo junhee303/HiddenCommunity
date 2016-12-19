@@ -156,11 +156,10 @@ public class BoardSearchActivity extends AppCompatActivity {
         }
     }
 
-    // 상단이 [ < ] 아이콘 클릭 시
+    // 상단의 [ < ] 버튼 클릭 -> 게시글 목록 화면으로 이동
     public void pushBoardListButton() {
         move_boardList_btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // 상단바의 [ < ] 버튼 클릭 시 게시글 목록으로 이동
                 Toast.makeText(BoardSearchActivity.this, "게시글 목록으로 이동", Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(BoardSearchActivity.this, BoardRecyclerViewActivity.class);

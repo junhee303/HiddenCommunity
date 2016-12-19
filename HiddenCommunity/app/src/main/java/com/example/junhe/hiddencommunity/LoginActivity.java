@@ -20,7 +20,6 @@ import java.io.IOException;
 public class LoginActivity extends AppCompatActivity {
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
-
     private ImageView img_Logo;
     private EditText etEmail;
     private Button bSendEmail;
@@ -49,7 +48,6 @@ public class LoginActivity extends AppCompatActivity {
 
     void onResponseHttp(String s) {
         if (s == null) {
-
             return;
         }
         Log.d("RESPONSE", s);
@@ -73,13 +71,13 @@ public class LoginActivity extends AppCompatActivity {
         inputEmail(); // 인증 받을 메일 입력
     }
 
-
     public static final String getRequestUrl() {
         String url = "http://ip.jsontest.com/";
         Log.d("TAG", url);
         return url;
     }
 
+    // 인증 받을 메일 입력
     public void inputEmail() {
 
         img_Logo = (ImageView) findViewById(R.id.img_Logo);
@@ -94,49 +92,24 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
-//                // 여기서 입력한 메일주소로 인증 메일 전송 + 다음 화면으로 전달
+                // 입력한 메일주소로 인증 메일 전송 + 다음 화면으로 전달
                 String email = etEmail.getText().toString();
 
                 if (email.matches(".*.ac.kr.*")) {
                     testurl = "http://52.78.207.133:3000/emails/send/" + email.toString();
                     _test = new TestTask();
                     _test.execute();
+
+                    Toast.makeText(LoginActivity.this, "메일을 전송 중 입니다", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(LoginActivity.this, "대학 계정 메일을 입력하세요", Toast.LENGTH_SHORT).show();
                     etEmail.setText("");
                     etEmail.requestFocus();
                     return;
                 }
-
-
-
-//              //  게시판 만들기 편하게 메일 입력에서 바로 게시판 뛰어넘게 해둠 / 나중에 경로 다시 수정
-//
-//                Intent intent = new Intent(getApplicationContext(), NoticeBoardActivity.class);
-//                startActivityForResult(intent, 1000);
-
             }
         });
-
-
     }
 }
-
-//    Runnable ask = new Runnable() {
-//        public void run() {
-//            InputStream is = null;
-//            try {
-//                HttpResponse resp = new DefaultHttpClient().execute(new HttpGet(
-//                        "http://52.78.207.133:3000/members/new/"));
-//
-//                is = resp.getEntity().getContent();
-//            } catch (Exception e) {
-//                Log.d("InputStream", e.getLocalizedMessage());
-//            }
-//            if (is != null) {
-//
-//            }
-//        }
-//    }
 
 

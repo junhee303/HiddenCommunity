@@ -17,8 +17,8 @@ public class BoardData{
     private int count_comment; // 댓글 수
 
     public BoardData(){
-
     }
+
     public BoardData(String BoardId, String Category, String Title,  String Author, String Date, String Body, String Tag, int count_hit, int count_like, int count_comment) {
         this.BoardId = BoardId;
         this.Category = Category;

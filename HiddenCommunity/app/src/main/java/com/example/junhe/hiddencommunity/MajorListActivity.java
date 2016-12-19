@@ -27,7 +27,7 @@ public class MajorListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_major_list);
 
-        // 전공 추가 ===> 서버에서 해야..
+        // 전공 리스트 추가
         major_data.add(new MajorData("건축·토목", "건축·설비공학, 건축학, 조경학, 토목공학, 도시공학"));
         major_data.add(new MajorData("경영·경제", "경영학, 경제학, 관광학, 광고·홍보학, 금융·회계·세무학, 무역·유통학, 교양경상학"));
         major_data.add(new MajorData("교육", "교육학, 유아교육학, 특수교육, 초등교육학, 언어교육, 인문교육, 사회교육, 공학교육, 자연계교육, 예체능교육"));
@@ -89,7 +89,6 @@ public class MajorListActivity extends AppCompatActivity {
 
             mMajorData = majorData;
         }
-
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {

@@ -12,212 +12,223 @@
     tools:context="com.example.junhe.hiddencommunity.RegisterActivity">
 
     <EditText
+        android:id="@+id/etPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
         android:layout_marginTop="50dp"
-        android:id="@+id/etPassword"
-        android:textSize="18sp"
+        android:ems="10"
         android:hint="비밀번호"
-        android:textColorHint="#FFA7A7A7"
-        android:textColor="#FF4E4E4E"
+        android:inputType="textPassword"
         android:password="false"
-        android:textCursorDrawable="@null"/>
+        android:textColor="#FF4E4E4E"
+        android:textColorHint="#FFA7A7A7"
+        android:textCursorDrawable="@null"
+        android:textSize="18sp" />
 
     <TextView
-        android:text="영문 대·소문자, 숫자를 포함한 8~12자리로 입력하세요."
+        android:id="@+id/PasswordNotice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/PasswordNotice"
-        android:textSize="10sp"
-        android:textColor="#b4b4b4"
         android:layout_below="@+id/etPassword"
-        android:gravity="right"/>
+        android:gravity="right"
+        android:text="영문 대·소문자, 숫자를 포함한 8~12자리로 입력하세요"
+        android:textColor="#b4b4b4"
+        android:textSize="10sp" />
 
     // android:drawableRight="@+id/etPasswordConfirm"
 
     <EditText
+        android:id="@+id/etPasswordConfirm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/etPasswordConfirm"
-        android:textSize="18sp"
-        android:hint="비밀번호 확인"
-        android:textColorHint="#FFA7A7A7"
-        android:textColor="#FF4E4E4E"
-        android:textCursorDrawable="@null"
-        android:layout_below="@+id/etPassword"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="32dp" />
+        android:layout_below="@+id/etPassword"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:hint="비밀번호 확인"
+        android:inputType="textPassword"
+        android:textColor="#FF4E4E4E"
+        android:textColorHint="#FFA7A7A7"
+        android:textCursorDrawable="@null"
+        android:textSize="18sp" />
 
 
     <TextView
-        android:text="비밀번호가 일치합니다."
+        android:id="@+id/CheckPasswordNotice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/CheckPasswordNotice"
-        android:textSize="10sp"
-        android:textColor="#b4b4b4"
         android:layout_below="@+id/etPasswordConfirm"
         android:gravity="right"
-        android:visibility="invisible"/>
+        android:text="비밀번호가 일치합니다"
+        android:textColor="#b4b4b4"
+        android:textSize="10sp"
+        android:visibility="invisible" />
 
     <EditText
+        android:id="@+id/etNickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:layout_marginTop="30dp"
-        android:id="@+id/etNickname"
-        android:textSize="18sp"
-        android:hint="닉네임"
-        android:textColorHint="#FFA7A7A7"
-        android:textColor="#FF4E4E4E"
-        android:layout_below="@+id/etPasswordConfirm"
         android:layout_alignParentStart="true"
-        android:textCursorDrawable="@null"/>
+        android:layout_below="@+id/etPasswordConfirm"
+        android:layout_marginTop="30dp"
+        android:ems="10"
+        android:hint="닉네임"
+        android:inputType="textPersonName"
+        android:textColor="#FF4E4E4E"
+        android:textColorHint="#FFA7A7A7"
+        android:textCursorDrawable="@null"
+        android:textSize="18sp" />
 
     // android:drawableRight="@+id/etPasswordConfirm"
 
 
     <TextView
-        android:text="사용 중에도 닉네임을 변경할 수 있습니다."
+        android:id="@+id/NicknameNotice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/NicknameNotice"
-        android:textSize="10sp"
-        android:textColor="#b4b4b4"
         android:layout_below="@+id/etNickname"
-        android:gravity="right"/>
+        android:gravity="right"
+        android:text="사용 중에도 닉네임을 변경할 수 있습니다"
+        android:textColor="#b4b4b4"
+        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/CheckNicknameNotice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="10sp"
-        android:textColor="#b4b4b4"
         android:layout_below="@+id/NicknameNotice"
         android:gravity="right"
-        android:visibility="visible"/>
+        android:textColor="#b4b4b4"
+        android:textSize="10sp"
+        android:visibility="visible" />
 
     <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:layout_marginTop="30dp"
         android:id="@+id/etMajor1"
-        android:textSize="18sp"
-        android:hint="전공1"
-        android:textColorHint="#FFA7A7A7"
-        android:textColor="#FF4E4E4E"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/etNickname"
-        android:layout_alignParentStart="true"
-        android:textCursorDrawable="@null"/>
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+        android:layout_marginTop="30dp"
         android:ems="10"
+        android:hint="클릭하여 전공을 선택해주세요"
+        android:inputType="textPersonName"
+        android:textColor="#FF4E4E4E"
+        android:textColorHint="#FFA7A7A7"
+        android:textCursorDrawable="@null"
+        android:textSize="18sp" />
+
+    <EditText
         android:id="@+id/etMajor2"
-        android:textSize="18sp"
-        android:hint="전공2"
-        android:textColorHint="#FFA7A7A7"
-        android:textColor="#FF4E4E4E"
-        android:layout_below="@+id/etMajor1"
-        android:layout_alignParentStart="true"
-        android:textCursorDrawable="@null"
-        android:visibility="invisible"/>
-    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/etMajor3"
-        android:textSize="18sp"
-        android:hint="전공3"
-        android:textColorHint="#FFA7A7A7"
-        android:textColor="#FF4E4E4E"
-        android:layout_below="@+id/etMajor2"
         android:layout_alignParentStart="true"
+        android:layout_below="@+id/etMajor1"
+        android:ems="10"
+        android:hint="클릭하여 전공을 선택해주세요"
+        android:inputType="textPersonName"
+        android:textColor="#FF4E4E4E"
+        android:textColorHint="#FFA7A7A7"
         android:textCursorDrawable="@null"
-        android:visibility="invisible"/>
+        android:textSize="18sp"
+        android:visibility="invisible" />
+
+    <EditText
+        android:id="@+id/etMajor3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/etMajor2"
+        android:ems="10"
+        android:hint="클릭하여 전공을 선택해주세요"
+        android:inputType="textPersonName"
+        android:textColor="#FF4E4E4E"
+        android:textColorHint="#FFA7A7A7"
+        android:textCursorDrawable="@null"
+        android:textSize="18sp"
+        android:visibility="invisible" />
 
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/etPasswordConfirm"
-        android:layout_alignParentEnd="true">
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/etPasswordConfirm">
+
         <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/error"
             android:id="@+id/passwordError"
-            android:layout_alignTop="@+id/etPasswordConfirm"
-            android:layout_alignParentEnd="true"
-            android:visibility="invisible"
-            />
-        <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/check"
-            android:id="@+id/passwordCheck"
-            android:layout_alignTop="@+id/etPasswordConfirm"
             android:layout_alignParentEnd="true"
-            android:visibility="invisible"
-            />
+            android:layout_alignTop="@+id/etPasswordConfirm"
+            android:src="@drawable/error"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/passwordCheck"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/etPasswordConfirm"
+            android:src="@drawable/check"
+            android:visibility="invisible" />
     </FrameLayout>
 
     <!--<FrameLayout-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignTop="@+id/etNickname"-->
-        <!--android:layout_alignParentEnd="true">-->
-        <!--<ImageView-->
-            <!--android:layout_width="30dp"-->
-            <!--android:layout_height="30dp"-->
-            <!--android:src="@drawable/check"-->
-            <!--android:id="@+id/nicknameCheck"-->
-            <!--android:layout_alignTop="@+id/etNickname"-->
-            <!--android:layout_alignParentEnd="true"-->
-            <!--android:visibility="visible"/>-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignTop="@+id/etNickname"-->
+    <!--android:layout_alignParentEnd="true">-->
+    <!--<ImageView-->
+    <!--android:layout_width="30dp"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:src="@drawable/check"-->
+    <!--android:id="@+id/nicknameCheck"-->
+    <!--android:layout_alignTop="@+id/etNickname"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:visibility="visible"/>-->
 
-        <!--<ImageView-->
-            <!--android:layout_width="30dp"-->
-            <!--android:layout_height="30dp"-->
-            <!--android:src="@drawable/error"-->
-            <!--android:id="@+id/nicknameError"-->
-            <!--android:layout_alignTop="@+id/etNickname"-->
-            <!--android:layout_alignParentEnd="true"-->
-            <!--android:visibility="invisible"/>-->
+    <!--<ImageView-->
+    <!--android:layout_width="30dp"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:src="@drawable/error"-->
+    <!--android:id="@+id/nicknameError"-->
+    <!--android:layout_alignTop="@+id/etNickname"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:visibility="invisible"/>-->
 
-<!--</FrameLayout>-->
+    <!--</FrameLayout>-->
     <Button
         android:id="@+id/bNicknameOverlapCheck"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/etNickname"
-        android:text="중복확인" />
+        android:text="중복 확인" />
 
-<Button
-    android:layout_width="40dp"
-    android:layout_height="40dp"
-    android:id="@+id/bMajorAdd"
-    android:background="@drawable/plus_selector"
-    android:layout_alignTop="@+id/etMajor1"
-    android:layout_alignParentEnd="true" />
+    <Button
+        android:id="@+id/bMajorAdd"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/etMajor1"
+        android:background="@drawable/plus_selector" />
+    <TextView
+        android:id="@+id/MajorNotice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bMajorAdd"
+        android:gravity="right"
+        android:text="최대 3개의 전공 선택 가능"
+        android:textColor="#b4b4b4"
+        android:textSize="10sp" />
 
-<Button
-    android:text="시작하기"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/bStart"
-    android:layout_below="@+id/etMajor3"
-    android:layout_centerHorizontal="true"
-    android:layout_marginTop="15dp" />
+    <Button
+        android:id="@+id/bStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/etMajor3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:text="시작하기" />
 
 
 </RelativeLayout>

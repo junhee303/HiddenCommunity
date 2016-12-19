@@ -200,16 +200,13 @@ public class NoticeListActivity  extends AppCompatActivity {
                         // TODO 아이템 클릭시에 구현할 내용은 여기에.
                         notice_List_position = position;
 
-                        // url로 해당 알림id 보내면서 check를 false -> true 로 바꾸기
-
-
                         // 서버로 해당 알림이 울린 boardId 전달
                         try {
                             String noticeId = notice_List.get(notice_List_position).noticeId;
 
                             url_check = "http://52.78.207.133:3000/notices/check/";
                             url_check += URLEncoder.encode(noticeId, "utf-8");
-
+                            // url로 해당 알림id 보내면 check 값이 false -> true 로 바뀜
                             Log.d("url", url_check);
 
                             newNoticeCheckTask = new NewNoticeCheckTask();

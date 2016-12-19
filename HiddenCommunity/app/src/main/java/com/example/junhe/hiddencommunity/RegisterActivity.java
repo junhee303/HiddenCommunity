@@ -34,19 +34,15 @@ public class RegisterActivity extends AppCompatActivity {
     private TextView CheckNicknameNotice;
     private ImageView passwordCheck;
     private ImageView passwordError;
-    private ImageView nicknameCheck;
-    private ImageView nicknameError;
-    private String server_nickname;
     private int addMajor;
     private int count_major;
 
-    String url_nickname, result_nickname;
-    String url_register, result_register;
+    private String url_nickname, result_nickname;
+    private String url_register, result_register;
 
     private boolean nickname_overlap = false;
+    boolean nickname_check = false;
 
-
-    //private ProgressDialog mProgressDialog;
 
     class NicknameOverlapTask extends AsyncTask<String, Void, String> {
         @Override
@@ -69,14 +65,13 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void onResponseHttp_nickname(String s) {
         Log.d("RESPONSE", s);
-        if (s.compareTo("no") == 0) {
-            System.out.println("중복된 닉네임입니다");
-            //Toast.makeText(RegisterActivity.this, "중복된 닉네임입니다", Toast.LENGTH_SHORT).show();
-        } else {
-        //} else if (s.compareTo("ok") == 0) {
-            System.out.println("사용 가능한 닉네임입니다");
-            //Toast.makeText(RegisterActivity.this, "사용 가능한 닉네임입니다", Toast.LENGTH_SHORT).show();
-            nickname_overlap = true; // 닉네임 중복 체크 true
+
+        if (s.compareTo("no") == 0) { // 중복된 닉네임
+            nickname_overlap = true; // 닉네임 중복 true
+            System.out.println("nickname_overlap은 " + nickname_overlap);
+
+        } else { // 사용 가능한 닉네임
+            nickname_overlap = false; // 닉네임 중복 false
             System.out.println("nickname_overlap은 " + nickname_overlap);
         }
     }
@@ -131,7 +126,6 @@ public class RegisterActivity extends AppCompatActivity {
         CheckNicknameNotice = (TextView) findViewById(R.id.CheckNicknameNotice);
         passwordCheck = (ImageView) findViewById(R.id.passwordCheck);
         passwordError = (ImageView) findViewById(R.id.passwordError);
-        //server_nickname = "server"; // 닉네임 중복 체크 위해 임의로 만든 닉네임
         count_major = 1;
 
         conformPassword(); // 비밀번호 일치 검사
@@ -174,33 +168,47 @@ public class RegisterActivity extends AppCompatActivity {
     public void conformNickname() {
         bNicknameOverlapCheck.setOnClickListener
                 (new View.OnClickListener() {
-                     public void onClick(View v) {
-                         String nickname = etNickname.getText().toString();
+                    public void onClick(View v) {
+                        String nickname = etNickname.getText().toString();
 
-                         if (etNickname.getText().toString().length() != 0) {
-                             try {
-                                 url_nickname = "http://52.78.207.133:3000/members/checkNickname/";
-                                 url_nickname += URLEncoder.encode(nickname, "utf-8");
-                             } catch (UnsupportedEncodingException e) {
-                                 e.printStackTrace();
-                             }
-                         } else {
-                             Toast.makeText(RegisterActivity.this, "닉네임을 입력하세요", Toast.LENGTH_SHORT).show();
-                             etNickname.requestFocus();
-                         }
+                        if (etNickname.getText().toString().length() != 0) {
+                            try {
+                                nickname_check = true;
+                                url_nickname = "http://52.78.207.133:3000/members/checkNickname/";
+                                url_nickname += URLEncoder.encode(nickname, "utf-8");
 
-                         nicknameOverlapTask = new NicknameOverlapTask();
-                         nicknameOverlapTask.execute();
+                                nicknameOverlapTask = new NicknameOverlapTask();
+                                nicknameOverlapTask.execute();
 
-                         if(nickname_overlap == true) {
-                             Toast.makeText(RegisterActivity.this, "사용 가능한 닉네임입니다", Toast.LENGTH_SHORT).show();
-                             CheckNicknameNotice.setText("사용 가능한 닉네임입니다");
-                         }
 
-                     }
+                                //noticeNicknameOverlap(); // 닉네임 중복 검사 결과 알림
 
-                 }
-                );
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Toast.makeText(RegisterActivity.this, "닉네임을 입력하세요", Toast.LENGTH_SHORT).show();
+                            etNickname.requestFocus();
+                        }
+
+
+                    }
+                });
+
+    }
+
+    // 닉네임 중복 검사 결과 알림
+    public void noticeNicknameOverlap() {
+
+        if (nickname_overlap == true) {
+            Toast.makeText(RegisterActivity.this, "중복된 닉네임입니다", Toast.LENGTH_SHORT).show();
+            CheckNicknameNotice.setText("중복된 닉네임입니다");
+            System.out.println("nickname_overlap은 " + nickname_overlap);
+        } else {
+            Toast.makeText(RegisterActivity.this, "사용 가능한 닉네임입니다", Toast.LENGTH_SHORT).show();
+            CheckNicknameNotice.setText("사용 가능한 닉네임입니다");
+            System.out.println("nickname_overlap은 " + nickname_overlap);
+        }
     }
 
     // 전공 입력 칸 누르면 MajorListActivity로 이동
@@ -281,6 +289,13 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
+                // 닉네임 중복 확인
+                if (nickname_overlap == true) {
+                    Toast.makeText(RegisterActivity.this, "중복된 닉네임입니다\n새로운 닉네임으로 중복 확인하세요", Toast.LENGTH_SHORT).show();
+                    etNickname.requestFocus();
+                    return;
+                }
+
                 // 전공 입력 확인
                 if (etMajor1.getText().toString().length() == 0) {
                     Toast.makeText(RegisterActivity.this, "전공을 입력하세요", Toast.LENGTH_SHORT).show();
@@ -297,10 +312,9 @@ public class RegisterActivity extends AppCompatActivity {
                 String major3 = etMajor3.getText().toString();
 
                 //닉네임 중복 확인 유무
-                if (nickname_overlap == false) {
+                if (nickname_check == false) {
                     Toast.makeText(RegisterActivity.this, "닉네임 중복 확인이 필요합니다.", Toast.LENGTH_SHORT).show();
                     etNickname.requestFocus();
-                    return;
                 } else {
                     // 서버로 회원 정보 전달
                     try {

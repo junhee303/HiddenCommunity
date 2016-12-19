@@ -19,10 +19,6 @@ import java.util.Locale;
 import data.BoardData;
 import data.CommentData;
 
-/**
- * Created by HongjunLim on 11/27/2016.
- */
-
 public class JsonParser {
     CommentData commentData;
     JSONArray postCommentList;

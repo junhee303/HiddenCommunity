@@ -49,14 +49,14 @@ public class MessageAdapter extends ArrayAdapter {
 
         System.out.println("MessageAdapter의 getView 부분");
         if (row == null) {
-            // inflator를 생성하여, message.xml을 읽어서 View객체로 생성한다.
+            // inflator를 생성하여, message.xml을 읽어서 View객체로 생성
             LayoutInflater inflater = (LayoutInflater) this.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(R.layout.message, parent, false);
         }
         messageContainer = (LinearLayout)row.findViewById(R.id.message_container);
         // Array List에 들어 있는 채팅 문자열을 읽어
         Message msg = msgs.get(position);
-        // Inflater를 이용해서 생성한 View에, Message를 삽입한다.
+        // Inflater를 이용해서 생성한 View에, Message를 삽입
         TextView msgText = (TextView) row.findViewById(R.id.message);
         TextView msgDate = (TextView) row.findViewById(R.id.date);
         msgText.setText(msg.getMessage());

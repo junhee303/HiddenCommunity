@@ -16,9 +16,6 @@ import com.android.volley.VolleyError;
 
 import org.json.JSONObject;
 
-/**
- * Created by HongjunLim on 11/27/2016.
- */
 
 public class DataRequest {
 

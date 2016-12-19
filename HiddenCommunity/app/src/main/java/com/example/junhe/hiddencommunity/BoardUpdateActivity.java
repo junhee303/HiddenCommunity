@@ -53,8 +53,6 @@ public class BoardUpdateActivity extends AppCompatActivity {
     private void onResponseHttp(String s) {
         Log.d("result: ", s);
         if (s == null) {
-//            mProgressDialog = ProgressDialog.show(.this,"",
-//                    "잠시만 기다려 주세요.",true);
             System.out.println("글이 수정되지 않았습니다.");
             return;
         }
@@ -79,6 +77,7 @@ public class BoardUpdateActivity extends AppCompatActivity {
         update_Board();
     }
 
+    // 게시글 수정하기
     public void update_Board() {
         Category = (TextView) findViewById(R.id.Category);
         Title = (EditText) findViewById(R.id.Title);
@@ -119,7 +118,7 @@ public class BoardUpdateActivity extends AppCompatActivity {
                 String tag = Tag.getText().toString();
                 System.out.println(category + " / " + title + " / " + author + " / " + body + " / " + tag);
 
-                // 서버로 게시글 전달
+                // 서버로 수정된 게시글 전달
                 try {
 
                     String boardId = extras.getString("boardId");

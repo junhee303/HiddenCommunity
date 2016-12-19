@@ -55,8 +55,6 @@ public class BoardWritingActivity extends AppCompatActivity {
     private void onResponseHttp(String s) {
         Log.d("result: ", s);
         if (s == null) {
-//            mProgressDialog = ProgressDialog.show(.this,"",
-//                    "잠시만 기다려 주세요.",true);
             System.out.println("작성한 글이 등록되지 않았습니다.");
             return;
         }

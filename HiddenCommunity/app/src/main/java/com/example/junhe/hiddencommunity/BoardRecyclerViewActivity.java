@@ -59,7 +59,7 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
 
         tabTitles = new ArrayList<>();
 
-
+        // 사용자의 전공 선택 개수에 따라 tab 추가
         tabTitles.add("자유");
         tabTitles.add(Major1);
         if (Major2 != "") {
@@ -87,34 +87,6 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
         pushBottomIcon(); // 하단 아이콘 클릭 시 액션
     }
 
-
-//    // 게시판 정렬 선택 시 그에 따른 게시글 정렬 변경
-//    public String changeBoardRange(int range_position) {
-//        String url_range;
-//        switch (range_position) {
-//            case 0: // 최신순 정렬
-//                url_range = "http://52.78.207.133:3000/boards/dateList/";
-//                Log.d("url", url_range);
-//                return url_range;
-//            case 1: // 조회순 정렬
-//                url_range = "http://52.78.207.133:3000/boards/hitList/";
-//                Log.d("url", url_range);
-//                return url_range;
-//            case 2: // 좋아요순 정렬
-//                url_range = "http://52.78.207.133:3000/boards/likeList/";
-//                Log.d("url", url_range);
-//                return url_range;
-//            default:
-//                return null;
-//        }
-//    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
-
     // ViewPager Adapter
     class PagerAdapter extends FragmentPagerAdapter {
 
@@ -128,11 +100,6 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
             this.tabTitles = tabTitles;
         }
 
-        public void update(){
-            notifyDataSetChanged();
-        }
-
-
         @Override
         public int getCount() {
             return tabTitles.size();
@@ -141,7 +108,6 @@ public class BoardRecyclerViewActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
 
-            //BoardRangeSpinner.setOnItemSelectedListener(mOnItemSelectedListener);
             switch (position) {
                 case 0:
                     BoardBlankFragment fragment = new BoardBlankFragment();

@@ -30,8 +30,6 @@ import java.util.ArrayList;
 
 public class MessageRoomActivity extends AppCompatActivity {
     private CustomJsonRequest request_message;
-//    ArrayList<Message> message;
-//    private int message_count; // message의 size
     private MessageAdapter messageAdapter;
     private TextView date;
     private EditText etMsg;
@@ -41,8 +39,6 @@ public class MessageRoomActivity extends AppCompatActivity {
 
     private String recipient;
     String myNickname; // 내 닉네임
-
-    //String url, result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +50,6 @@ public class MessageRoomActivity extends AppCompatActivity {
         date = (TextView) findViewById(R.id.Date);
         buttonSend = (Button) findViewById(R.id.send_btn);
         etMsg = (EditText) findViewById(R.id.messageText);
-        // message_send = (TextView) findViewById(R.id.message_send);
 
         Bundle extras = getIntent().getExtras();
         recipient = extras.getString("Author");
@@ -190,69 +185,5 @@ public class MessageRoomActivity extends AppCompatActivity {
             }
         });
     }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
-
-//    // 대화 읽어오기
-//    public void sendMessage() {
-//        VolleySingleton v = VolleySingleton.getInstance();
-//        RequestQueue queue = v.getRequestQueue();
-//
-//
-//        SharedPreferences test = getSharedPreferences("test", MODE_PRIVATE);
-//        String recipient = otherNickname.getText().toString();
-//        String message = enterSendMessage.getText().toString();
-//        String sender = test.getString("UserNickname", null);
-//
-//        // 서버로 대화 전달
-//        try {
-//            url = "http://52.78.207.133:3000/messages/send/";
-//            url += URLEncoder.encode(recipient, "utf-8")+"?";
-//            url += "&body=" + URLEncoder.encode(message, "utf-8");
-//            url += "&sender=" + URLEncoder.encode(sender, "utf-8");
-//
-//            enterSendMessage.setText("");
-//            enterSendMessage.requestFocus(); // 전송 후 메세지 창 지우기
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
-//
-//        Log.d("url", url);
-//        CustomJsonRequest request = new CustomJsonRequest(Request.Method.GET,
-//                url, null, new Response.Listener<JSONObject>() {
-//            @Override
-//            public void onResponse(JSONObject response) {
-//                try {
-//                    String all_message = response.getString("msgs");
-//                    // 우선 text창에 대화 전체 띄우기
-//                    message_send.setText(all_message);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                VolleyLog.e("Error: ", error.getMessage());
-//            }
-//        });
-//        // queue에 Request를 추가해준다.
-//        queue.add(request);
-//    }
-
 
 }
